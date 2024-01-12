@@ -1,0 +1,26 @@
+<section class="modal-login">
+    <h1 mat-dialog-title>Login</h1>
+    <div mat-dialog-content>
+        <form class="form-login" (ngSubmit)="onLogin()">
+            <div class="input-field">
+                <label for="login">Usuário ou Email:</label>
+                <input type="text" id="login" name="login" [(ngModel)]="login" required />
+            </div>
+            <div class="input-field">
+                <label for="password">Senha:</label>
+                <input type="password" id="senha" name="password" [(ngModel)]="senha" required />
+            </div>
+            <a href="#" class="esqueci-senha">Esqueci a senha</a>
+
+            <div mat-dialog-actions>
+                <button type="submit" class="btn-entrar" mat-flat-button>Entrar</button>
+                <button class="btn-cancelar" mat-flat-button (click)="limparFormulario()">Limpar</button>
+            </div>
+        </form>
+    </div>
+</section>
+<section class="modal-sucesso" *ngIf="loginSucesso">
+    <h2>Login bem-sucedido!</h2>
+    <p>Bem-vindo, {{ tipoUsuario }}</p>
+    <button (click)="fecharModal()">OK</button>
+</section>

@@ -1,0 +1,80 @@
+.modal-login {
+    .mat-dialog-title {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .form-login {
+        display: flex;
+        flex-direction: column;
+
+        .input-field {
+            margin-bottom: 15px;
+
+            label {
+                display: block;
+                margin-bottom: 5px;
+            }
+
+            input {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+        }
+
+        .esqueci-senha {
+            color: #333;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+    }
+
+    .mat-dialog-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+
+        .btn-cancelar, .btn-entrar {
+            padding: 10px 20px;
+        }
+    }
+
+    button {
+        background-color: #333;
+        color: white;
+    }
+}
+
+.modal-sucesso {
+    background-color: #f8f8f8; /* Cor de fundo */
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    h2 {
+        color: #333; /* Cor do texto do título */
+        margin-bottom: 15px;
+    }
+
+    p {
+        color: #333; /* Cor do texto do parágrafo */
+        margin-bottom: 20px;
+    }
+
+    button {
+        background-color: #333; /* Cor de fundo do botão */
+        color: white; /* Cor do texto do botão */
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &:hover {
+            background-color: #333; /* Cor de fundo do botão ao passar o mouse */
+        }
+    }
+}

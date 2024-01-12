@@ -1,0 +1,53 @@
+.app-footer {
+    .mat-toolbar {
+        display: flex;
+        width: 100%;
+        height: 132px;
+        padding: 32px 220px;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #333;
+    }
+    
+    img {
+        width: 161.839px;
+        height: 40px;
+    }
+
+    .footer-test{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    h1 {
+        color: #F5F5F5;
+        font-family: Roboto;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 24px; /* 150% */
+    }
+
+    .spacer {
+        flex: 1 1 auto;
+    }
+
+    .social-media {
+        color: #F5F5F5;
+        font-family: Roboto;
+        font-size: 16px;
+        line-height: 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+    
+        .icons {
+            display: flex;
+            gap: 16px;
+        }
+    }
+}

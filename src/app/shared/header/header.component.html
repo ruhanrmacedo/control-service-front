@@ -1,0 +1,18 @@
+<header class="app-header">
+    <mat-toolbar>
+        <img src="assets/imagens/White_logo_on_color1_322x75-PhotoRoom.png-PhotoRoom.png" alt="Logo da Macedos">
+        <span class="spacer"></span>
+        <button mat-raised-button color="#333" (click)="openUsuarioDialog()">Cadastro Usuário</button>
+
+        <ng-container *ngIf="isLoggedIn; else loginButton">
+            <button mat-button [matMenuTriggerFor]="userMenu">{{ userName }}</button>
+            <mat-menu #userMenu="matMenu">
+                <button mat-menu-item>Perfil</button>
+                <button mat-menu-item (click)="logout()">Logout</button>
+            </mat-menu>
+        </ng-container>
+        <ng-template #loginButton>
+            <button mat-stroked-button (click)="openLoginDialog()">LOGIN</button>
+        </ng-template>
+    </mat-toolbar>
+</header>

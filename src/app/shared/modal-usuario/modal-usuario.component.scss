@@ -1,0 +1,83 @@
+.modal-usuario {
+    max-width: 500px; /* Largura máxima do modal */
+    margin: auto; /* Centraliza o modal */
+    padding: 20px; /* Espaçamento interno para o conteúdo */
+    background: #fff; /* Cor de fundo branca */
+    border-radius: 8px; /* Bordas arredondadas */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+
+    h1 {
+        font-size: 1.8rem; /* Tamanho do título */
+        color: #333; /* Cor do texto */
+        margin-bottom: 20px; /* Espaço abaixo do título */
+    }
+
+    .input-field {
+        margin-bottom: 15px; /* Espaço entre os campos */
+
+        label {
+            display: block; /* Label em uma nova linha */
+            color: #666; /* Cor do texto */
+            margin-bottom: 5px; /* Espaço abaixo do label */
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%; /* Largura total dentro do modal */
+            padding: 10px; /* Espaçamento interno */
+            border: 1px solid #ccc; /* Borda sutil */
+            border-radius: 4px; /* Bordas arredondadas */
+            font-size: 1rem; /* Tamanho do texto */
+        }
+    }
+
+    .checkbox-group {
+        margin: 20px 0; /* Espaço acima e abaixo do grupo */
+        
+        p {
+            font-weight: bold; /* Título em negrito */
+            color: #333; /* Cor do texto */
+            margin-bottom: 10px; /* Espaço abaixo do título */
+        }
+
+        label {
+            display: block; /* Cada checkbox em sua própria linha */
+            margin-bottom: 5px; /* Espaço entre checkboxes */
+            cursor: pointer; /* Indica que é clicável */
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px; /* Espaço entre o checkbox e o texto */
+        }
+    }
+
+    .mat-dialog-actions {
+        display: flex; /* Layout flexível para os botões */
+        justify-content: space-between; /* Espaçar igualmente */
+        padding-top: 20px; /* Espaço acima dos botões */
+
+        button {
+            padding: 10px 15px; /* Espaçamento interno dos botões */
+            font-size: 1rem; /* Tamanho do texto do botão */
+            border-radius: 4px; /* Bordas arredondadas para o botão */
+            cursor: pointer; /* Indica que o botão é clicável */
+            border: none; /* Sem borda */
+            min-width: 120px; /* Largura mínima para os botões */
+        }
+
+        .btn-cancelar {
+            background: #f44336; /* Cor vermelha para cancelar */
+            color: white; /* Texto branco */
+        }
+
+        .btn-enviar {
+            background: #4caf50; /* Cor verde para enviar */
+            color: white; /* Texto branco */
+        }
+    }
+
+    .btn-cancelar:hover,
+    .btn-enviar:hover {
+        opacity: 0.9; /* Efeito de passar o mouse */
+    }
+}

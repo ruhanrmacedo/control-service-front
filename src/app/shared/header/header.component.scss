@@ -1,0 +1,40 @@
+.app-header {
+    .mat-toolbar {
+        background-color: #333; /* Cor de fundo escura para um look sofisticado */
+        color: white; /* Texto branco para contraste */
+        padding: 0 20px; /* Espaçamento interno mais moderado */
+        align-items: center; /* Alinhar itens verticalmente */
+        box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.25); /* Sombra sutil para profundidade */
+    }
+
+    img {
+        height: 50px; /* Altura fixa para o logo, ajuste conforme necessário */
+        margin-right: 16px; /* Espaçamento à direita do logo */
+    }
+
+    .spacer {
+        flex: 1; /* Empurra os botões para a direita */
+    }
+
+    button {
+        margin: 0 8px; /* Espaçamento entre os botões */
+        color: white; /* Cor do texto dos botões */
+    }
+
+    /* Estilo para botões primários */
+    button.mat-raised-button {
+        background-color: #005cbf; /* Cor de fundo azul para botão primário */
+        box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.25); /* Sombra para dar um efeito elevado */
+    }
+
+    /* Estilo para botões de contorno */
+    button.mat-stroked-button {
+        border-color: white; /* Bordas brancas */
+        background-color: transparent; /* Sem cor de fundo */
+    }
+
+    /* Efeitos hover para os botões */
+    button:hover {
+        opacity: 0.85; /* Leve transparência para o efeito hover */
+    }
+}
