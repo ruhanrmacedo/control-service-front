@@ -1,0 +1,34 @@
+<div class="perfil-container">
+    <h2>Perfil do Usuário</h2>
+
+    <div class="perfil-item">
+        <label>Nome:</label>
+        <span>{{ usuario.nome }}</span>
+        <button mat-button (click)="abrirModalEdicao()">Editar</button>
+    </div>
+
+    <div class="perfil-item">
+        <label>CPF:</label>
+        <span>{{ usuario.cpf }}</span>
+        <button mat-button (click)="abrirModalEdicao()">Editar</button>
+    </div>
+
+    <div class="perfil-item">
+        <label>Login:</label>
+        <span>{{ usuario.login }}</span>
+        <button mat-button (click)="abrirModalEdicao()">Editar</button>
+    </div>
+
+    <div class="perfil-item">
+        <label>Tipo de Usuário:</label>
+        <span>{{ usuario.tipoUsuario }}</span>
+    </div>
+
+    <div class="perfil-item">
+        <button mat-button (click)="abrirModalAlterarSenha()">Alterar Senha</button>
+    </div>
+
+    <div class="voltar-home">
+        <a routerLink="/">Voltar para Home</a>
+      </div>
+</div>

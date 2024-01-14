@@ -7,7 +7,7 @@
         <ng-container *ngIf="isLoggedIn; else loginButton">
             <button mat-button [matMenuTriggerFor]="userMenu">{{ userName }}</button>
             <mat-menu #userMenu="matMenu">
-                <button mat-menu-item>Perfil</button>
+                <button mat-menu-item (click)="navigateToProfile()">Perfil</button>
                 <button mat-menu-item (click)="logout()">Logout</button>
             </mat-menu>
         </ng-container>

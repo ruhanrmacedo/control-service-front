@@ -16,15 +16,17 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { CardTecnicoComponent } from './shared/card-tecnico/card-tecnico.component';
 import { CardCadastroServicosComponent } from './shared/card-cadastro-servicos/card-cadastro-servicos.component';
-import { ModalLoginComponent } from './shared/modal-login/modal-login.component';
+import { ModalLoginComponent } from './shared/modal/header/modal-login/modal-login.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { ModalUsuarioComponent } from './shared/modal-usuario/modal-usuario.component';
+import { ModalUsuarioComponent } from './shared/modal/header/modal-usuario/modal-usuario.component';
 import { CardPainelComponent } from './shared/card-painel/card-painel.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './core/services/auth.interceptor';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { MatMenuModule } from '@angular/material/menu'; 
+import { MatMenuModule } from '@angular/material/menu';
+import { PerfilComponent } from './pages/perfil/perfil.component';
+import { ModalEdicaoComponent } from './shared/modal/perfil/modal-edicao/modal-edicao.component'; 
 
 
 @NgModule({
@@ -42,6 +44,8 @@ import { MatMenuModule } from '@angular/material/menu';
     ModalLoginComponent,
     ModalUsuarioComponent,
     CardPainelComponent,
+    PerfilComponent,
+    ModalEdicaoComponent,
 
   ],
   imports: [

@@ -22,7 +22,7 @@ export class AuthService {
 
   //Buscar o nome do usuário após o login
   fetchCurrentUserName(): void {
-    this.http.get<any>('/api/usuarios/me').subscribe(response => {
+    this.http.get<any>('/api/usuarios/usuarioAtual').subscribe(response => {
       localStorage.setItem('userName', response.nome);
     })
   }

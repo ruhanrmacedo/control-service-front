@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { ModalLoginComponent } from '../modal-login/modal-login.component';
+import { ModalLoginComponent } from '../modal/header/modal-login/modal-login.component';
 import { MatDialog } from '@angular/material/dialog';
-import { ModalUsuarioComponent } from '../modal-usuario/modal-usuario.component';
+import { ModalUsuarioComponent } from '../modal/header/modal-usuario/modal-usuario.component';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -10,7 +11,7 @@ import { AuthService } from 'src/app/core/services/auth.service';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
-  constructor(public dialog: MatDialog, private authService: AuthService) { }
+  constructor(private router: Router, public dialog: MatDialog, private authService: AuthService) { }
 
   get isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
@@ -44,5 +45,9 @@ export class HeaderComponent {
       console.log('The dialog was closed'); // Lógica após fechar o diálogo, se necessário
     });
 
+  }
+
+  navigateToProfile(): void {
+    this.router.navigate(['/perfil']);
   }
 }
