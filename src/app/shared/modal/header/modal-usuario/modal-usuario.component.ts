@@ -14,6 +14,10 @@ export class ModalUsuarioComponent {
   login: string = '';
   senha: string = '';
   tipoUsuario: string = '';
+  cadastroSucesso: boolean = false;
+  erroCadastro: boolean = false;
+  mensagemErro: string = '';
+  
 
   constructor(
     private dialogRef: MatDialogRef<ModalUsuarioComponent>,
@@ -32,12 +36,28 @@ export class ModalUsuarioComponent {
     this.usuarioService.cadastrarUsuario(usuario).subscribe({
       next: (data) => {
         console.log('Usuário cadastrado com sucesso!', data);
-        this.dialogRef.close();
+        this.cadastroSucesso = true;
+        localStorage.setItem('userName', data.nome);
+        localStorage.setItem('tipoUsuario', data.tipoUsuario)
+        //this.dialogRef.close();
       },
-      error: (error) => {
-        console.error('Erro ao cadastrar usuário', error);
+      error: (erroResponse) => {
+        console.error('Erro ao cadastrar usuário', erroResponse);
+        //this.cadastroSucesso = false;
+        this.erroCadastro = true;
+        this.mensagemErro = erroResponse
+          .map((erro: { campo: any; mensagem: any; }) => `${erro.campo}: ${erro.mensagem}`)
+          .join(', ');
       }
     });
+  }
+
+  get userName(): string {
+    return this.usuarioService.getCurrentUserName();
+  }
+
+  get userTipoUsuario(): string {
+    return this.usuarioService.getTipoUsuario();
   }
 
   limparFormulario(): void {
@@ -47,4 +67,14 @@ export class ModalUsuarioComponent {
     this.senha = '';
     this.tipoUsuario = '';
   }
+
+  fecharModal(): void {
+    this.dialogRef.close();
+  }
+
+  fecharModalErro(): void {
+    this.erroCadastro = false;
+    this.mensagemErro = '';
+  }
+
 }

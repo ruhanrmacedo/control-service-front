@@ -17,8 +17,8 @@ export class HeaderComponent {
     return this.authService.isLoggedIn();
   }
 
-  get userName(): string {
-    return this.authService.getCurrentUserName();
+  get usuarioLogado(): string {
+    return this.authService.getCurrentUsuarioLogado();
   }
 
   logout(): void {
@@ -49,5 +49,10 @@ export class HeaderComponent {
 
   navigateToProfile(): void {
     this.router.navigate(['/perfil']);
+  }
+
+  get isRootOrGerente(): boolean {
+    const tipoUsuario = localStorage.getItem('tipoUsuarioLogado');
+    return tipoUsuario === 'ROOT' || tipoUsuario === 'GERENTE';
   }
 }

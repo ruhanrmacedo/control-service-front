@@ -19,8 +19,13 @@
         </form>
     </div>
 </section>
-<section class="modal-sucesso" *ngIf="loginSucesso">
+<section class="modal-mensagem modal-sucesso" *ngIf="loginSucesso">
     <h2>Login bem-sucedido!</h2>
-    <p>Bem-vindo, {{ tipoUsuario }}</p>
+    <p>Bem-vindo, {{ usuarioLogado }}</p>
     <button (click)="fecharModal()">OK</button>
+</section>
+<section class="modal-mensagem modal-erro" *ngIf="erroLogin">
+    <h2>Erro no login</h2>
+    <p>{{ mensagemErro }}</p>
+    <button (click)="fecharModalErro()">OK</button>
 </section>

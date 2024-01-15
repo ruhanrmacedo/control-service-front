@@ -13,6 +13,8 @@ export class ModalLoginComponent {
   senha: string = '';
   loginSucesso: boolean = false;
   tipoUsuario: string = '';
+  erroLogin: boolean = false;
+  mensagemErro: string = '';
 
   constructor(
     private authService: AuthService,
@@ -29,9 +31,12 @@ export class ModalLoginComponent {
       },
       error: (error) => {
         console.error('Erro no login', error);
-      },
-      complete: () => {
-        // Código a ser executado quando a Observable é concluída
+        this.erroLogin = true;
+        if (typeof error === 'string') {
+          this.mensagemErro = error;
+        } else {
+          this.mensagemErro = 'Erro desconhecido ao tentar fazer login';
+        }
       }
     });
   }
@@ -43,5 +48,14 @@ export class ModalLoginComponent {
   limparFormulario(): void {
     this.login = '';
     this.senha = '';
+  }
+
+  get usuarioLogado(): string {
+    return this.authService.getCurrentUsuarioLogado();
+  }
+
+  fecharModalErro(): void {
+    this.erroLogin = false;
+    this.mensagemErro = '';
   }
 }

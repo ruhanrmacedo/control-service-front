@@ -25,10 +25,21 @@
                 <label><input type="radio" name="tipo" [(ngModel)]="tipoUsuario" value="ROOT">Root</label>
             </div>
             <div mat-dialog-actions>
-                <button type="submit" class="btn-enviar" mat-flat-button color="primary">Enviar</button>
-                <button class="btn-limpar" mat-flat-button color="primary" (click)="limparFormulario()">Limpar</button>
+                <button type="submit" class="btn-enviar" mat-flat-button>Enviar</button>
+                <button class="btn-limpar" mat-flat-button (click)="limparFormulario()">Limpar</button>
             </div>
         </form>
     </div>
 </section>
+<section class="modal-mensagem modal-sucesso" *ngIf="cadastroSucesso">
+    <h2>Cadastro bem-sucedido!</h2>
+    <p>{{ userName }}, cadastrado com sucesso como {{ tipoUsuario }}</p>
+    <button (click)="fecharModal()">OK</button>
+</section>
+<section class="modal-mensagem modal-erro" *ngIf="erroCadastro">
+    <h2>Erro no cadastrado</h2>
+    <p>{{ mensagemErro }}</p>
+    <button (click)="fecharModalErro()">OK</button>
+</section>
+
 

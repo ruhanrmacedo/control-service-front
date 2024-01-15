@@ -8,15 +8,30 @@ import { AuthService } from 'src/app/core/services/auth.service';
   styleUrls: ['./perfil.component.scss']
 })
 export class PerfilComponent {
-  usuario: any;
-  constructor(private authService: AuthService, public dialog: MatDialog) {
-    const usuario = {
-      nome: 'Nome do Usuário',
-      cpf: '000.000.000-00',
-      login: 'usuario.login',
-      tipoUsuario: 'Tipo do Usuário'
-    };
 
+  nome: string = '';
+  cpf: string = '';
+  login: string = '';
+
+  constructor(
+    private authService: AuthService, 
+    public dialog: MatDialog) {
+  }
+
+  get usuarioLogado(): string {
+    return this.authService.getCurrentUsuarioLogado();
+  }
+
+  get cpfUsuarioLogado(): string {
+    return this.authService.getCurrentCpfUsuarioLogado();
+  }
+
+  get loginUsuarioLogado(): string {
+    return this.authService.getCurrentLoginUsuarioLogado();
+  }
+
+  get tipoUsuarioLogado(): string {
+    return this.authService.getCurrentTipoUsuarioLogado();
   }
 
   abrirModalEdicao(): void {

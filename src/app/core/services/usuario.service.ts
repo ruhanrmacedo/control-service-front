@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 
 export interface CadastroUsuario {
   nome: string;
@@ -19,6 +19,19 @@ export class UsuarioService {
   constructor(private http: HttpClient) { }
 
   cadastrarUsuario(usuario: CadastroUsuario): Observable<any> {
-    return this.http.post(this.apiUrl, usuario)
+    return this.http.post(this.apiUrl, usuario).pipe(
+      catchError(error => {
+        const erroResponse = error.error;
+        return throwError(() => erroResponse);
+      })
+    );
+  }
+
+  getCurrentUserName(): string {
+    return localStorage.getItem('userName') || '';
+  }
+
+  getTipoUsuario(): string {
+    return localStorage.getItem('tipoUsuario') || '';
   }
 }
