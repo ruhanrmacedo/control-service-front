@@ -1,0 +1,31 @@
+<section class="modal-alterar-senha">
+    <h1 mat-dialog-title>Alterar Senha</h1>
+    <div mat-dialog-content>
+        <form class="form-alterar-senha" (ngSubmit)="alterarSenha()">
+            <div class="input-field">
+                <label for="novaSenha">Nova Senha:</label>
+                <input type="password" id="novaSenha" [(ngModel)]="novaSenha" name="novaSenha" required/>
+            </div>
+
+            <div class="input-field">
+                <label for="confirmarSenha">Repetir Senha:</label>
+                <input type="password" id="confirmarSenha" [(ngModel)]="confirmarSenha" name="confirmarSenha" required/>
+            </div>
+
+            <div mat-dialog-actions>
+                <button type="submit" class="btn-alterar" mat-flat-button>Alterar Senha</button>
+                <button class="btn-limpar" mat-flat-button (click)="limparFormulario()">Limpar</button>
+            </div>
+        </form>
+    </div>
+</section>
+<section class="modal-mensagem modal-sucesso" *ngIf="alterarSenhaSucesso">
+    <h2>Login bem-sucedido!</h2>
+    <p>Bem-vindo, </p>
+    <button (click)="fecharModal()">OK</button>
+</section>
+<section class="modal-mensagem modal-erro" *ngIf="erroSenha">
+    <h2>Erro ao alterar senha</h2>
+    <p>{{ mensagemErro }}</p>
+    <button (click)="fecharModalErro()">OK</button>
+</section>

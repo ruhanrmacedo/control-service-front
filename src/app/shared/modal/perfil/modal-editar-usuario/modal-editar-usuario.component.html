@@ -1,0 +1,45 @@
+<section class="modal-editar-usuario">
+    <h1 mat-dialog-title>Editar Usuário</h1>
+    <div mat-dialog-content>
+      <div class="modal-editar-container">
+  
+        <div class="modal-editar-item">
+          <label>Id Usuário:</label>
+          <span>{{ data.usuarioId }}</span>
+        </div>
+  
+        <div class="modal-editar-item">
+          <label>Nome:</label>
+          <input type="text" [(ngModel)]="data.nome" />
+        </div>
+  
+        <div class="modal-editar-item">
+          <label>CPF:</label>
+          <input type="text" [(ngModel)]="data.cpf" />
+        </div>
+  
+        <div class="modal-editar-item">
+          <label>Login:</label>
+          <input type="text" [(ngModel)]="data.login" />
+        </div>
+  
+        <div class="modal-editar-item">
+          <label>Tipo de Usuário:</label>
+          <span>{{ data.tipoUsuario }}</span>
+        </div>
+  
+        <button mat-button (click)="salvarAlteracoes()">Salvar</button>
+        <button mat-button (click)="fecharModal()">Cancelar</button>
+      </div>
+    </div>
+  </section>
+<section class="modal-mensagem modal-sucesso" *ngIf="editadoComSucesso">
+    <h2>Edição bem-sucedida!</h2>
+    <p>{{ data.nome }}, editado com sucesso</p>
+    <button (click)="fecharModal()">OK</button>
+</section>
+<section class="modal-mensagem modal-erro" *ngIf="erroEditar">
+    <h2>Erro no cadastrado</h2>
+    <p>{{ mensagemErro }}</p>
+    <button (click)="fecharModalErro()">OK</button>
+</section>

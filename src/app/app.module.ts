@@ -27,6 +27,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatMenuModule } from '@angular/material/menu';
 import { PerfilComponent } from './pages/perfil/perfil.component';
 import { ModalEdicaoComponent } from './shared/modal/perfil/modal-edicao/modal-edicao.component'; 
+import { MatTableModule } from '@angular/material/table';
+import { ModalAlterarSenhaComponent } from './shared/modal/perfil/modal-alterar-senha/modal-alterar-senha.component';
+import { ModalEditarUsuarioComponent } from './shared/modal/perfil/modal-editar-usuario/modal-editar-usuario.component'; 
 
 
 @NgModule({
@@ -46,6 +49,8 @@ import { ModalEdicaoComponent } from './shared/modal/perfil/modal-edicao/modal-e
     CardPainelComponent,
     PerfilComponent,
     ModalEdicaoComponent,
+    ModalAlterarSenhaComponent,
+    ModalEditarUsuarioComponent,
 
   ],
   imports: [
@@ -58,7 +63,8 @@ import { ModalEdicaoComponent } from './shared/modal/perfil/modal-edicao/modal-e
     MatDialogModule,
     FormsModule,
     HttpClientModule,
-    MatMenuModule
+    MatMenuModule,
+    MatTableModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

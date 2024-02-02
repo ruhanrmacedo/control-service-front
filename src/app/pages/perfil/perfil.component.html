@@ -1,25 +1,35 @@
 <div class="perfil-page-container">
-    <app-banner src="assets/imagens/bannerPerfil.png" alt="Banner perfil Macedos">
-    </app-banner>
+
     <div class="perfil-container">
         <h2>Perfil do Usuário</h2>
 
         <div class="perfil-item">
+            <label>Id Usuário:</label>
+            <span>{{ usuarioId }}</span>
+        </div>
+
+        <div class="perfil-item">
             <label>Nome:</label>
-            <span>{{ usuarioLogado }}</span>
-            <button mat-button (click)="abrirModalEdicao()">Editar</button>
+            <input type="text" [(ngModel)]="nome" [disabled]="!editStates.nome" />
+            <button mat-button (click)="toggleEdit('nome')">Editar</button>
+            <button mat-button *ngIf="editStates.nome" (click)="salvarAlteracoes('nome')">Salvar</button>
+            <button mat-button *ngIf="editStates.nome" (click)="cancelarAlteracoes('nome')">Cancelar</button>
         </div>
 
         <div class="perfil-item">
             <label>CPF:</label>
-            <span>{{ cpfUsuarioLogado }}</span>
-            <button mat-button (click)="abrirModalEdicao()">Editar</button>
+            <input type="text" [(ngModel)]="cpf" [disabled]="!editStates.cpf" />
+            <button mat-button (click)="toggleEdit('cpf')">Editar</button>
+            <button mat-button *ngIf="editStates.cpf" (click)="salvarAlteracoes('cpf')">Salvar</button>
+            <button mat-button *ngIf="editStates.cpf" (click)="cancelarAlteracoes('cpf')">Cancelar</button>
         </div>
 
         <div class="perfil-item">
             <label>Login:</label>
-            <span>{{ loginUsuarioLogado }}</span>
-            <button mat-button (click)="abrirModalEdicao()">Editar</button>
+            <input type="text" [(ngModel)]="login" [disabled]="!editStates.login" />
+            <button mat-button (click)="toggleEdit('login')">Editar</button>
+            <button mat-button *ngIf="editStates.login" (click)="salvarAlteracoes('login')">Salvar</button>
+            <button mat-button *ngIf="editStates.login" (click)="cancelarAlteracoes('login')">Cancelar</button>
         </div>
 
         <div class="perfil-item">
@@ -33,7 +43,62 @@
 
         <div class="links">
             <a routerLink="/">Voltar para Home</a>
-            <a routerLink="/">Visualizar outros perfis</a>
+            <button (click)="toggleTabelaUsuarios()">Visualizar outros perfis</button>
         </div>
+    </div>
+
+    <div class="tabela-usuarios-container" *ngIf="mostrarTabelaUsuarios">
+        <table mat-table [dataSource]="usuarios" class="mat-elevation-z8">
+
+            <!-- Coluna ID -->
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef> ID </th>
+                <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+            </ng-container>
+
+            <!-- Coluna Nome -->
+            <ng-container matColumnDef="nome">
+                <th mat-header-cell *matHeaderCellDef> Nome </th>
+                <td mat-cell *matCellDef="let element"> {{element.nome}} </td>
+            </ng-container>
+
+            <!-- Coluna CPF -->
+            <ng-container matColumnDef="cpf">
+                <th mat-header-cell *matHeaderCellDef> CPF </th>
+                <td mat-cell *matCellDef="let element"> {{element.cpf}} </td>
+            </ng-container>
+
+            <!-- Coluna Login -->
+            <ng-container matColumnDef="login">
+                <th mat-header-cell *matHeaderCellDef> Login </th>
+                <td mat-cell *matCellDef="let element"> {{element.login}} </td>
+            </ng-container>
+
+            <!-- Coluna Tipo de Usuário -->
+            <ng-container matColumnDef="tipoUsuario">
+                <th mat-header-cell *matHeaderCellDef> Tipo de Usuário </th>
+                <td mat-cell *matCellDef="let element"> {{element.tipoUsuario}} </td>
+            </ng-container>
+
+            <!-- Coluna Data de Ativação -->
+            <ng-container matColumnDef="dataAtivacao">
+                <th mat-header-cell *matHeaderCellDef> Data de Ativação </th>
+                <td mat-cell *matCellDef="let element"> {{element.dataAtivacao | date}} </td>
+            </ng-container>
+
+            <!-- Coluna Data de Inativação -->
+            <ng-container matColumnDef="dataInativacao">
+                <th mat-header-cell *matHeaderCellDef> Data de Inativação </th>
+                <td mat-cell *matCellDef="let element"> {{element.dataInativacao | date}} </td>
+            </ng-container>
+
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
+                (click)="selecionarUsuario(row)"
+                [class.linha-selecionada]="row === usuarioSelecionado">
+            </tr>         
+        </table>
+
+        <button class="btn-editar" mat-button (click)="editarUsuario()">Editar</button>
+
     </div>
 </div>

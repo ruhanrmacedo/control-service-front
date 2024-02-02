@@ -1,0 +1,102 @@
+/* Estilização do modal de editar usuário */
+.modal-editar-usuario {
+    /* Título do modal */
+    .mat-dialog-title {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    /* Container principal do modal */
+    .modal-editar-container {
+        display: flex;
+        flex-direction: column;
+        width: 600px; // Aumentando a largura do modal
+
+        /* Estilização de cada item dentro do modal */
+        .modal-editar-item {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+
+            /* Estilização do label */
+            label {
+                font-weight: bold;
+                margin-right: 15px;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+
+            /* Estilização dos inputs e spans */
+            input, span {
+                flex-grow: 1; // Garantindo que todos os inputs tenham o mesmo tamanho
+                padding: 6px 12px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                width: 100%; // Garantindo que os inputs ocupem todo o espaço disponível
+            }
+
+            /* Estilização específica para span */
+            span {
+                background-color: #f8f8f8;
+            }
+        }
+
+        /* Estilização dos botões */
+        button {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+
+            &:not(:last-child) {
+                margin-right: 10px;
+            }
+
+            /* Efeito ao passar o mouse sobre os botões */
+            &:hover {
+                background-color: darken(#333, 10%);
+            }
+        }
+    }
+}
+
+/* Estilização dos modais de mensagem (sucesso e erro) */
+.modal-mensagem {
+    background-color: #f8f8f8;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    /* Título do modal de mensagem */
+    h2 {
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    /* Parágrafo do modal de mensagem */
+    p {
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    /* Botões do modal de mensagem */
+    button {
+        background-color: #333;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        /* Efeito ao passar o mouse sobre os botões */
+        &:hover {
+            background-color: darken(#333, 10%);
+        }
+    }
+}
