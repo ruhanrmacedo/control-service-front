@@ -1,4 +1,5 @@
 import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 
@@ -40,7 +41,10 @@ export class UsuarioService {
   }
 
   editarUsuario(id: number, dadosAtualizados: any): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/editarUsuario/${id}`, dadosAtualizados);
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+    return this.http.put<void>(`${this.apiUrl}/editarUsuario/${id}`, dadosAtualizados, { headers });
   }
 
   listarTodosUsuarios(): Observable<any> {
