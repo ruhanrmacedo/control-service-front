@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
+import { Usuario } from '../types/type';
 
 @Injectable({
   providedIn: 'root'
@@ -83,19 +84,18 @@ export class AuthService {
     localStorage.setItem('loginUsuarioLogado', usuario.login);
   }
 
-  listarTodosUsuarios(): Observable<any> {
+  listarTodosUsuarios(): Observable<{ content: Usuario[] }> {
     return this.http.get<any>('/api/usuarios/listarTodosUsuarios');
   }
 
-  alterarSenha(dados: { novaSenha: string, confirmarSenha: string }): Observable<void> {
-    const url = '/api/usuarios/alterarSenha'; 
-  
-    // Verifique se a nova senha e a confirmação coincidem antes de fazer a solicitação
-    if (dados.novaSenha !== dados.confirmarSenha) {
-      return throwError({ message: 'As senhas não coincidem' });
-    }
-  
-    return this.http.put<void>(url, dados);
+  alterarSenha(dados: { id: number, novaSenha: string, confirmarSenha: string }): Observable<void> {
+    const params = new HttpParams()
+    .set('novaSenha', dados.novaSenha)
+    .set('confirmarSenha', dados.confirmarSenha);
+    
+    const url = `/api/usuarios/alterarSenha?id=${dados.id}`; 
+
+    return this.http.put<void>(url, {}, {params });
   }
 
 

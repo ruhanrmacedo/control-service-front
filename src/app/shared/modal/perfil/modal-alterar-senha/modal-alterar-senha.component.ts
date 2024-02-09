@@ -21,14 +21,20 @@ export class ModalAlterarSenhaComponent {
     private authService: AuthService
   ) { }
 
-  limparFormulario(): void {
-    this.novaSenha = '';
-    this.confirmarSenha = '';
-  }
+  alterarSenha(event: Event): void {
+    event.preventDefault();
 
-  alterarSenha(): void {
     const usuarioId = this.authService.getCurrentUsuarioId();
     console.log('ID do Usuário:', usuarioId);
+
+    console.log('Nova Senha:', this.novaSenha);
+    console.log('Confirmar Senha:', this.confirmarSenha);
+
+    if (this.novaSenha !== this.confirmarSenha) {
+      this.erroSenha = true;
+      this.mensagemErro = 'As senhas não coincidem!';
+      return;
+    }
 
     if (usuarioId) {
       const dadosAtualizados = {
@@ -49,6 +55,11 @@ export class ModalAlterarSenhaComponent {
       )
     }
 
+  }
+
+  limparFormulario(): void {
+    this.novaSenha = '';
+    this.confirmarSenha = '';
   }
 
   fecharModal(): void {

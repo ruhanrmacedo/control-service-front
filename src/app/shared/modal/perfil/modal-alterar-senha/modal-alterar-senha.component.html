@@ -1,7 +1,7 @@
 <section class="modal-alterar-senha">
     <h1 mat-dialog-title>Alterar Senha</h1>
     <div mat-dialog-content>
-        <form class="form-alterar-senha" (ngSubmit)="alterarSenha()">
+        <form class="form-alterar-senha" (ngSubmit)="alterarSenha($event)">
             <div class="input-field">
                 <label for="novaSenha">Nova Senha:</label>
                 <input type="password" id="novaSenha" [(ngModel)]="novaSenha" name="novaSenha" required/>
@@ -14,7 +14,7 @@
 
             <div mat-dialog-actions>
                 <button type="submit" class="btn-alterar" mat-flat-button>Alterar Senha</button>
-                <button class="btn-limpar" mat-flat-button (click)="limparFormulario()">Limpar</button>
+                <button type="button" class="btn-limpar" mat-flat-button (click)="limparFormulario()">Limpar</button>
             </div>
         </form>
     </div>
