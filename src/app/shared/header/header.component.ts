@@ -11,7 +11,11 @@ import { Router } from '@angular/router';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
-  constructor(private router: Router, public dialog: MatDialog, private authService: AuthService) { }
+  constructor (
+    private router: Router, 
+    public dialog: MatDialog, 
+    private authService: AuthService
+  ) { }
 
   get isLoggedIn(): boolean {
     return this.authService.isLoggedIn();

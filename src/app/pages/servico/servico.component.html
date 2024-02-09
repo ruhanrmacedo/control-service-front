@@ -1,0 +1,23 @@
+<div class="servico-page-container">
+    <div class="servico-container">
+        <h2>Cadastro de Novo Serviço</h2>
+        <form [formGroup]="servicoForm" (ngSubmit)="onSubmit()">
+            <label for="descricao">Descrição</label>
+            <input id="descricao" type="text" formControlName="descricao">
+
+            <label for="valorClaro">Valor Claro</label>
+            <input id="valorClaro" type="text" formControlName="valorClaro">
+
+            <label for="valorMacedo">Valor Macedo</label>
+            <input id="valorMacedo" type="text" formControlName="valorMacedo">
+
+            <label for="tipoServico">Tipo de Serviço</label>
+            <select id="tipoServico" formControlName="tipoServico">
+                <option *ngFor="let tipo of tiposServico" [value]="tipo">{{tipo}}</option>
+            </select>
+
+            <button type="submit" [disabled]="!servicoForm.valid">Cadastrar Serviço</button>
+        </form>
+
+    </div>
+</div>

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-card-servicos',
@@ -6,5 +7,10 @@ import { Component } from '@angular/core';
   styleUrls: ['./card-servicos.component.scss'],
 })
 export class CardServicosComponent {
+  constructor ( private router: Router ) {}
 
+  navigateToRegistrarServico(): void {
+    this.router.navigate(['/registrar-servicos']);
+  }
 }
+ 

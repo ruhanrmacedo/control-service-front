@@ -29,7 +29,11 @@ import { PerfilComponent } from './pages/perfil/perfil.component';
 import { ModalEdicaoComponent } from './shared/modal/perfil/modal-edicao/modal-edicao.component'; 
 import { MatTableModule } from '@angular/material/table';
 import { ModalAlterarSenhaComponent } from './shared/modal/perfil/modal-alterar-senha/modal-alterar-senha.component';
-import { ModalEditarUsuarioComponent } from './shared/modal/perfil/modal-editar-usuario/modal-editar-usuario.component'; 
+import { ModalEditarUsuarioComponent } from './shared/modal/perfil/modal-editar-usuario/modal-editar-usuario.component';
+import { TecnicoComponent } from './pages/tecnico/tecnico.component';
+import { ServicoComponent } from './pages/servico/servico.component';
+import { RegistrarServicosComponent } from './pages/registrar-servicos/registrar-servicos.component';
+import { ReactiveFormsModule } from '@angular/forms'; 
 
 
 @NgModule({
@@ -51,6 +55,9 @@ import { ModalEditarUsuarioComponent } from './shared/modal/perfil/modal-editar-
     ModalEdicaoComponent,
     ModalAlterarSenhaComponent,
     ModalEditarUsuarioComponent,
+    TecnicoComponent,
+    ServicoComponent,
+    RegistrarServicosComponent,
 
   ],
   imports: [
@@ -64,7 +71,8 @@ import { ModalEditarUsuarioComponent } from './shared/modal/perfil/modal-editar-
     FormsModule,
     HttpClientModule,
     MatMenuModule,
-    MatTableModule
+    MatTableModule,
+    ReactiveFormsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
