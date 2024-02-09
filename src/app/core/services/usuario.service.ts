@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 
@@ -39,8 +39,13 @@ export class UsuarioService {
     return this.http.get(`${this.apiUrl}/${id}`);
   }
 
-  editarUsuario(id: number, dadosAtualizados: any): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/editarUsuario/${id}`, dadosAtualizados);
+  editarUsuario(dadosAtualizados: any): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+  
+    // Certifique-se de que a URL está correta conforme a expectativa da sua API.
+    return this.http.put<any>(`${this.apiUrl}/editarUsuario`, dadosAtualizados, { headers });
   }
 
   listarTodosUsuarios(): Observable<any> {

@@ -24,16 +24,18 @@ export class ModalEditarUsuarioComponent {
 
   salvarAlteracoes(): void {
     const dadosAtualizados = {
+      id: this.data.usuarioId,
       nome: this.data.nome,
       cpf: this.data.cpf,
       login: this.data.login,
     };
-    this.usuarioService.editarUsuario(this.data.usuarioId, dadosAtualizados)
+    this.usuarioService.editarUsuario(dadosAtualizados)
     .subscribe({
       next: (res) => {
         // Tratar sucesso
         this.editadoComSucesso = true;
         alert('Usuário atualizado com sucesso');
+        this.dialogRef.close(true);
       },
       error: (erro) => {
         // Tratar erros
