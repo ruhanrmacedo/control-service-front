@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ServicoService } from 'src/app/core/services/servico.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-servico',
@@ -10,8 +11,10 @@ import { ServicoService } from 'src/app/core/services/servico.service';
 export class ServicoComponent {
   servicoForm: FormGroup;
   tiposServico: any[] = [];
+  servicos: any[] = [];
+  displayedColumns: string[] = ['idServico', 'descricao', 'tipoServico']; 
   
-  constructor(private fb: FormBuilder, private servicoService: ServicoService) {
+  constructor(private changeDetectorRef: ChangeDetectorRef, private fb: FormBuilder, private servicoService: ServicoService) {
     this.servicoForm = this.fb.group({
       descricao: ['', Validators.required],
       valorClaro: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
@@ -31,12 +34,30 @@ export class ServicoComponent {
     });
   }
 
+  carregarServicos(): void {
+    this.servicoService.listarServicos().subscribe({
+      next: (data) => {
+        console.log('Dados recebidos:', data);
+        this.servicos = data.content;
+        console.log('Serviços após atribuição:', this.servicos);
+        this.changeDetectorRef.detectChanges();
+      },
+      error: (err) => console.error('Erro ao carregar serviços', err)
+    });
+  }
+
+  ngOnInit(): void {
+    this.carregarServicos();
+  }
+
   onSubmit(): void {
     if (this.servicoForm.valid) {
       this.servicoService.cadastrarServico(this.servicoForm.value).subscribe({
         next: (res) => {
           console.log('Serviço cadastrado com sucesso!', res);
-          // Implementar ações após o sucesso, como limpar o formulário ou mostrar uma mensagem
+          alert('Serviço cadastrado com sucesso!')
+          this.servicoForm.reset(); // Limpar o formulário após o cadastro
+          this.carregarServicos(); // Recarrega os serviços para atualizar a tabela
         },
         error: (err) => {
           console.error('Erro ao cadastrar serviço', err);

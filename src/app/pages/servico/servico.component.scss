@@ -1,0 +1,92 @@
+.servico-page-container {
+    min-height: 100vh;
+    padding: 60px 0 100px;
+
+    .servico-container {
+        position: relative;
+        max-width: 1000px;
+        margin: auto;
+        padding: 25px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        background-color: rgba(249, 249, 249, 0.8);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+
+            .input-group {
+                display: flex;
+                justify-content: space-between;
+
+                >* {
+                    width: calc(20% - 10px); // Subtrai a margem entre os inputs
+                }
+            }
+
+            label {
+                display: block;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+
+            input,
+            select {
+                width: 100%;
+                padding: 6px 12px;
+                margin-bottom: 20px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+
+            button[type="submit"] {
+                width: max-content;
+                margin: 20px auto;
+                padding: 10px 15px;
+                background-color: #0056b3;
+                color: #ffffff;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+
+                &:hover {
+                    background-color: #004494;
+                }
+            }
+        }
+    }
+
+    // Estilização específica para a tabela
+    .mat-elevation-z8 {
+        width: 100%;
+        margin-top: 30px;
+        overflow-x: auto; // Permite rolagem se a tabela for muito larga
+
+        table {
+            width: 100%;
+            border-collapse: collapse; // Remove espaços entre as células
+
+            th {
+                background-color: #f5f5f5; // Fundo dos cabeçalhos
+                color: #333;
+                padding: 10px;
+                text-align: left;
+            }
+
+            td {
+                padding: 10px;
+                border-top: 1px solid #ddd; // Linha divisória sutil
+            }
+
+            tr:nth-child(even) {
+                background-color: #f9f9f9; // Zebra striping para linhas
+            }
+        }
+    }
+}

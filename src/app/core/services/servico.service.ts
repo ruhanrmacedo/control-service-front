@@ -1,12 +1,13 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Servico } from '../types/type';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ServicoService {
-  private apiUrl = 'http://localhost:8080/api/servicos';
+  private apiUrl = 'http://localhost:8081/api/servicos';
 
   constructor( private http: HttpClient ) { }
 
@@ -23,6 +24,11 @@ export class ServicoService {
 
   getTiposServico(): Observable<any[]> {
     const headers = this.getHeaders();
-    return this.http.get<any[]>(`${this.apiUrl}/tipos-servico`, { headers });
+    return this.http.get<any[]>(`${this.apiUrl}/tipo-servico`, { headers });
+  }
+
+  listarServicos(): Observable<{ content: Servico[] }> {
+    const headers = this.getHeaders();
+    return this.http.get<any>(`${this.apiUrl}/listarServicos`, { headers });
   }
 }

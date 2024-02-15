@@ -9,3 +9,12 @@ export interface Usuario {
 
 export type EditableField = 'nome' | 'cpf' | 'login';
 
+export interface Servico {
+  idServico: number;
+  descricao: string;
+  valorClaro: number;
+  valorMacedos: number;
+  tipoServico: string;
+
+}
+
