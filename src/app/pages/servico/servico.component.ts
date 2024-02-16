@@ -13,6 +13,8 @@ export class ServicoComponent {
   tiposServico: any[] = [];
   servicos: any[] = [];
   displayedColumns: string[] = ['idServico', 'descricao', 'tipoServico']; 
+  displayedColumnsGerente: string[] = ['idServico', 'descricao', 'tipoServico', 'valorClaro', 'valorMacedo']; 
+  servicosGerente: any[] = [];
   
   constructor(private changeDetectorRef: ChangeDetectorRef, private fb: FormBuilder, private servicoService: ServicoService) {
     this.servicoForm = this.fb.group({
@@ -46,8 +48,21 @@ export class ServicoComponent {
     });
   }
 
+  carregarServicosGerente(): void {
+    this.servicoService.listarServicosGerente().subscribe({
+      next: (data) => {
+        console.log('Dados Serviço Gerente recebidos:', data);
+        this.servicosGerente = data.content;
+        console.log('Serviços Gerente após atribuição:', this.servicosGerente);
+        this.changeDetectorRef.detectChanges();
+      },
+      error: (err) => console.error('Erro ao carregar serviços', err)
+    });
+  }
+
   ngOnInit(): void {
     this.carregarServicos();
+    this.carregarServicosGerente();
   }
 
   onSubmit(): void {

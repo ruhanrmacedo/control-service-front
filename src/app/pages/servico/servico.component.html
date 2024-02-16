@@ -2,26 +2,24 @@
     <div class="servico-container">
         <h2>Cadastro de Novo Serviço</h2>
         <form [formGroup]="servicoForm" (ngSubmit)="onSubmit()">
-            <label for="descricao">Descrição</label>
-            <input id="descricao" type="text" formControlName="descricao">
-            
-            <div class="input-group">
-                <div>
-                    <label for="valorClaro">Valor Claro</label>
-                    <input id="valorClaro" type="text" formControlName="valorClaro">
-                </div>
-                <div>
-                    <label for="valorMacedo">Valor Macedo</label>
-                    <input id="valorMacedo" type="text" formControlName="valorMacedo">
-                </div>
-                <div>
-                    <label for="tipoServico">Tipo de Serviço</label>
-                    <select id="tipoServico" formControlName="tipoServico">
-                        <option *ngFor="let tipo of tiposServico" [value]="tipo">{{tipo}}</option>
-                    </select>
-                </div>
+            <div class="form-field">
+                <label for="descricao">Descrição</label>
+                <input id="descricao" type="text" formControlName="descricao">
             </div>
-
+            <div class="form-field">
+                <label for="valorClaro">Valor Claro</label>
+                <input id="valorClaro" type="text" formControlName="valorClaro">
+            </div>
+            <div class="form-field">
+                <label for="valorMacedo">Valor Macedo</label>
+                <input id="valorMacedo" type="text" formControlName="valorMacedo">
+            </div>
+            <div class="form-field">
+                <label for="tipoServico">Tipo de Serviço</label>
+                <select id="tipoServico" formControlName="tipoServico">
+                    <option *ngFor="let tipo of tiposServico" [value]="tipo">{{tipo}}</option>
+                </select>
+            </div>
             <button type="submit" [disabled]="!servicoForm.valid">Cadastrar Serviço</button>
         </form>
     </div>
@@ -50,6 +48,47 @@
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <!-- Linhas da Tabela -->
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            
+        </table>
+    </div>
+
+
+    <div class="tabela-listar-servicos">
+        <table mat-table [dataSource]="servicosGerente" class="mat-elevation-z8">
+
+            <!-- Coluna ID -->
+            <ng-container matColumnDef="idServico">
+                <th mat-header-cell *matHeaderCellDef> ID </th>
+                <td mat-cell *matCellDef="let element"> {{element.idServico}} </td>
+            </ng-container>
+
+            <!-- Coluna Descrição -->
+            <ng-container matColumnDef="descricao">
+                <th mat-header-cell *matHeaderCellDef> Descrição </th>
+                <td mat-cell *matCellDef="let element"> {{element.descricao}} </td>
+            </ng-container>
+
+            <!-- Coluna Tipo Serviço -->
+            <ng-container matColumnDef="tipoServico">
+                <th mat-header-cell *matHeaderCellDef> Tipo Serviço </th>
+                <td mat-cell *matCellDef="let element"> {{element.tipoServico}} </td>
+            </ng-container>
+
+            <!-- Coluna Valor Claro -->
+            <ng-container matColumnDef="valorClaro">
+                <th mat-header-cell *matHeaderCellDef> Valor Claro </th>
+                <td mat-cell *matCellDef="let element"> {{element.valorClaro}} </td>
+            </ng-container>
+
+            <!-- Coluna Valor Macedo -->
+            <ng-container matColumnDef="valorMacedo">
+                <th mat-header-cell *matHeaderCellDef> Valor Macedo </th>
+                <td mat-cell *matCellDef="let element"> {{element.valorMacedo}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsGerente"></tr>
+            <!-- Linhas da Tabela -->
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsGerente;"></tr>
             
         </table>
     </div>

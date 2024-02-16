@@ -4,6 +4,8 @@ export interface Usuario {
     cpf: string;
     login: string;
     tipoUsuario: string;
+    dataAtivacao: Date;
+    dataInativacao: Date;
     // Adicione outros campos conforme necessário
   }
 
@@ -13,8 +15,9 @@ export interface Servico {
   idServico: number;
   descricao: string;
   valorClaro: number;
-  valorMacedos: number;
+  valorMacedo: number;
   tipoServico: string;
 
 }
+
 

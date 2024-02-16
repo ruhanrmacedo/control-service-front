@@ -31,4 +31,9 @@ export class ServicoService {
     const headers = this.getHeaders();
     return this.http.get<any>(`${this.apiUrl}/listarServicos`, { headers });
   }
+
+  listarServicosGerente(): Observable<{ content: Servico[] }> {
+    const headers = this.getHeaders();
+    return this.http.get<any>(`${this.apiUrl}/listarServicosGerente`, { headers });
+  }
 }

@@ -26,6 +26,7 @@ export class PerfilComponent {
   element: any;
 
   constructor(
+    private changeDetectorRef: ChangeDetectorRef,
     private authService: AuthService,
     private usuarioService: UsuarioService,
     public dialog: MatDialog,
@@ -79,8 +80,14 @@ export class PerfilComponent {
   }
 
   carregarUsuarios(): void {
-    this.authService.listarTodosUsuarios().subscribe(data => {
-      this.usuarios = data.content;
+    this.authService.listarTodosUsuarios().subscribe({
+      next: (data) => {
+        console.log('Dados recebidos:', data);
+        this.usuarios = data.content;
+        console.log('Usuarios após atribuição:', this.usuarios);
+        this.changeDetectorRef.detectChanges();
+    },
+    error: (err) => console.error('Erro ao carregar tipos de usuarios', err)  
     });
   }
 
