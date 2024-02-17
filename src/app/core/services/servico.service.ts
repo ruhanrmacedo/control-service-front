@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Servico } from '../types/type';
+import { Servico, ServicoGerente } from '../types/type';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +32,7 @@ export class ServicoService {
     return this.http.get<any>(`${this.apiUrl}/listarServicos`, { headers });
   }
 
-  listarServicosGerente(): Observable<{ content: Servico[] }> {
+  listarServicosGerente(): Observable<{ content: ServicoGerente[] }> {
     const headers = this.getHeaders();
     return this.http.get<any>(`${this.apiUrl}/listarServicosGerente`, { headers });
   }

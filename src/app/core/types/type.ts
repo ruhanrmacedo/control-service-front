@@ -14,10 +14,16 @@ export type EditableField = 'nome' | 'cpf' | 'login';
 export interface Servico {
   idServico: number;
   descricao: string;
+
+}
+
+export interface ServicoGerente {
+  idServico: number;
+  descricao: string;
   valorClaro: number;
   valorMacedo: number;
   tipoServico: string;
-
+  ativo: boolean;
 }
 
 

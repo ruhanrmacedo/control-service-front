@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ServicoService } from 'src/app/core/services/servico.service';
 import { ChangeDetectorRef } from '@angular/core';
+import { Servico, ServicoGerente } from 'src/app/core/types/type';
 
 @Component({
   selector: 'app-servico',
@@ -11,10 +12,11 @@ import { ChangeDetectorRef } from '@angular/core';
 export class ServicoComponent {
   servicoForm: FormGroup;
   tiposServico: any[] = [];
-  servicos: any[] = [];
+  servicos: Servico[] = [];
   displayedColumns: string[] = ['idServico', 'descricao', 'tipoServico']; 
-  displayedColumnsGerente: string[] = ['idServico', 'descricao', 'tipoServico', 'valorClaro', 'valorMacedo']; 
-  servicosGerente: any[] = [];
+  servicosGerente: ServicoGerente[] = [];
+  displayedColumnsGerente: string[] = ['idServico', 'descricao', 'valorClaro', 'valorMacedo', 'tipoServico', 'ativo']; 
+  
   
   constructor(private changeDetectorRef: ChangeDetectorRef, private fb: FormBuilder, private servicoService: ServicoService) {
     this.servicoForm = this.fb.group({
@@ -56,7 +58,10 @@ export class ServicoComponent {
         console.log('Serviços Gerente após atribuição:', this.servicosGerente);
         this.changeDetectorRef.detectChanges();
       },
-      error: (err) => console.error('Erro ao carregar serviços', err)
+      error: (err) => {
+        console.error('Erro ao carregar serviços', err);
+        console.log(err); // Adicione isto para ver o erro detalhado
+      }
     });
   }
 
