@@ -60,9 +60,13 @@ header, footer {
         }
 
         // Botão para alterar senha e botão para editar
-        .btn-alterar-senha, .btn-editar {
-            display: block;
-            margin: 30px auto;
+        .botoes-container {
+            display: flex;
+            justify-content: center; // Alinha os itens horizontalmente ao centro
+            gap: 10px; // Adiciona espaço entre os botões
+        }
+
+        .btn-editar, .btn-excluir {
             background-color: #333;
             color: #f9f9f9;
         }

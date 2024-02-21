@@ -1,5 +1,5 @@
 <div class="servico-page-container">
-    <div class="servico-container">
+    <div class="servico-container" *ngIf="isUserGerenteOuRoot">
         <h2>Cadastro de Novo Serviço</h2>
         <form [formGroup]="servicoForm" (ngSubmit)="onSubmit()">
             <div class="form-field">
@@ -24,7 +24,7 @@
         </form>
     </div>
 
-    <div class="tabela-listar-servicos">
+    <div class="tabela-listar-servicos" *ngIf="!isUserGerenteOuRoot">
         <table mat-table [dataSource]="servicos" class="mat-elevation-z8">
 
             <!-- Coluna ID -->
@@ -53,8 +53,8 @@
     </div>
 
 
-    <div class="tabela-listar-servicos">
-        <table mat-table [dataSource]="servicosGerente" class="mat-elevation-z8">
+    <div class="tabela-listar-servicos" *ngIf="isUserGerenteOuRoot">
+        <table  mat-table [dataSource]="servicosGerente" class="mat-elevation-z8">
 
             <!-- Coluna ID -->
             <ng-container matColumnDef="idServico">
@@ -94,9 +94,21 @@
 
             <tr mat-header-row *matHeaderRowDef="displayedColumnsGerente"></tr>
             <!-- Linhas da Tabela -->
-            <tr mat-row *matRowDef="let row; columns: displayedColumnsGerente;"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsGerente;" 
+                (click)="selecionarServico(row)"
+                [class.linha-selecionada]="row === servicoSelecionado">
+            </tr>
 
         </table>
+
+        <div class="botoes-container">
+            <button class="btn-editar" mat-button (click)="editarServico()">Editar</button>
+            <button class="btn-excluir" mat-button (click)="excluirServico()">Excluir</button>
+        </div>
+    </div>
+
+    <div class="links">
+        <a routerLink="/">Voltar para Home</a>
     </div>
 
 </div>

@@ -30,14 +30,17 @@
                 color: #333;
             }
 
-            input, select, button[type="submit"] {
+            input,
+            select,
+            button[type="submit"] {
                 padding: 6px 12px;
                 border: 1px solid #ccc;
                 border-radius: 4px;
                 margin-bottom: 20px;
             }
 
-            input[type="text"], select {
+            input[type="text"],
+            select {
                 width: 100%;
             }
 
@@ -50,6 +53,7 @@
                 border-radius: 4px;
                 justify-self: center; // Centraliza o botão na coluna
                 grid-column: 1 / -1; // Faz o botão ocupar todas as colunas
+
                 &:hover {
                     background-color: darken(#333, 10%);
                 }
@@ -67,12 +71,14 @@
         border-radius: 10px;
         background-color: rgba(249, 249, 249, 0.8);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
         table {
             width: 100%;
             margin: 40px auto;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
-            th, td {
+            th,
+            td {
                 padding: 8px 16px;
                 border-bottom: 1px solid #ddd;
             }
@@ -85,6 +91,40 @@
             tr:hover {
                 background-color: rgba(0, 0, 0, 0.05);
             }
+        }
+
+        .botoes-container {
+            display: flex;
+            justify-content: center; // Alinha os itens horizontalmente ao centro
+            gap: 10px; // Adiciona espaço entre os botões
+        }
+
+        .btn-editar, .btn-excluir {
+            background-color: #333;
+            color: #f9f9f9;
+        }
+
+        // Estilo para linha selecionada na tabela
+        .linha-selecionada {
+            background-color: #333; // Cor de fundo para a linha selecionada
+        }
+
+
+    }
+
+    .links {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+
+        a,
+        button {
+            color: #333;
+            text-decoration: none;
+            padding: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
         }
     }
 }

@@ -82,6 +82,13 @@ export class AuthService {
     localStorage.setItem('usuarioLogado', usuario.nome);
     localStorage.setItem('cpfUsuarioLogado', usuario.cpf);
     localStorage.setItem('loginUsuarioLogado', usuario.login);
+    localStorage.setItem('tipoUsuarioLogado', usuario.tipoUsuario);
+    this.usuarioAtualSubject.next(usuario);
+  }
+
+  public isGerenteOuRoot(): boolean {
+    const tipoUsuario = localStorage.getItem('tipoUsuarioLogado');
+    return tipoUsuario === 'GERENTE' || tipoUsuario === 'ROOT';
   }
 
   listarTodosUsuarios(): Observable<{ content: Usuario[] }> {

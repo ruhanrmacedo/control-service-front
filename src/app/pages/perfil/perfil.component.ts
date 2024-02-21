@@ -167,4 +167,27 @@ export class PerfilComponent {
       console.log("Nenhum usuário selecionado.");
     }
   }
+
+  desligarUsuario(): void {
+    if(this.usuarioSelecionado) {
+      const confirmacao = confirm(`Confirma a exclusão do usuário ${this.usuarioSelecionado.nome}?`);
+      if (confirmacao) {
+        // Gere a data atual e formate como 'YYYY-MM-DD'
+        const dataAtual = new Date().toISOString().slice(0, 10);
+  
+        // Passe o ID e a data de inativação para o serviço
+        this.usuarioService.desligarUsuario(this.usuarioSelecionado.id, dataAtual).subscribe({
+          next: () => {
+            alert('Usuário desligado com sucesso.');
+            this.carregarUsuarios(); // Recarrega a lista de usuários
+          },
+          error: (erro) => {
+            console.error('Erro ao desligar o usuário', erro);
+          }
+        });
+      }
+    } else {
+      alert('Por favor, selecione um usuário para excluir.');
+    }
+  }
 }

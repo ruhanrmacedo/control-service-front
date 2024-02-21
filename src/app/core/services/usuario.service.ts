@@ -18,8 +18,15 @@ export class UsuarioService {
 
   constructor(private http: HttpClient) { }
 
+  private getHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+  }
+
   cadastrarUsuario(usuario: CadastroUsuario): Observable<any> {
-    return this.http.post(`${this.apiUrl}/cadastrarUsuario`, usuario).pipe(
+    const headers = this.getHeaders(); // Use o método getHeaders aqui
+    return this.http.post(`${this.apiUrl}/cadastrarUsuario`, usuario, { headers }).pipe(
       catchError(error => {
         const erroResponse = error.error;
         return throwError(() => erroResponse);
@@ -36,19 +43,25 @@ export class UsuarioService {
   }
 
   getUsuarioById(id: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${id}`);
+    const headers = this.getHeaders(); // Use o método getHeaders aqui
+    return this.http.get(`${this.apiUrl}/${id}`, { headers });
   }
 
   editarUsuario(dadosAtualizados: any): Observable<any> {
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${localStorage.getItem('token')}`
-    });
-  
-    // Certifique-se de que a URL está correta conforme a expectativa da sua API.
+    const headers = this.getHeaders(); // Método getHeaders já definido
     return this.http.put<any>(`${this.apiUrl}/editarUsuario`, dadosAtualizados, { headers });
   }
 
   listarTodosUsuarios(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/listarTodosUsuarios`);
+    const headers = this.getHeaders(); // Use o método getHeaders aqui
+    return this.http.get<any>(`${this.apiUrl}/listarTodosUsuarios`, { headers });
+  }
+
+  desligarUsuario(id: number, dataInativacao: string): Observable<any> {
+    const headers = this.getHeaders();
+    const body = { id, dataInativacao };
+
+    return this.http.put(`${this.apiUrl}/desligarUsuario`, body, { headers });
   }
 }
+

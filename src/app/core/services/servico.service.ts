@@ -32,8 +32,18 @@ export class ServicoService {
     return this.http.get<any>(`${this.apiUrl}/listarServicos`, { headers });
   }
 
-  listarServicosGerente(): Observable<{ content: ServicoGerente[] }> {
+  listarServicosGerente(): Observable< ServicoGerente[] > {
     const headers = this.getHeaders();
-    return this.http.get<any>(`${this.apiUrl}/listarServicosGerente`, { headers });
+    return this.http.get<ServicoGerente[]>(`${this.apiUrl}/listarServicosGerente`, { headers });
+  }
+
+  editarServico(dadosAtualizados: any): Observable<any> {
+    const headers = this.getHeaders();
+    return this.http.put<any>(`${this.apiUrl}/editarServico`, dadosAtualizados, { headers })
+  }
+
+  excluirServico(idServico: number): Observable<any> {
+    const headers = this.getHeaders();
+    return this.http.delete(`${this.apiUrl}/excluirServico/${idServico}`, { headers })
   }
 }
