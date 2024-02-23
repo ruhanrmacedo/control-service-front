@@ -61,9 +61,10 @@ header, footer {
 
         // Botão para alterar senha e botão para editar
         .botoes-container {
+            margin-top: 20px; 
             display: flex;
-            justify-content: center; // Alinha os itens horizontalmente ao centro
-            gap: 10px; // Adiciona espaço entre os botões
+            justify-content: center;
+            gap: 10px;
         }
 
         .btn-editar, .btn-excluir {
