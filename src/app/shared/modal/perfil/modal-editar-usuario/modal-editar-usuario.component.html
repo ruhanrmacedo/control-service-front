@@ -28,11 +28,35 @@
           <span>{{ data.tipoUsuario }}</span>
         </div>
   
-        <button mat-button (click)="salvarAlteracoes()">Salvar</button>
-        <button mat-button (click)="fecharModal()">Cancelar</button>
+        <div class="actions">
+          <button mat-button (click)="mostrarFormAlterarSenha()">Alterar Senha</button>
+          <button mat-button (click)="salvarAlteracoes()">Salvar</button>
+          <button mat-button (click)="fecharModal()">Cancelar</button>
+        </div>
+      </div>
+
+      <div class="mostrar-alterar-senha" *ngIf="mostrarAlterarSenha">
+        <form class="form-alterar-senha" (ngSubmit)="alterarSenha($event)">
+          <div class="input-field">
+              <label for="novaSenha">Nova Senha:</label>
+              <input type="password" id="novaSenha" [(ngModel)]="novaSenha" name="novaSenha" required/>
+          </div>
+
+          <div class="input-field">
+              <label for="confirmarSenha">Repetir Senha:</label>
+              <input type="password" id="confirmarSenha" [(ngModel)]="confirmarSenha" name="confirmarSenha" required/>
+          </div>
+
+          <div mat-dialog-actions>
+              <button type="submit" class="btn-alterar" mat-flat-button>Alterar Senha</button>
+              <button type="button" class="btn-limpar" mat-flat-button (click)="limparFormulario()">Limpar</button>
+          </div>
+      </form>
       </div>
     </div>
-  </section>
+</section>
+
+
 <section class="modal-mensagem modal-sucesso" *ngIf="editadoComSucesso">
     <h2>Edição bem-sucedida!</h2>
     <p>{{ data.nome }}, editado com sucesso</p>

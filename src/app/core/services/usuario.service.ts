@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 
@@ -63,5 +63,19 @@ export class UsuarioService {
 
     return this.http.put(`${this.apiUrl}/desligarUsuario`, body, { headers });
   }
+
+  alterarSenhaUsuarioSelecionado(dadosSenha: { novaSenha: string, confirmarSenha: string }, usuarioId: number): Observable<any> {
+    const headers = this.getHeaders();
+    const url = `${this.apiUrl}/alterarSenhaUsuarioSelecionado/${usuarioId}`;
+  
+    // O corpo da requisição deve conter apenas 'novaSenha' e 'confirmarSenha', conforme esperado pelo backend.
+    const body = {
+      novaSenha: dadosSenha.novaSenha,
+      confirmarSenha: dadosSenha.confirmarSenha
+    };
+  
+    return this.http.put<void>(url, body, { headers });
+  }
+  
 }
 

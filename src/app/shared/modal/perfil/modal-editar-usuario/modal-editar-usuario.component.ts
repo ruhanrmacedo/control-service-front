@@ -14,6 +14,10 @@ export class ModalEditarUsuarioComponent {
   erroEditar: boolean = false;
   erroSenha: boolean = false;
   mensagemErro: string = '';
+  mostrarAlterarSenha: boolean = false;
+  novaSenha: string = '';
+  confirmarSenha: string = '';
+  alterarSenhaSucesso: boolean = false;
   
 
   constructor(
@@ -53,5 +57,50 @@ export class ModalEditarUsuarioComponent {
   fecharModalErro(): void {
     this.erroSenha = false;
     this.mensagemErro = '';
+  }
+
+  mostrarFormAlterarSenha(): void {
+    this.mostrarAlterarSenha = !this.mostrarAlterarSenha;
+    console.log("mostrarAlterarSenha:", this.mostrarAlterarSenha);
+  }
+
+  alterarSenha(event: Event): void {
+    event.preventDefault();
+
+    console.log('ID do Usuário:', this.data.usuarioId);
+    console.log('Nova Senha:', this.novaSenha);
+    console.log('Confirmar Senha:', this.confirmarSenha);
+
+    // Verifica se as senhas coincidem
+    if (this.novaSenha !== this.confirmarSenha) {
+      this.erroSenha = true;
+      this.mensagemErro = 'As senhas não coincidem!';
+      return;
+    }
+
+    // Prepara os dados para alteração de senha
+    const dadosSenha = {
+      novaSenha: this.novaSenha,
+      confirmarSenha: this.confirmarSenha
+    };
+
+    // Chama o serviço para alterar a senha
+    this.usuarioService.alterarSenhaUsuarioSelecionado(dadosSenha, this.data.usuarioId).subscribe({
+      next: () => {
+        alert('Senha alterada com sucesso!');
+        this.dialogRef.close(true);
+      },
+      error: (erro) => {
+        this.erroSenha = true;
+        this.mensagemErro = 'Erro ao alterar a senha';
+        console.error('Erro ao alterar senha', erro);
+      }
+    });
+
+  }
+
+  limparFormulario(): void {
+    this.novaSenha = '';
+    this.confirmarSenha = '';
   }
 }

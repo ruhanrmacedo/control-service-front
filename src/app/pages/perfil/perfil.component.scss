@@ -9,6 +9,14 @@ header, footer {
     min-height: 100vh;
     padding: 60px 0 100px; // Compacta as definições de padding
 
+    .btn-alterar-senha {
+        background-color: #333;
+        color: #f9f9f9;
+        display: flex;
+        justify-content: center; // Alinha os itens horizontalmente ao centro
+        gap: 10px; // Adiciona espaço entre os botões
+    }
+
     // Estilos para os contêineres do perfil e tabela de usuários
     .perfil-container, .tabela-usuarios-container {
         position: relative;
