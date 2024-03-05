@@ -190,4 +190,25 @@ export class PerfilComponent {
       alert('Por favor, selecione um usuário para excluir.');
     }
   }
+
+  readimitirUsuario(): void {
+    if(this.usuarioSelecionado) {
+      const confirmacao = confirm(`Confirma a readmissão do usuário ${this.usuarioSelecionado.nome}?`);
+      if (confirmacao) {
+        // Passe o ID e a data de inativação para o serviço
+        this.usuarioService.readmitirUsuario(this.usuarioSelecionado.id).subscribe({
+          next: () => {
+            alert('Usuário readmitido com sucesso.');
+            this.carregarUsuarios(); // Recarrega a lista de usuários
+          },
+          error: (erro) => {
+            console.error('Erro ao readmitir o usuário', erro);
+            alert(erro.message || 'Erro ao readmitir o usuário. ' + erro);
+          }
+        });
+      }
+    } else {
+      alert('Por favor, selecione um usuário para readmitir.');
+    }
+  }
 }

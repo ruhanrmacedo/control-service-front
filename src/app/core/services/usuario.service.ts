@@ -77,5 +77,15 @@ export class UsuarioService {
     return this.http.put<void>(url, body, { headers });
   }
   
+  readmitirUsuario(id: number): Observable<any> {
+    const headers = this.getHeaders();
+
+    return this.http.put(`${this.apiUrl}/readmitirUsuario/${id}`, null, { headers })
+      .pipe(
+        catchError((error) => {
+          return throwError(() => error.error);
+        })
+      );
+  }
 }
 
