@@ -1,1 +1,144 @@
-<p>tecnico works!</p>
+<div class="tecnico-page-container">
+    <div class="tecnico-container" *ngIf="isUserGerenteOuRoot">
+        <h2>Cadastro de Novo Técnico</h2>
+        <form [formGroup]="tecnicoForm" (ngSubmit)="onSubmit()">
+            <div class="form-field">
+                <label for="nome">Nome</label>
+                <input id="nome" type="text" formControlName="nome">
+            </div>
+            <div class="form-field">
+                <label for="cpf">CPF</label>
+                <input id="cpf" type="text" formControlName="cpf">
+            </div>
+            <div class="form-field">
+                <label for="login">Login</label>
+                <input id="login" type="text" formControlName="login">
+            </div>
+            <div class="form-field">
+                <label for="placa">Placa</label>
+                <input id="placa" type="text" formControlName="placa">
+            </div>
+            <div class="form-field">
+                <label for="dataAdmissao">Data de Admissão</label>
+                <input id="dataAdmissao" matInput [matDatepicker]="picker" formControlName="dataAdmissao">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </div>
+
+
+
+            <button type="submit" [disabled]="!tecnicoForm.valid">Cadastrar Técnico</button>
+        </form>
+    </div>
+
+    <div class="tabela-listar-tecnicos" *ngIf="!isUserGerenteOuRoot">
+        <table mat-table [dataSource]="tecnicosDataSource" class="mat-elevation-z8">
+
+            <!-- Coluna ID -->
+            <ng-container matColumnDef="idTecnico">
+                <th mat-header-cell *matHeaderCellDef> ID </th>
+                <td mat-cell *matCellDef="let element"> {{element.idTecnico}} </td>
+            </ng-container>
+
+            <!-- Coluna Nome -->
+            <ng-container matColumnDef="nome">
+                <th mat-header-cell *matHeaderCellDef> Descrição </th>
+                <td mat-cell *matCellDef="let element"> {{element.nome}} </td>
+            </ng-container>
+
+            <!-- Coluna Tipo Login -->
+            <ng-container matColumnDef="login">
+                <th mat-header-cell *matHeaderCellDef> Login </th>
+                <td mat-cell *matCellDef="let element"> {{element.login}} </td>
+            </ng-container>
+
+            <!-- Coluna Tipo Placa -->
+            <ng-container matColumnDef="placa">
+                <th mat-header-cell *matHeaderCellDef> Placa </th>
+                <td mat-cell *matCellDef="let element"> {{element.placa}} </td>
+            </ng-container>
+
+            <!-- Coluna Data Admissão -->
+            <ng-container matColumnDef="dataAdmissao">
+                <th mat-header-cell *matHeaderCellDef> Data Admissão </th>
+                <td mat-cell *matCellDef="let element"> {{element.dataAdmissao}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <!-- Linhas da Tabela -->
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        </table>
+    </div>
+
+
+    <div class="tabela-listar-tecnicos" *ngIf="isUserGerenteOuRoot">
+        <table mat-table [dataSource]="tecnicoGerenteDataSource" class="mat-elevation-z8">
+
+            <!-- Coluna ID -->
+            <ng-container matColumnDef="idTecnico">
+                <th mat-header-cell *matHeaderCellDef> ID </th>
+                <td mat-cell *matCellDef="let element"> {{element.idTecnico}} </td>
+            </ng-container>
+
+            <!-- Coluna Nome -->
+            <ng-container matColumnDef="nome">
+                <th mat-header-cell *matHeaderCellDef> Nome </th>
+                <td mat-cell *matCellDef="let element"> {{element.nome}} </td>
+            </ng-container>
+
+            <!-- Coluna CPF -->
+            <ng-container matColumnDef="cpf">
+                <th mat-header-cell *matHeaderCellDef> CPF </th>
+                <td mat-cell *matCellDef="let element"> {{element.cpf}} </td>
+            </ng-container>
+
+            <!-- Coluna Tipo Login -->
+            <ng-container matColumnDef="login">
+                <th mat-header-cell *matHeaderCellDef> Login </th>
+                <td mat-cell *matCellDef="let element"> {{element.login}} </td>
+            </ng-container>
+
+            <!-- Coluna Tipo Placa -->
+            <ng-container matColumnDef="placa">
+                <th mat-header-cell *matHeaderCellDef> Placa </th>
+                <td mat-cell *matCellDef="let element"> {{element.placa}} </td>
+            </ng-container>
+
+            <!-- Coluna Data Admissão -->
+            <ng-container matColumnDef="dataAdmissao">
+                <th mat-header-cell *matHeaderCellDef> Data Admissão </th>
+                <td mat-cell *matCellDef="let element"> {{element.dataAdmissao}} </td>
+            </ng-container>
+
+            <!-- Coluna Data Desligamento -->
+            <ng-container matColumnDef="dataDesligamento">
+                <th mat-header-cell *matHeaderCellDef> Data Desligamento </th>
+                <td mat-cell *matCellDef="let element"> {{element.dataDesligamento}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsGerente"></tr>
+            <!-- Linhas da Tabela -->
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsGerente;" (click)="selecionarTecnico(row)"
+                [class.linha-selecionada]="row === tecnicoSelecionado">
+            </tr>
+
+        </table>
+
+        <mat-paginator [length]="tecnicoGerenteDataSource.data.length"
+               [pageSize]="10"
+               [pageSizeOptions]="[5, 10, 20]"
+               aria-label="Select page of technicians">
+        </mat-paginator>
+
+        <div class="botoes-container">
+            <button class="btn-editar" mat-button (click)="editarTecnico()">Editar Técnico</button>
+            <button class="btn-excluir" mat-button (click)="demitirTecnico()">Desligar Técnico</button>
+        </div>
+    </div>
+
+    <div class="links">
+        <a routerLink="/">Voltar para Home</a>
+    </div>
+
+</div>

@@ -33,7 +33,14 @@ import { TecnicoComponent } from './pages/tecnico/tecnico.component';
 import { ServicoComponent } from './pages/servico/servico.component';
 import { RegistrarServicosComponent } from './pages/registrar-servicos/registrar-servicos.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ModalEditarServicoComponent } from './shared/modal/servico/modal-editar-servico/modal-editar-servico.component'; 
+import { ModalEditarServicoComponent } from './shared/modal/servico/modal-editar-servico/modal-editar-servico.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatNativeDateModule } from '@angular/material/core';
+import { ModalEditarTecnicoComponent } from './shared/modal/tecnico/modal-editar-tecnico/modal-editar-tecnico.component'; 
+import { MatPaginatorModule } from '@angular/material/paginator';
+
 
 
 @NgModule({
@@ -58,6 +65,7 @@ import { ModalEditarServicoComponent } from './shared/modal/servico/modal-editar
     ServicoComponent,
     RegistrarServicosComponent,
     ModalEditarServicoComponent,
+    ModalEditarTecnicoComponent,
 
   ],
   imports: [
@@ -72,7 +80,13 @@ import { ModalEditarServicoComponent } from './shared/modal/servico/modal-editar
     HttpClientModule,
     MatMenuModule,
     MatTableModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatNativeDateModule,
+    ReactiveFormsModule,
+    MatPaginatorModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

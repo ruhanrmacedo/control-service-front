@@ -26,4 +26,21 @@ export interface ServicoGerente {
   ativo: boolean;
 }
 
+export interface Tecnico {
+  idTecnico: number;
+  nome: string;
+  login: string;
+  placa: string;
+  dataAdmissao: Date;
+}
+
+export interface TecnicoGerente {
+  idTecnico: number;
+  nome: string;
+  cpf: string;
+  login: string;
+  placa: string;
+  dataAdmissao: Date;
+  dataDesligamento: Date;
+}
 

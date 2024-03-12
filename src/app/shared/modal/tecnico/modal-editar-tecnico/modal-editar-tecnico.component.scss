@@ -20,7 +20,7 @@
 
         form {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: 3fr 1fr 1fr 1fr;
             gap: 40px;
 
             label {
@@ -51,8 +51,8 @@
                 cursor: pointer;
                 border: none;
                 border-radius: 4px;
-                justify-self: center;
-                grid-column: 1 / -1;
+                justify-self: center; // Centraliza o botão na coluna
+                grid-column: 1 / -1; // Faz o botão ocupar todas as colunas
 
                 &:hover {
                     background-color: darken(#333, 10%);
@@ -63,8 +63,8 @@
 
     .tabela-listar-tecnicos {
         margin-top: 60px;
-        max-width: 80%;
-        margin: auto;
+        max-width: 80%; // Define a largura máxima da tabela para corresponder à do formulário
+        margin: auto; // Centraliza a tabela
         overflow-x: auto;
         padding: 25px;
         border: 1px solid #ddd;
@@ -95,8 +95,8 @@
 
         .botoes-container {
             display: flex;
-            justify-content: center;
-            gap: 10px;
+            justify-content: center; // Alinha os itens horizontalmente ao centro
+            gap: 10px; // Adiciona espaço entre os botões
         }
 
         .btn-editar, .btn-excluir {
@@ -104,9 +104,12 @@
             color: #f9f9f9;
         }
 
+        // Estilo para linha selecionada na tabela
         .linha-selecionada {
-            background-color: #333;
+            background-color: #333; // Cor de fundo para a linha selecionada
         }
+
+
     }
 
     .links {
