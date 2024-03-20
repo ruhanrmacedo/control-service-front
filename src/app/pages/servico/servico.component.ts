@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ServicoService } from 'src/app/core/services/servico.service';
 import { ChangeDetectorRef } from '@angular/core';
@@ -6,6 +6,8 @@ import { Servico, ServicoGerente } from 'src/app/core/types/type';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalEditarServicoComponent } from 'src/app/shared/modal/servico/modal-editar-servico/modal-editar-servico.component';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-servico',
@@ -21,6 +23,11 @@ export class ServicoComponent {
   displayedColumnsGerente: string[] = ['idServico', 'descricao', 'valorClaro', 'valorMacedo', 'tipoServico', 'ativo']; 
   isUserGerenteOuRoot: boolean = false;
   servicoSelecionado: any = null;
+  servicoGerenteDataSource = new MatTableDataSource<ServicoGerente>([]);
+  servicosDataSource = new MatTableDataSource<Servico>([]);
+
+  @ViewChild(MatPaginator)
+  paginator!: MatPaginator;
   
   constructor(
     private changeDetectorRef: ChangeDetectorRef, 
@@ -50,11 +57,12 @@ export class ServicoComponent {
   }
 
   carregarServicos(): void {
-    this.servicoService.listarServicos().subscribe({
-      next: (data) => {
+    this.servicoService.listarServicos(0, 20).subscribe({
+      next: (data: any) => {
         console.log('Dados recebidos:', data);
-        this.servicos = data.content;
-        console.log('Serviços após atribuição:', this.servicos);
+        this.servicosDataSource = new MatTableDataSource<Servico>(data.content);
+        this.servicosDataSource.paginator = this.paginator;
+        console.log('Serviços após atribuição:', this.servicosDataSource.data);
         this.changeDetectorRef.detectChanges();
       },
       error: (err) => console.error('Erro ao carregar serviços', err)
@@ -63,11 +71,12 @@ export class ServicoComponent {
 
   carregarServicosGerente(): void {
     if (this.isUserGerenteOuRoot) {
-      this.servicoService.listarServicosGerente().subscribe({
-        next: (data) => {
+      this.servicoService.listarServicosGerente(0, 20).subscribe({
+        next: (data: any) => {
           console.log('Dados Serviço Gerente recebidos:', data);
-          this.servicosGerente = data;
-          console.log('Serviços Gerente após atribuição:', this.servicosGerente);
+          this.servicoGerenteDataSource = new MatTableDataSource<ServicoGerente>(data.content);
+          this.servicoGerenteDataSource.paginator = this.paginator;
+          console.log('Serviços Gerente após atribuição:', this.servicoGerenteDataSource.data);
           this.changeDetectorRef.detectChanges();
         },
         error: (err) => {
@@ -98,6 +107,7 @@ export class ServicoComponent {
           alert('Serviço cadastrado com sucesso!')
           this.servicoForm.reset(); // Limpar o formulário após o cadastro
           this.carregarServicos(); // Recarrega os serviços para atualizar a tabela
+          this.carregarServicosGerente();
         },
         error: (err) => {
           console.error('Erro ao cadastrar serviço', err);

@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Tecnico, TecnicoGerente } from 'src/app/core/types/type';
 import { ChangeDetectorRef } from '@angular/core';
@@ -14,7 +14,7 @@ import { MatPaginator } from '@angular/material/paginator';
   templateUrl: './tecnico.component.html',
   styleUrls: ['./tecnico.component.scss']
 })
-export class TecnicoComponent implements AfterViewInit {
+export class TecnicoComponent {
   tecnicoForm: FormGroup;
   displayedColumns: string[] = ['idTecnico', 'nome', 'login', 'placa', 'dataAdmissao'];
   tecnicoGerente: TecnicoGerente[] = [];
@@ -27,7 +27,6 @@ export class TecnicoComponent implements AfterViewInit {
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
-tecnicosDataSourceDataSource: any;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -48,11 +47,13 @@ tecnicosDataSourceDataSource: any;
   }
 
   carregarTecnicos(): void {
-    this.tecnicoService.listarTecnicos().subscribe({
-      next: (data) => {
+    this.tecnicoService.listarTecnicos(0, 20).subscribe({
+      next: (data: any) => {
         console.log('Dados recebidos:', data);
-        this.tecnicosDataSource = new MatTableDataSource(data.content);
-        console.log('Serviços após atribuição:', this.tecnicos);
+        this.tecnicosDataSource = new MatTableDataSource<Tecnico>(data.content);
+        this.tecnicosDataSource.paginator = this.paginator;
+        this.paginator.length = data.totalElements;
+        console.log('Serviços após atribuição:', this.tecnicosDataSource.data);
         this.changeDetectorRef.detectChanges();
       },
       error: (err) => console.error('Erro ao carregar técnicos', err)
@@ -153,9 +154,5 @@ tecnicosDataSourceDataSource: any;
     } else {
       alert('Por favor, selecione um usuário para excluir.');
     }
-  }
-
-  ngAfterViewInit() {
-    this.tecnicosDataSource.paginator = this.paginator;
   }
 }

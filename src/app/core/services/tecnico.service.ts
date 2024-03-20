@@ -1,7 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Tecnico, TecnicoGerente } from '../types/type';
 
 @Injectable({
   providedIn: 'root'
@@ -22,9 +21,10 @@ export class TecnicoService {
     return this.http.post(`${this.apiUrl}/cadastrarTecnico`, dadosTecnico, { headers });
   }
 
-  listarTecnicos(): Observable<{ content: Tecnico[] }> {
+  listarTecnicos(page: number, size: number): Observable<any> {
     const headers = this.getHeaders();
-    return this.http.get<any>(`${this.apiUrl}/listarTecnicos`, { headers });
+    const params = { params: new HttpParams().set('page', String(page)).set('size', String(size)) };
+    return this.http.get<any>(`${this.apiUrl}/listarTecnicos`, { headers, ...params });
   }
 
   listarTodosTecnicos(page: number, size: number): Observable<any> {

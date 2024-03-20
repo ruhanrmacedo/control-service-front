@@ -1,7 +1,7 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Servico, ServicoGerente } from '../types/type';
+
 
 @Injectable({
   providedIn: 'root'
@@ -27,14 +27,16 @@ export class ServicoService {
     return this.http.get<any[]>(`${this.apiUrl}/tipo-servico`, { headers });
   }
 
-  listarServicos(): Observable<{ content: Servico[] }> {
+  listarServicos(page: number, size: number): Observable<any> {
     const headers = this.getHeaders();
-    return this.http.get<any>(`${this.apiUrl}/listarServicos`, { headers });
+    const params = { params: new HttpParams().set('page', String(page)).set('size', String(size)) };
+    return this.http.get<any>(`${this.apiUrl}/listarServicos`, { headers, ...params });
   }
 
-  listarServicosGerente(): Observable< ServicoGerente[] > {
+  listarServicosGerente(page: number, size: number): Observable<any> {
     const headers = this.getHeaders();
-    return this.http.get<ServicoGerente[]>(`${this.apiUrl}/listarServicosGerente`, { headers });
+    const params = { params: new HttpParams().set('page', String(page)).set('size', String(size)) };
+    return this.http.get<any>(`${this.apiUrl}/listarServicosGerente`, { headers, ...params });
   }
 
   editarServico(dadosAtualizados: any): Observable<any> {

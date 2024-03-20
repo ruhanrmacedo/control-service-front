@@ -2,12 +2,14 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 
+
 export interface CadastroUsuario {
   nome: string;
   cpf: string;
   login: string;
   senha: string;
   tipoUsuario: string;
+  dataAtivacao: string;
 }
 
 @Injectable({
@@ -43,18 +45,19 @@ export class UsuarioService {
   }
 
   getUsuarioById(id: number): Observable<any> {
-    const headers = this.getHeaders(); // Use o método getHeaders aqui
+    const headers = this.getHeaders(); 
     return this.http.get(`${this.apiUrl}/${id}`, { headers });
   }
 
   editarUsuario(dadosAtualizados: any): Observable<any> {
-    const headers = this.getHeaders(); // Método getHeaders já definido
+    const headers = this.getHeaders(); 
     return this.http.put<any>(`${this.apiUrl}/editarUsuario`, dadosAtualizados, { headers });
   }
 
-  listarTodosUsuarios(): Observable<any> {
-    const headers = this.getHeaders(); // Use o método getHeaders aqui
-    return this.http.get<any>(`${this.apiUrl}/listarTodosUsuarios`, { headers });
+  listarTodosUsuarios(page: number, size: number): Observable<any> {
+    const headers = this.getHeaders(); 
+    const params = { params: new HttpParams().set('page', String(page)).set('size', String(size)) };
+    return this.http.get<any>(`${this.apiUrl}/listarTodosUsuarios`, { headers, ...params });
   }
 
   desligarUsuario(id: number, dataInativacao: string): Observable<any> {

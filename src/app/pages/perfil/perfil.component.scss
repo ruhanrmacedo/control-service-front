@@ -7,7 +7,7 @@ header, footer {
 // Contêiner principal da página de perfil
 .perfil-page-container {
     min-height: 100vh;
-    padding: 60px 0 100px; // Compacta as definições de padding
+    padding: 60px 0; // Compacta as definições de padding
 
     .btn-alterar-senha {
         background-color: #333;
@@ -18,9 +18,9 @@ header, footer {
     }
 
     // Estilos para os contêineres do perfil e tabela de usuários
-    .perfil-container, .tabela-usuarios-container {
+    .perfil-container {
         position: relative;
-        max-width: 1000px;
+        max-width: 80%;
         margin: auto;
         padding: 25px;
         border: 1px solid #ddd;
@@ -100,6 +100,57 @@ header, footer {
         .linha-selecionada {
             background-color: #333; // Cor de fundo para a linha selecionada
         }
+    }
+
+    .tabela-usuarios-container {
+        margin-top: 60px;
+        max-width: 80%; // Define a largura máxima da tabela para corresponder à do formulário
+        margin: auto; // Centraliza a tabela
+        overflow-x: auto;
+        padding: 25px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        background-color: rgba(249, 249, 249, 0.8);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        table {
+            width: 100%;
+            margin: 40px auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+            th,
+            td {
+                padding: 8px 16px;
+                border-bottom: 1px solid #ddd;
+            }
+
+            th {
+                background-color: #333;
+                color: white;
+            }
+
+            tr:hover {
+                background-color: rgba(0, 0, 0, 0.05);
+            }
+        }
+
+        .botoes-container {
+            display: flex;
+            justify-content: center; // Alinha os itens horizontalmente ao centro
+            gap: 10px; // Adiciona espaço entre os botões
+        }
+
+        .btn-editar, .btn-excluir, .btn-readmitir {
+            background-color: #333;
+            color: #f9f9f9;
+        }
+
+        // Estilo para linha selecionada na tabela
+        .linha-selecionada {
+            background-color: #333; // Cor de fundo para a linha selecionada
+        }
+
+
     }
 }
 

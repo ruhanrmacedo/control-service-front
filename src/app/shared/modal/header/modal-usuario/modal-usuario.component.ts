@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { UsuarioService, CadastroUsuario } from 'src/app/core/services/usuario.service';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-modal-usuario',
@@ -14,6 +15,7 @@ export class ModalUsuarioComponent {
   login: string = '';
   senha: string = '';
   tipoUsuario: string = '';
+  dataAtivacao: string = formatDate(new Date(), 'yyyy-MM-dd', 'en-US');
   cadastroSucesso: boolean = false;
   erroCadastro: boolean = false;
   mensagemErro: string = '';
@@ -30,7 +32,8 @@ export class ModalUsuarioComponent {
       cpf: this.cpf,
       login: this.login,
       senha: this.senha,
-      tipoUsuario: this.tipoUsuario
+      tipoUsuario: this.tipoUsuario,
+      dataAtivacao: this.dataAtivacao
     };
 
     this.usuarioService.cadastrarUsuario(usuario).subscribe({

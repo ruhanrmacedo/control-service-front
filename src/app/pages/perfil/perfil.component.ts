@@ -1,10 +1,12 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { UsuarioService } from 'src/app/core/services/usuario.service';
-import { EditableField } from 'src/app/core/types/type';
+import { EditableField, Usuario } from 'src/app/core/types/type';
 import { ModalAlterarSenhaComponent } from 'src/app/shared/modal/perfil/modal-alterar-senha/modal-alterar-senha.component';
 import { ModalEditarUsuarioComponent } from 'src/app/shared/modal/perfil/modal-editar-usuario/modal-editar-usuario.component';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 
 @Component({
@@ -14,10 +16,14 @@ import { ModalEditarUsuarioComponent } from 'src/app/shared/modal/perfil/modal-e
 })
 export class PerfilComponent {
 
-  usuarios: any[] = [];
+  usuarios: Usuario[] = [];
   displayedColumns: string[] = ['id', 'nome', 'cpf', 'login', 'tipoUsuario', 'dataAtivacao', 'dataInativacao'];
   mostrarTabelaUsuarios: boolean = false;
   usuarioSelecionado: any = null;
+  usuariosDataSource = new MatTableDataSource<Usuario>([]);
+
+  @ViewChild(MatPaginator)
+  paginator!: MatPaginator;
 
   //id: number = 0;
   nome: string = '';
@@ -77,6 +83,7 @@ export class PerfilComponent {
     this.originalValues.cpf = this.cpfUsuarioLogado;
     this.originalValues.login = this.loginUsuarioLogado;
     this.carregarUsuarios();
+    this.listarUsuarios();
   }
 
   carregarUsuarios(): void {
@@ -89,6 +96,23 @@ export class PerfilComponent {
     },
     error: (err) => console.error('Erro ao carregar tipos de usuarios', err)  
     });
+  }
+
+  ngAfterViewInit() {
+    this.listarUsuarios();
+  }
+
+  //Listar usuários para a tabela em page perfil
+  listarUsuarios(): void {
+    this.usuarioService.listarTodosUsuarios(0, 20).subscribe({
+      next: (data: any) => {
+        console.log('Dados recebidos:', data);
+        this.usuariosDataSource = new MatTableDataSource<Usuario>(data.content);
+        this.changeDetectorRef.detectChanges();
+        this.usuariosDataSource.paginator = this.paginator;
+        console.log('Dados após atribuição:', this.usuariosDataSource.data);
+      }
+    })
   }
 
   toggleTabelaUsuarios() {
@@ -210,5 +234,14 @@ export class PerfilComponent {
     } else {
       alert('Por favor, selecione um usuário para readmitir.');
     }
+  }
+
+  get isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
+  }
+
+  get isRootOrGerente(): boolean {
+    const tipoUsuario = localStorage.getItem('tipoUsuarioLogado');
+    return tipoUsuario === 'ROOT' || tipoUsuario === 'GERENTE';
   }
 }

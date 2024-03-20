@@ -6,7 +6,6 @@ export interface Usuario {
     tipoUsuario: string;
     dataAtivacao: Date;
     dataInativacao: Date;
-    // Adicione outros campos conforme necessário
   }
 
 export type EditableField = 'nome' | 'cpf' | 'login';
