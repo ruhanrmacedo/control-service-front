@@ -9,7 +9,6 @@ export interface CadastroUsuario {
   login: string;
   senha: string;
   tipoUsuario: string;
-  dataAtivacao: string;
 }
 
 @Injectable({

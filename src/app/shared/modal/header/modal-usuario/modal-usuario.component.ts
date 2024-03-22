@@ -15,7 +15,6 @@ export class ModalUsuarioComponent {
   login: string = '';
   senha: string = '';
   tipoUsuario: string = '';
-  dataAtivacao: string = formatDate(new Date(), 'yyyy-MM-dd', 'en-US');
   cadastroSucesso: boolean = false;
   erroCadastro: boolean = false;
   mensagemErro: string = '';
@@ -32,8 +31,7 @@ export class ModalUsuarioComponent {
       cpf: this.cpf,
       login: this.login,
       senha: this.senha,
-      tipoUsuario: this.tipoUsuario,
-      dataAtivacao: this.dataAtivacao
+      tipoUsuario: this.tipoUsuario
     };
 
     this.usuarioService.cadastrarUsuario(usuario).subscribe({

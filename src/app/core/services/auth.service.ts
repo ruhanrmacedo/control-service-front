@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
 import { Usuario } from '../types/type';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -103,6 +104,17 @@ export class AuthService {
     const url = `/api/usuarios/alterarSenha?id=${dados.id}`; 
 
     return this.http.put<void>(url, {}, {params });
+  }
+
+  tokenExpirou(): boolean {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decoded: any = jwtDecode(token);  // Uso correto da função importada
+      const agora = new Date();
+      const expiracao = new Date(decoded.exp * 1000); // JWT exp é em segundos
+      return agora > expiracao;
+    }
+    return true;
   }
 
 
