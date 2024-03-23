@@ -43,3 +43,12 @@ export interface TecnicoGerente {
   dataDesligamento: Date;
 }
 
+export interface RegistoServicoDTO {
+  contrato: string;
+  os: string;
+  data: string;
+  idTecnico: number;
+  idServico: number;
+  valorClaro?: number;
+  valorMacedo?: number;
+}

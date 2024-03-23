@@ -40,6 +40,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 import { ModalEditarTecnicoComponent } from './shared/modal/tecnico/modal-editar-tecnico/modal-editar-tecnico.component'; 
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatAutocompleteModule } from '@angular/material/autocomplete'; 
 
 
 
@@ -86,7 +87,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatInputModule,
     MatNativeDateModule,
     ReactiveFormsModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatAutocompleteModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
