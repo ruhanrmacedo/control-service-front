@@ -1,70 +1,132 @@
 <form [formGroup]="registroForm" (ngSubmit)="registrar()" novalidate>
-  
+
+  <mat-form-field appearance="fill">
+    <mat-label>Contrato</mat-label>
+    <input matInput formControlName="contrato" required>
+    <mat-error *ngIf="registroForm.get('contrato')?.invalid && registroForm.get('contrato')?.touched">
+      O campo Contrato é obrigatório.
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>OS</mat-label>
+    <input matInput formControlName="os" required>
+    <mat-error *ngIf="registroForm.get('os')?.invalid && registroForm.get('os')?.touched">
+      O campo OS é obrigatório.
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Data</mat-label>
+    <input matInput [matDatepicker]="picker" formControlName="data" required>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+    <mat-error *ngIf="registroForm.get('data')?.invalid && registroForm.get('data')?.touched">
+      A data é obrigatória.
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Técnico</mat-label>
+    <input type="text" matInput formControlName="idTecnico" [matAutocomplete]="autoTecnico" required>
+    <mat-autocomplete #autoTecnico="matAutocomplete">
+      <mat-option *ngFor="let tecnico of tecnicosFiltrados | async" [value]="tecnico.idTecnico">
+        {{ tecnico.nome }}
+      </mat-option>
+    </mat-autocomplete>
+    <mat-error *ngIf="registroForm.get('idTecnico')?.invalid && registroForm.get('idTecnico')?.touched">
+      A escolha de um técnico é obrigatória.
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Serviço</mat-label>
+    <input type="text" matInput formControlName="idServico" [matAutocomplete]="autoServico" required>
+    <mat-autocomplete #autoServico="matAutocomplete">
+      <mat-option *ngFor="let servico of servicosFiltrados | async" [value]="servico.idServico">
+        {{ servico.descricao }}
+      </mat-option>
+    </mat-autocomplete>
+    <mat-error *ngIf="registroForm.get('idServico')?.invalid && registroForm.get('idServico')?.touched">
+      A escolha de um serviço é obrigatória.
+    </mat-error>
+  </mat-form-field>
+
+  <div *ngIf="isRootOrGerente">
     <mat-form-field appearance="fill">
-        <mat-label>Contrato</mat-label>
-        <input matInput formControlName="contrato" required>
-        <mat-error *ngIf="registroForm.get('contrato')?.invalid && registroForm.get('contrato')?.touched">
-          O campo Contrato é obrigatório.
-        </mat-error>
+      <mat-label>Valor Claro</mat-label>
+      <input matInput type="number" formControlName="valorClaro">
     </mat-form-field>
-  
+
     <mat-form-field appearance="fill">
-      <mat-label>OS</mat-label>
-      <input matInput formControlName="os" required>
-      <mat-error *ngIf="registroForm.get('os')?.invalid && registroForm.get('os')?.touched">
-        O campo OS é obrigatório.
-      </mat-error>
+      <mat-label>Valor Macedo</mat-label>
+      <input matInput type="number" formControlName="valorMacedo">
     </mat-form-field>
-  
-    <mat-form-field appearance="fill">
-      <mat-label>Data</mat-label>
-      <input matInput [matDatepicker]="picker" formControlName="data" required>
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-      <mat-error *ngIf="registroForm.get('data')?.invalid && registroForm.get('data')?.touched">
-        A data é obrigatória.
-      </mat-error>
-    </mat-form-field>
-  
-    <mat-form-field appearance="fill">
-      <mat-label>Técnico</mat-label>
-      <input type="text" matInput formControlName="idTecnico" [matAutocomplete]="autoTecnico" required>
-      <mat-autocomplete #autoTecnico="matAutocomplete">
-        <mat-option *ngFor="let tecnico of tecnicosFiltrados | async" [value]="tecnico.idTecnico">
-          {{ tecnico.nome }}
-        </mat-option>
-      </mat-autocomplete>
-      <mat-error *ngIf="registroForm.get('idTecnico')?.invalid && registroForm.get('idTecnico')?.touched">
-        A escolha de um técnico é obrigatória.
-      </mat-error>
-    </mat-form-field>
-  
-    <mat-form-field appearance="fill">
-      <mat-label>Serviço</mat-label>
-      <input type="text" matInput formControlName="idServico" [matAutocomplete]="autoServico" required>
-      <mat-autocomplete #autoServico="matAutocomplete">
-        <mat-option *ngFor="let servico of servicosFiltrados | async" [value]="servico.idServico">
-          {{ servico.descricao }}
-        </mat-option>
-      </mat-autocomplete>
-      <mat-error *ngIf="registroForm.get('idServico')?.invalid && registroForm.get('idServico')?.touched">
-        A escolha de um serviço é obrigatória.
-      </mat-error>
-    </mat-form-field>
-  
-    <div *ngIf="isRootOrGerente">
-      <mat-form-field appearance="fill">
-        <mat-label>Valor Claro</mat-label>
-        <input matInput type="number" formControlName="valorClaro">
-      </mat-form-field>
-  
-      <mat-form-field appearance="fill">
-        <mat-label>Valor Macedo</mat-label>
-        <input matInput type="number" formControlName="valorMacedo">
-      </mat-form-field>
-    </div>
-  
-    <button mat-raised-button color="primary" type="submit" [disabled]="!registroForm.valid">Registrar</button>
-    
-  </form>
-  
+  </div>
+
+  <button mat-raised-button color="primary" type="submit" [disabled]="!registroForm.valid">Registrar</button>
+
+</form>
+
+<div class="tabela-listar-servicos">
+  <table mat-table [dataSource]="servicosExecutadosDataSource" class="mat-elevation-z8">
+
+    <!-- Coluna ID -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> ID </th>
+      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    </ng-container>
+
+    <!-- Coluna Contrato -->
+    <ng-container matColumnDef="contrato">
+      <th mat-header-cell *matHeaderCellDef> Contrato </th>
+      <td mat-cell *matCellDef="let element"> {{element.contrato}} </td>
+    </ng-container>
+
+    <!-- Coluna Tipo OS -->
+    <ng-container matColumnDef="os">
+      <th mat-header-cell *matHeaderCellDef> OS </th>
+      <td mat-cell *matCellDef="let element"> {{element.os}} </td>
+    </ng-container>
+
+    <!-- Coluna Tipo Data -->
+    <ng-container matColumnDef="data">
+      <th mat-header-cell *matHeaderCellDef> Data </th>
+      <td mat-cell *matCellDef="let element"> {{element.data}} </td>
+    </ng-container>
+
+    <!-- Coluna Tipo Nome Técnico -->
+    <ng-container matColumnDef="nomeTecnico">
+      <th mat-header-cell *matHeaderCellDef> Nome Técnico </th>
+      <td mat-cell *matCellDef="let element"> {{element.nomeTecnico}} </td>
+    </ng-container>
+
+    <!-- Coluna Tipo Descrição Serviço -->
+    <ng-container matColumnDef="descricaoServico">
+      <th mat-header-cell *matHeaderCellDef> Descrição Serviço </th>
+      <td mat-cell *matCellDef="let element"> {{element.descricaoServico}} </td>
+    </ng-container>
+
+    <!-- Coluna Valor Claro -->
+    <ng-container matColumnDef="valorClaro">
+      <th mat-header-cell *matHeaderCellDef> Valor Claro </th>
+      <td mat-cell *matCellDef="let element"> {{element.valorClaro}} </td>
+    </ng-container>
+
+    <!-- Coluna Valor Macedo -->
+    <ng-container matColumnDef="valorMacedo">
+      <th mat-header-cell *matHeaderCellDef> Valor Macedo </th>
+      <td mat-cell *matCellDef="let element"> {{element.valorMacedo}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <!-- Linhas da Tabela -->
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+  </table>
+
+  <mat-paginator [length]="servicosExecutadosDataSource.data.length" [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"
+    aria-label="Select page of technicians">
+  </mat-paginator>
+
+</div>

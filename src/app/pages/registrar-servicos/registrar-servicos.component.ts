@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { RegistrarServicosService } from 'src/app/core/services/registrar-servicos.service';
-import { RegistoServicoDTO, Servico, Tecnico } from 'src/app/core/types/type';
+import { RegistroServicoDTO, Servico, Tecnico } from 'src/app/core/types/type';
 
 @Component({
   selector: 'app-registrar-servicos',
@@ -17,9 +19,14 @@ export class RegistrarServicosComponent implements OnInit {
   tecnicos: Tecnico[] = []; // Sua lista de técnicos
   servicos: Servico[] = []; // Sua lista de serviços
   tecnicoControl = new FormControl(); // Adicionado o FormControl
+  servicosExecutadosDataSource = new MatTableDataSource<RegistroServicoDTO>([]);
+  displayedColumns: string[] = ['id', 'contrato', 'os', 'data', 'nomeTecnico', 'descricaoServico', 'valorClaro', 'valorMacedo'];
 
+  @ViewChild(MatPaginator)
+  paginator!: MatPaginator;
 
   constructor(
+    private changeDetectorRef: ChangeDetectorRef, 
     private fb: FormBuilder,
     private registrarServicosService: RegistrarServicosService
   ) {
@@ -34,7 +41,8 @@ export class RegistrarServicosComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
+    this.carregarServicosExecutados();
     this.tecnicosFiltrados = this.tecnicoControl.valueChanges
       .pipe(
         startWith(''),
@@ -45,7 +53,7 @@ export class RegistrarServicosComponent implements OnInit {
 
   registrar(): void {
     if (this.registroForm.valid) {
-      const registro: RegistoServicoDTO = this.registroForm.value;
+      const registro: RegistroServicoDTO = this.registroForm.value;
       // Chamada ao serviço para registrar
       this.registrarServicosService.registrarServico(registro).subscribe(
         success => {
@@ -70,6 +78,19 @@ export class RegistrarServicosComponent implements OnInit {
   get isRootOrGerente(): boolean {
     const tipoUsuario = localStorage.getItem('tipoUsuarioLogado');
     return tipoUsuario === 'ROOT' || tipoUsuario === 'GERENTE';
+  }
+
+  carregarServicosExecutados(): void {
+    this.registrarServicosService.listarServicosExecutados(0, 20).subscribe({
+      next: (data: any) => {
+        console.log('Dados recebidos: ', data);
+        this.servicosExecutadosDataSource = new MatTableDataSource<RegistroServicoDTO>(data.content);
+        this.servicosExecutadosDataSource.paginator = this.paginator;
+        console.log('Dados após atribuição: ', this.servicosExecutadosDataSource.data);
+        this.changeDetectorRef.detectChanges();
+      },
+      error: (err) => console.error('Error ao carregar dados', err)
+    });
   }
 
 }

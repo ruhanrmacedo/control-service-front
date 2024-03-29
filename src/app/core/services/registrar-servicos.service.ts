@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -22,5 +22,11 @@ export class RegistrarServicosService {
     const headers = this.getHeaders();
     // Endpoint para registrar um serviço, ajuste conforme necessário
     return this.http.post(`${this.apiUrl}/registrarServico`, dadosServico, { headers });
+  }
+
+  listarServicosExecutados(page: number, size: number): Observable<any>{
+    const headers = this.getHeaders();
+    const params = { params: new HttpParams().set('page', String(page)).set('size', String(size)) };
+    return this.http.get<any>(`${this.apiUrl}/listarServicosExecutados`, { headers, ...params } );
   }
 }
