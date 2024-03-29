@@ -42,7 +42,7 @@
   <mat-form-field appearance="fill">
     <mat-label>Serviço</mat-label>
     <input type="text" matInput formControlName="idServico" [matAutocomplete]="autoServico" required>
-    <mat-autocomplete #autoServico="matAutocomplete">
+    <mat-autocomplete #autoServico="matAutocomplete" (optionSelected)="onServicoSelected($event.option.value)">
       <mat-option *ngFor="let servico of servicosFiltrados | async" [value]="servico.idServico">
         {{ servico.descricao }}
       </mat-option>
@@ -55,12 +55,12 @@
   <div *ngIf="isRootOrGerente">
     <mat-form-field appearance="fill">
       <mat-label>Valor Claro</mat-label>
-      <input matInput type="number" formControlName="valorClaro">
+      <input matInput type="number" formControlName="valorClaro" readonly>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Valor Macedo</mat-label>
-      <input matInput type="number" formControlName="valorMacedo">
+      <input matInput type="number" formControlName="valorMacedo" readonly>
     </mat-form-field>
   </div>
 

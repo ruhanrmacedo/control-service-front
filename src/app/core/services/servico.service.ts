@@ -48,4 +48,9 @@ export class ServicoService {
     const headers = this.getHeaders();
     return this.http.delete(`${this.apiUrl}/excluirServico/${idServico}`, { headers })
   }
+
+  buscarServicoPorId(idServico: number): Observable<any> {
+    const headers = this.getHeaders();
+    return this.http.get<any>(`${this.apiUrl}/detalharServico/${idServico}`, { headers });
+  }
 }

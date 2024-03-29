@@ -5,6 +5,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { RegistrarServicosService } from 'src/app/core/services/registrar-servicos.service';
+import { ServicoService } from 'src/app/core/services/servico.service';
+import { TecnicoService } from 'src/app/core/services/tecnico.service';
 import { RegistroServicoDTO, Servico, Tecnico } from 'src/app/core/types/type';
 
 @Component({
@@ -19,6 +21,7 @@ export class RegistrarServicosComponent implements OnInit {
   tecnicos: Tecnico[] = []; // Sua lista de técnicos
   servicos: Servico[] = []; // Sua lista de serviços
   tecnicoControl = new FormControl(); // Adicionado o FormControl
+  servicoControl = new FormControl();
   servicosExecutadosDataSource = new MatTableDataSource<RegistroServicoDTO>([]);
   displayedColumns: string[] = ['id', 'contrato', 'os', 'data', 'nomeTecnico', 'descricaoServico', 'valorClaro', 'valorMacedo'];
 
@@ -28,7 +31,9 @@ export class RegistrarServicosComponent implements OnInit {
   constructor(
     private changeDetectorRef: ChangeDetectorRef, 
     private fb: FormBuilder,
-    private registrarServicosService: RegistrarServicosService
+    private registrarServicosService: RegistrarServicosService,
+    private tecnicoService: TecnicoService,
+    private servicoService: ServicoService
   ) {
     this.registroForm = this.fb.group({
       contrato: ['', [Validators.required]], // Use array de validadores
@@ -43,12 +48,17 @@ export class RegistrarServicosComponent implements OnInit {
 
   ngOnInit(): void {
     this.carregarServicosExecutados();
-    this.tecnicosFiltrados = this.tecnicoControl.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => typeof value === 'string' ? value : ''), // Conversão para string
-        map(value => this._filter(value))
-      );
+    this.loadTecnicos();
+    this.loadServicos();
+
+    this.tecnicoService.listarTecnicos(0, 20).subscribe(tecnicos => {
+      this.tecnicos = tecnicos.content; // Supondo que a resposta tenha um campo 'content'
+    });
+    this.servicoService.listarServicos(0, 20).subscribe(servicos => {
+      this.servicos = servicos.content; // Supondo que a resposta tenha um campo 'content'
+    });
+
+    this.setupAutocompleteFilters();
   }
 
   registrar(): void {
@@ -70,14 +80,60 @@ export class RegistrarServicosComponent implements OnInit {
     }
   }
 
-  private _filter(value: string): Tecnico[] { // Assumindo que valor é string
+  get isRootOrGerente(): boolean {
+    const tipoUsuario = localStorage.getItem('tipoUsuarioLogado');
+    return tipoUsuario === 'ROOT' || tipoUsuario === 'GERENTE';
+  }
+
+  private loadTecnicos() {
+    // Altere o número de página e tamanho conforme necessário
+    this.tecnicoService.listarTecnicos(0, 1000).subscribe({
+      next: (response) => {
+        // Atualize aqui com a propriedade correta da sua resposta, se for diferente
+        this.tecnicos = response.content;
+      },
+      error: (error) => {
+        console.error('Erro ao carregar técnicos', error);
+      }
+    });
+  }
+
+  private loadServicos() {
+    // Altere o número de página e tamanho conforme necessário
+    this.servicoService.listarServicos(0, 1000).subscribe({
+      next: (response) => {
+        // Atualize aqui com a propriedade correta da sua resposta, se for diferente
+        this.servicos = response.content;
+      },
+      error: (error) => {
+        console.error('Erro ao carregar serviços', error);
+      }
+    });
+  }
+
+  private setupAutocompleteFilters() {
+    this.tecnicosFiltrados = this.tecnicoControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this.filterTecnicos(value))
+      );
+    this.servicosFiltrados = this.servicoControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this.filterServicos(value))
+      );
+  
+    // Adicionar um observável similar para os serviços
+  }
+
+  private filterTecnicos(value: string): Tecnico[] {
     const filterValue = value.toLowerCase();
     return this.tecnicos.filter(tecnico => tecnico.nome.toLowerCase().includes(filterValue));
   }
 
-  get isRootOrGerente(): boolean {
-    const tipoUsuario = localStorage.getItem('tipoUsuarioLogado');
-    return tipoUsuario === 'ROOT' || tipoUsuario === 'GERENTE';
+  private filterServicos(value: string): Servico[] {
+    const filterValue = value.toLowerCase();
+    return this.servicos.filter(servicos => servicos.descricao.toLowerCase().includes(filterValue));
   }
 
   carregarServicosExecutados(): void {
@@ -92,5 +148,16 @@ export class RegistrarServicosComponent implements OnInit {
       error: (err) => console.error('Error ao carregar dados', err)
     });
   }
+
+  onServicoSelected(idServico: number): void {
+    this.servicoService.buscarServicoPorId(idServico).subscribe(servico => {
+      this.registroForm.patchValue({
+        valorClaro: servico.valorClaro,
+        valorMacedo: servico.valorMacedo
+      });
+    });
+  }
+
+
 
 }
