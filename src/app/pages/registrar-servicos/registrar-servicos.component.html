@@ -144,6 +144,21 @@
 
   </div>
 
+  <div class="resumo-mensal-container">
+    <div class="summary-field-container">
+      <span class="label">Quantidade de Serviços:</span>
+      <span class="value">{{ quantidadeServicos }}</span>
+    </div>
+    <div class="summary-field-container">
+      <span class="label">Valor Total Claro:</span>
+      <span class="value">{{ valorTotalClaro | currency:'BRL' }}</span>
+    </div>
+    <div class="summary-field-container">
+      <span class="label">Valor Total Macedo:</span>
+      <span class="value">{{ valorTotalMacedos | currency:'BRL' }}</span>
+    </div>
+  </div>
+
   <div class="links">
     <a routerLink="/">Voltar para Home</a>
   </div>

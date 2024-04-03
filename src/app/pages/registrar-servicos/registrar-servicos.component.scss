@@ -120,4 +120,39 @@
             cursor: pointer;
         }
     }
+
+    .resumo-mensal-container {
+        display: flex;
+        justify-content: space-between; // This will align the child elements to the sides
+        align-items: center;
+        padding: 25px;
+        margin-top: 20px; // Adjust as needed for spacing
+        width: 100%;
+      
+        // Create a container for the summary fields that mimics the input style
+        .summary-field-container {
+          display: flex;
+          align-items: center;
+          padding: 0 15px;
+          height: 56px; // Match the height of your input fields
+          border: 1px solid #ccc; // Match the border of your input fields
+          border-radius: 4px; // Match the border-radius of your input fields
+          background-color: #f9f9f9; // Match the background color of your input fields
+          margin-right: 10px; // Spacing between the summary fields
+          
+          .label {
+            font-weight: bold; // To match your form field labels
+            margin-right: 10px; // Spacing between label and value
+            color: #333; // Label text color
+          }
+          
+          .value {
+            font-size: 16px; // Match font size to your input fields
+            color: #333; // Value text color
+          }
+        }
+      
+        // Ensure that the summary fields are on the right
+        margin-left: auto;
+      }
 }

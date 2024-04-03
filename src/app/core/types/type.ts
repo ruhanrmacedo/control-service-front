@@ -52,3 +52,9 @@ export interface RegistroServicoDTO {
   valorClaro?: number;
   valorMacedo?: number;
 }
+
+export interface ResumoMensalServicoDTO {
+  quantidadeServicos: number;
+  valorTotalClaro: number;
+  valorTotalMacedos: number;
+}

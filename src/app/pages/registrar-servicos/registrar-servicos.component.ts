@@ -26,6 +26,9 @@ export class RegistrarServicosComponent implements OnInit {
   servicosExecutadosDataSource = new MatTableDataSource<RegistroServicoDTO>([]);
   displayedColumns: string[] = ['id', 'contrato', 'os', 'data', 'nomeTecnico', 'descricaoServico', 'valorClaro', 'valorMacedo'];
   servicoSelecionado: any = null;
+  quantidadeServicos: number | null = null;
+  valorTotalClaro: number | null = null;
+  valorTotalMacedos: number | null = null;
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
@@ -64,38 +67,51 @@ export class RegistrarServicosComponent implements OnInit {
 
   registrar(): void {
     if (this.registroForm.valid) {
-      const tecnico = this.tecnicoControl.value;
-      const servico = this.servicoControl.value;
-
       const formValue = this.registroForm.value;
       const registro: RegistroServicoDTO = {
         contrato: formValue.contrato,
         os: formValue.os,
         data: formValue.data,
-        idTecnico: tecnico?.idTecnico, // Ajuste para extrair o ID
-        idServico: servico?.idServico, // Ajuste para extrair o ID
+        idTecnico: formValue.idTecnico,
+        idServico: formValue.idServico,
         valorClaro: formValue.valorClaro,
         valorMacedo: formValue.valorMacedo
       };
-
-      // Envie 'registro' para o backend
-      this.registrarServicosService.registrarServico(registro).subscribe(
-        success => {
+  
+      this.registrarServicosService.registrarServico(registro).subscribe({
+        next: (success) => {
           console.log('Serviço registrado com sucesso');
+  
+          // Extrai o mês e o ano da data do serviço registrado
+          const data = new Date(registro.data);
+          const mes = data.getMonth() + 1; // getMonth() retorna mês de 0 a 11
+          const ano = data.getFullYear();
+  
+          // Atualiza a tabela com os serviços do mês do serviço registrado
+          this.atualizarListaServicos(mes, ano);
+          this.obterResumoMensal(mes, ano);
+  
           this.registroForm.reset();
-          // Aqui você pode adicionar qualquer lógica adicional após o sucesso da operação, como mostrar uma mensagem de sucesso ou atualizar uma lista de registros.
         },
-        error => {
+        error: (error) => {
           console.error('Ocorreu um erro:', error);
-          // E aqui, você pode tratar erros da requisição, como mostrar uma mensagem de erro.
         }
-      );
+      });
     } else {
       console.error('Formulário inválido');
-      // Aqui, você pode adicionar lógica para tratar um formulário inválido, como mostrar mensagens de erro específicas.
     }
   }
 
+  atualizarListaServicos(mes: number, ano: number): void {
+    this.registrarServicosService.listarServicosPorMesEAno(mes, ano).subscribe({
+      next: (servicos) => {
+        this.servicosExecutadosDataSource = new MatTableDataSource<RegistroServicoDTO>(servicos);
+        this.servicosExecutadosDataSource.paginator = this.paginator;
+        this.changeDetectorRefs.detectChanges();
+      },
+      error: (err) => console.error('Erro ao carregar serviços executados', err)
+    });
+  }
 
 
   get isRootOrGerente(): boolean {
@@ -225,6 +241,18 @@ export class RegistrarServicosComponent implements OnInit {
       alert('Por favor, selecione um contrato para excluir.');
     }
 
+  }
+
+  obterResumoMensal(mes: number, ano: number): void {
+    this.registrarServicosService.obterResumoMensal(mes, ano).subscribe({
+      next: (resumo) => {
+        this.quantidadeServicos = resumo.quantidadeServicos;
+        this.valorTotalClaro = resumo.valorTotalClaro;
+        this.valorTotalMacedos = resumo.valorTotalMacedos;
+        this.changeDetectorRefs.detectChanges();
+      },
+      error: (err) => console.error('Erro ao obter o resumo mensal', err)
+    });
   }
 }
 
