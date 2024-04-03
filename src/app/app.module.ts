@@ -40,7 +40,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 import { ModalEditarTecnicoComponent } from './shared/modal/tecnico/modal-editar-tecnico/modal-editar-tecnico.component'; 
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatAutocompleteModule } from '@angular/material/autocomplete'; 
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { ModalEditarServicoExecutadoComponent } from './shared/modal/registrar-servico/modal-editar-servico-executado/modal-editar-servico-executado.component'; 
 
 
 
@@ -67,6 +68,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     RegistrarServicosComponent,
     ModalEditarServicoComponent,
     ModalEditarTecnicoComponent,
+    ModalEditarServicoExecutadoComponent,
 
   ],
   imports: [

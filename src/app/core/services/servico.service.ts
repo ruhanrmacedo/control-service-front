@@ -51,6 +51,7 @@ export class ServicoService {
 
   buscarServicoPorId(idServico: number): Observable<any> {
     const headers = this.getHeaders();
+    // Observe que removemos as chaves {idServico} do final da URL.
     return this.http.get<any>(`${this.apiUrl}/detalharServico/${idServico}`, { headers });
   }
 }

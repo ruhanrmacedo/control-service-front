@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 export class TecnicoService {
   private apiUrl = 'http://localhost:8081/api/tecnicos'
 
-  constructor( private http: HttpClient ) { }
+  constructor(private http: HttpClient) { }
 
   private getHeaders(): HttpHeaders {
     return new HttpHeaders({
@@ -47,6 +47,13 @@ export class TecnicoService {
 
   buscarTecnicoPorId(idTecnico: number): Observable<any> {
     const headers = this.getHeaders();
-    return this.http.get<any>(`${this.apiUrl}/detalharTecnico/${idTecnico}`, { headers });
+    return this.http.get<any>(`${this.apiUrl}/detalharTecnico/${idTecnico}`, { headers })
+      .pipe(
+        tap(
+          data => console.log('Detalhes do serviço recebidos:', data),
+          error => console.error('Erro ao buscar detalhes do serviço:', error)
+        )
+      );
+    ;
   }
 }

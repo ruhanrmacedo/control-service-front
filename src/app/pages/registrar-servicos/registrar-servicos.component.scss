@@ -1,0 +1,123 @@
+.registro-servicos-page-container {
+    max-width: 100%;
+    margin: auto;
+    padding: 25px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: rgba(249, 249, 249, 0.8);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    .registro-servicos-container {
+        max-width: 100%;
+        margin: auto;
+        padding: 25px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        background-color: rgba(249, 249, 249, 0.8);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        .registro-form-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+
+            // Campo de formulário comum
+            .mat-form-field {
+                margin-bottom: 20px;
+            }
+
+            // Linha superior dos campos (25% cada)
+            .contrato-control,
+            .os-control,
+            .data-control,
+            .tecnico-control {
+                flex: 1;
+                max-width: 25%;
+            }
+
+            // Linha inferior dos campos
+            .servico-control {
+                flex: 2;
+                max-width: 50%;
+            }
+        }
+
+        button[mat-raised-button] {
+            background-color: #333;
+            color: white;
+            width: 100%;
+            margin-top: 20px;
+
+            &:hover {
+                background-color: darken(#333, 10%);
+            }
+        }
+    }
+
+
+
+    .tabela-listar-servicos {
+        overflow-x: auto;
+        padding: 25px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        background-color: rgba(249, 249, 249, 0.8);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    table {
+        width: 100%;
+        margin-top: 40px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+        th {
+            background-color: #333;
+            color: white;
+        }
+
+        td {
+            padding: 8px 16px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .mat-paginator {
+            margin-top: 20px;
+        }
+    }
+
+    .botoes-container {
+        display: flex;
+        justify-content: center; // Alinha os itens horizontalmente ao centro
+        gap: 10px; // Adiciona espaço entre os botões
+    }
+
+    .btn-editar,
+    .btn-excluir {
+        background-color: #333;
+        color: #f9f9f9;
+    }
+
+    .linha-selecionada {
+        background-color: #333; // Cor de fundo para a linha selecionada
+    }
+
+    .links {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+
+        a,
+        button {
+            color: #333;
+            text-decoration: none;
+            padding: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+    }
+}

@@ -29,4 +29,14 @@ export class RegistrarServicosService {
     const params = { params: new HttpParams().set('page', String(page)).set('size', String(size)) };
     return this.http.get<any>(`${this.apiUrl}/listarServicosExecutados`, { headers, ...params } );
   }
+
+  editarServicoExecutado(dadosAtualizados: any): Observable<any> {
+    const headers = this.getHeaders();
+    return this.http.put<any>(`${this.apiUrl}/editarServicoExecutado`, dadosAtualizados, { headers })
+  }
+
+  excluirServicoExecutado(id: number): Observable<any> {
+    const headers = this.getHeaders();
+    return this.http.delete(`${this.apiUrl}/excluirServicoExecutado/${id}`, { headers })
+  }
 }
