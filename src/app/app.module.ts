@@ -41,7 +41,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { ModalEditarTecnicoComponent } from './shared/modal/tecnico/modal-editar-tecnico/modal-editar-tecnico.component'; 
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { ModalEditarServicoExecutadoComponent } from './shared/modal/registrar-servico/modal-editar-servico-executado/modal-editar-servico-executado.component'; 
+import { ModalEditarServicoExecutadoComponent } from './shared/modal/registrar-servico/modal-editar-servico-executado/modal-editar-servico-executado.component';
+import { PainelComponent } from './pages/painel/painel.component'; 
 
 
 
@@ -69,6 +70,7 @@ import { ModalEditarServicoExecutadoComponent } from './shared/modal/registrar-s
     ModalEditarServicoComponent,
     ModalEditarTecnicoComponent,
     ModalEditarServicoExecutadoComponent,
+    PainelComponent,
 
   ],
   imports: [
