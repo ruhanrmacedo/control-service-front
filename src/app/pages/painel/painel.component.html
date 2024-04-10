@@ -1,1 +1,130 @@
-<p>painel works!</p>
+<div class="painel-container">
+  <form [formGroup]="registroForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="fill" class="tecnico-control">
+      <mat-label>Técnico</mat-label>
+      <input type="text" matInput [formControl]="tecnicoControl" [matAutocomplete]="autoTecnico" required>
+      <mat-autocomplete #autoTecnico="matAutocomplete" [displayWith]="displayFnTecnico"
+        (optionSelected)="onTecnicoSelected($event)">
+        <mat-option *ngFor="let tecnico of tecnicosFiltrados | async" [value]="tecnico">
+          {{tecnico.nome}}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error *ngIf="registroForm.get('idTecnico')?.invalid && registroForm.get('idTecnico')?.touched">
+        A escolha de um técnico é obrigatória.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Mês</mat-label>
+      <mat-select formControlName="mes">
+        <mat-option *ngFor="let mes of meses" [value]="mes.valor">
+          {{mes.nome}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Ano</mat-label>
+      <mat-select formControlName="ano">
+        <mat-option *ngFor="let ano of anos" [value]="ano">
+          {{ano}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-slide-toggle formControlName="bonus">Incluir Bônus?</mat-slide-toggle>
+
+    <button type="submit" mat-raised-button color="primary">Buscar</button>
+  </form>
+
+  <!-- Tabela de Serviços Executados -->
+  <table mat-table [dataSource]="contratosExecutadosDataSource" class="mat-elevation-z8">
+
+    <!-- Coluna ID -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> ID </th>
+      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    </ng-container>
+
+    <!-- Coluna Contrato -->
+    <ng-container matColumnDef="contrato">
+      <th mat-header-cell *matHeaderCellDef> Contrato </th>
+      <td mat-cell *matCellDef="let element"> {{element.contrato}} </td>
+    </ng-container>
+
+    <!-- Coluna Tipo OS -->
+    <ng-container matColumnDef="os">
+      <th mat-header-cell *matHeaderCellDef> OS </th>
+      <td mat-cell *matCellDef="let element"> {{element.os}} </td>
+    </ng-container>
+
+    <!-- Coluna Tipo Data -->
+    <ng-container matColumnDef="data">
+      <th mat-header-cell *matHeaderCellDef> Data </th>
+      <td mat-cell *matCellDef="let element"> {{element.data}} </td>
+    </ng-container>
+
+    <!-- Coluna Tipo Nome Técnico -->
+    <ng-container matColumnDef="nomeTecnico">
+      <th mat-header-cell *matHeaderCellDef> Nome Técnico </th>
+      <td mat-cell *matCellDef="let element"> {{element.nomeTecnico}} </td>
+    </ng-container>
+
+    <!-- Coluna Tipo Descrição Serviço -->
+    <ng-container matColumnDef="descricaoServico">
+      <th mat-header-cell *matHeaderCellDef> Descrição Serviço </th>
+      <td mat-cell *matCellDef="let element"> {{element.descricaoServico}} </td>
+    </ng-container>
+
+    <!-- Coluna Valor Claro -->
+    <ng-container matColumnDef="valorClaro">
+      <th mat-header-cell *matHeaderCellDef> Valor Claro </th>
+      <td mat-cell *matCellDef="let element"> {{element.valorClaro}} </td>
+    </ng-container>
+
+    <!-- Coluna Valor Macedo -->
+    <ng-container matColumnDef="valorMacedo">
+      <th mat-header-cell *matHeaderCellDef> Valor Macedo </th>
+      <td mat-cell *matCellDef="let element"> {{element.valorMacedo}} </td>
+    </ng-container>
+
+    <!-- Coluna Valor Comissao -->
+    <ng-container matColumnDef="comissao">
+      <th mat-header-cell *matHeaderCellDef> Comissão </th>
+      <td mat-cell *matCellDef="let element"> {{element.comissao}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <!-- Linhas da Tabela -->
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <div class="resumo-mensal-container">
+    <div class="summary-field-container">
+      <span class="label">Quantidade de Serviços:</span>
+      <span class="value">{{ contratosExecutadosDataSource.data.length }}</span>
+    </div>
+    <div class="summary-field-container">
+      <span class="label">Valor Total Claro:</span>
+      <span class="value">{{ valorTotalClaro | currency:'BRL' }}</span>
+    </div>
+    <div class="summary-field-container">
+      <span class="label">Valor Total Macedo:</span>
+      <span class="value">{{ valorTotalMacedo | currency:'BRL' }}</span>
+    </div>
+    <div class="summary-field-container">
+      <span class="label">Comissão Total:</span>
+      <span class="value">{{ comissaoTotal | currency:'BRL' }}</span>
+    </div>
+  </div>
+
+  <button *ngIf="!isPrinting" (click)="openPrintModal()">
+    <mat-icon>print</mat-icon> Imprimir
+  </button>
+
+  <div class="links">
+    <a routerLink="/">Voltar para Home</a>
+  </div>
+
+
+</div>

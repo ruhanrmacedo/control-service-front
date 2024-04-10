@@ -43,7 +43,10 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ModalEditarServicoExecutadoComponent } from './shared/modal/registrar-servico/modal-editar-servico-executado/modal-editar-servico-executado.component';
 import { PainelComponent } from './pages/painel/painel.component'; 
-
+import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatIconModule } from '@angular/material/icon';
+import { ModalComissaoComponent } from './shared/modal/painel/modal-comissao/modal-comissao.component'; 
 
 
 @NgModule({
@@ -71,6 +74,7 @@ import { PainelComponent } from './pages/painel/painel.component';
     ModalEditarTecnicoComponent,
     ModalEditarServicoExecutadoComponent,
     PainelComponent,
+    ModalComissaoComponent,
 
   ],
   imports: [
@@ -92,7 +96,10 @@ import { PainelComponent } from './pages/painel/painel.component';
     MatNativeDateModule,
     ReactiveFormsModule,
     MatPaginatorModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatSelectModule,
+    MatSlideToggleModule,
+    MatIconModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

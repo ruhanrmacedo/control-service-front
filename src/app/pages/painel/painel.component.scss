@@ -1,0 +1,117 @@
+.painel-container {
+    max-width: 100%;
+    margin: auto;
+    padding: 25px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: rgba(249, 249, 249, 0.8);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Aplica estilos ao formulário, semelhante ao .registro-form-container */
+.form-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* Estilo comum dos campos do formulário */
+.mat-form-field {
+    margin-bottom: 20px;
+    width: 100%;
+    /* Ocupar a largura total em dispositivos menores */
+}
+
+/* Estilos para botão de busca */
+button[mat-raised-button] {
+    background-color: #333;
+    color: white;
+    width: 100%;
+    margin-top: 20px;
+}
+
+button[mat-raised-button]:hover {
+    background-color: darken(#333, 10%);
+}
+
+/* Estilização da tabela, semelhante ao .tabela-listar-servicos */
+.mat-elevation-z8 {
+    overflow-x: auto;
+    padding: 25px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: rgba(249, 249, 249, 0.8);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+table {
+    width: 100%;
+    margin-top: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+th {
+    background-color: #333 !important;
+    color: white;
+}
+
+td {
+    padding: 8px 16px;
+    border-bottom: 1px solid #ddd;
+}
+
+tr:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Estilização da área de resumo mensal */
+.resumo-mensal-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px;
+    margin-top: 20px;
+    width: 97%;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilização para links de navegação */
+.links {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.links a,
+.links button {
+    color: #333;
+    text-decoration: none;
+    padding: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* Resposta visual para campos obrigatórios que não foram tocados */
+.mat-error {
+    color: #d32f2f;
+}
+
+/* Adaptação para dispositivos menores, se necessário */
+@media (max-width: 768px) {
+    .form-container {
+        flex-direction: column;
+    }
+
+    .mat-form-field,
+    button[mat-raised-button] {
+        width: 100%;
+        max-width: none;
+    }
+}

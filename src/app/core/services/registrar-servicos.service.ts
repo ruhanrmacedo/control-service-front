@@ -18,11 +18,16 @@ export class RegistrarServicosService {
     });
   }
 
-  // Aqui você vai adicionar os métodos que interagem com o backend, exemplo:
+  // Endpoint para registrar um serviço executado
   registrarServico(dadosServico: any): Observable<any> {
     const headers = this.getHeaders();
-    // Endpoint para registrar um serviço, ajuste conforme necessário
     return this.http.post(`${this.apiUrl}/registrarServico`, dadosServico, { headers });
+  }
+
+  listarServicosExecutadosAdm(page: number, size: number): Observable<any>{
+    const headers = this.getHeaders();
+    const params = { params: new HttpParams().set('page', String(page)).set('size', String(size)) };
+    return this.http.get<any>(`${this.apiUrl}/listarServicosExecutadosAdm`, { headers, ...params } );
   }
 
   listarServicosExecutados(page: number, size: number): Observable<any>{

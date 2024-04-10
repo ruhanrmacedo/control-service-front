@@ -1,0 +1,59 @@
+.card-tecnico {
+    max-width: 320px;
+    background-color: #FEF7FF; /* Cor de fundo */
+    border-radius: 12px; /* Borda arredondada*/
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* Sombra sutil para profundidade */
+    margin: 10px; /* Espaço ao redor do cartão */
+
+    /* Estilização para o header do cartão */
+    mat-card-header {
+        background-color: #333; /* Cor de fundo para o header */
+        color: white; /* Texto branco para contraste */
+        padding: 16px 24px; /* Espaçamento interno */
+        border-top-left-radius: 12px; /* Arredondar apenas os cantos superiores */
+        border-top-right-radius: 12px;
+    }
+
+    /* Estilização para o título */
+    mat-card-title {
+        font-size: 1.2em; /* Tamanho maior para título */
+        font-weight: bold; /* Negrito para destaque */
+    }
+
+    /* Estilização para a imagem */
+    img {
+        width: 100%; /* Faz a imagem ocupar todo o espaço disponível */
+        height: auto; /* Mantém a proporção da imagem */
+        border-top-right-radius: 12px;
+        border-top-left-radius: 12px;
+    }
+
+    /* Estilização para o conteúdo do cartão */
+    mat-card-content {
+        padding: 16px 24px; /* Espaçamento interno */
+        color: #333; /* Cor escura para o texto para melhor leitura */
+        font-size: 1em; /* Tamanho padrão para texto */
+    }
+
+    /* Estilização para as ações do cartão */
+    mat-card-actions {
+        padding: 16px 24px; /* Espaçamento interno */
+        display: flex; /* Flexbox para alinhamento */
+        justify-content: center; /* Centraliza o botão */
+        button {
+            width: 100%; /* Faz o botão ocupar todo o espaço horizontal */
+            margin: 0 16px 16px; /* Margem para distanciar do conteúdo acima */
+            padding: 12px 20px; /* Espaçamento interno para o botão */
+            background-color: #333; /* Cor de fundo para o botão */
+            color: white; /* Texto branco para o botão */
+            font-weight: bold; /* Negrito para o texto do botão */
+            border: none; /* Remove a borda padrão */
+            border-radius: 8px; /* Borda arredondada para o botão */
+            cursor: pointer; /* Indica que o botão é clicável */
+            transition: background-color 0.3s; /* Transição suave para hover */
+        }
+        button:hover {
+            background-color: #333; /* Cor de fundo mais escura ao passar o mouse */
+        }
+    }
+}

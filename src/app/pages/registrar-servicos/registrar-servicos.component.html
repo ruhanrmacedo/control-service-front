@@ -73,7 +73,7 @@
     </form>
   </div>
 
-  <div class="tabela-listar-servicos">
+  <div class="tabela-listar-servicos" *ngIf="isUserGerenteOuRoot">
     <table mat-table [dataSource]="servicosExecutadosDataSource" class="mat-elevation-z8">
 
       <!-- Coluna ID -->
@@ -141,6 +141,57 @@
       <button class="btn-editar" mat-button (click)="editarServico()">Editar</button>
       <button class="btn-excluir" mat-button (click)="excluirServico()">Excluir</button>
     </div>
+
+  </div>
+
+  <div class="tabela-listar-servicos" *ngIf="!isUserGerenteOuRoot">
+    <table mat-table [dataSource]="servicosExecutadosAdmDataSource" class="mat-elevation-z8">
+
+      <!-- Coluna ID -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> ID </th>
+        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+      </ng-container>
+
+      <!-- Coluna Contrato -->
+      <ng-container matColumnDef="contrato">
+        <th mat-header-cell *matHeaderCellDef> Contrato </th>
+        <td mat-cell *matCellDef="let element"> {{element.contrato}} </td>
+      </ng-container>
+
+      <!-- Coluna Tipo OS -->
+      <ng-container matColumnDef="os">
+        <th mat-header-cell *matHeaderCellDef> OS </th>
+        <td mat-cell *matCellDef="let element"> {{element.os}} </td>
+      </ng-container>
+
+      <!-- Coluna Tipo Data -->
+      <ng-container matColumnDef="data">
+        <th mat-header-cell *matHeaderCellDef> Data </th>
+        <td mat-cell *matCellDef="let element"> {{element.data}} </td>
+      </ng-container>
+
+      <!-- Coluna Tipo Nome Técnico -->
+      <ng-container matColumnDef="nomeTecnico">
+        <th mat-header-cell *matHeaderCellDef> Nome Técnico </th>
+        <td mat-cell *matCellDef="let element"> {{element.nomeTecnico}} </td>
+      </ng-container>
+
+      <!-- Coluna Tipo Descrição Serviço -->
+      <ng-container matColumnDef="descricaoServico">
+        <th mat-header-cell *matHeaderCellDef> Descrição Serviço </th>
+        <td mat-cell *matCellDef="let element"> {{element.descricaoServico}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumnsAdm"></tr>
+      <!-- Linhas da Tabela -->
+      <tr mat-row *matRowDef="let row; columns: displayedColumnsAdm;"></tr>
+
+    </table>
+
+    <mat-paginator [length]="servicosExecutadosDataSource.data.length" [pageSize]="50" [pageSizeOptions]="[25, 50, 100]"
+      aria-label="Select page of technicians">
+    </mat-paginator>
 
   </div>
 

@@ -1,0 +1,52 @@
+<section class="modal-editar-servico">
+    <h1 mat-dialog-title>Editar Serviço</h1>
+    <div mat-dialog-content>
+      <div class="modal-editar-container">
+  
+        <div class="modal-editar-item">
+          <label>Id Serviço:</label>
+          <span>{{ data.idServico }}</span>
+        </div>
+  
+        <div class="modal-editar-item">
+          <label>Descrição:</label>
+          <input type="text" [(ngModel)]="data.descricao" />
+        </div>
+  
+        <div class="modal-editar-item">
+          <label>Valor Claro:</label>
+          <input type="text" [(ngModel)]="data.valorClaro" />
+        </div>
+  
+        <div class="modal-editar-item">
+          <label>Valor Macedo:</label>
+          <input type="text" [(ngModel)]="data.valorMacedo" />
+        </div>
+  
+        <div class="modal-editar-item">
+          <label>Tipo de Serviço Atual:</label>
+          <span>{{ data.tipoServico }}</span>
+        </div>
+        
+        <div class="modal-editar-item">
+          <label>Novo Tipo de Serviço:</label>
+          <select [(ngModel)]="data.novoTipoServico" name="novoTipoServico">
+            <option *ngFor="let tipo of tiposServico" [ngValue]="tipo">{{ tipo }}</option>
+          </select>
+        </div>
+  
+        <button mat-button (click)="salvarAlteracoes()">Salvar</button>
+        <button mat-button (click)="fecharModal()">Cancelar</button>
+      </div>
+    </div>
+  </section>
+<section class="modal-mensagem modal-sucesso" *ngIf="editadoComSucesso">
+    <h2>Edição bem-sucedida!</h2>
+    <p>{{ data.nome }}, editado com sucesso</p>
+    <button (click)="fecharModal()">OK</button>
+</section>
+<section class="modal-mensagem modal-erro" *ngIf="erroEditar">
+    <h2>Erro no cadastrado</h2>
+    <p>{{ mensagemErro }}</p>
+    <button (click)="fecharModalErro()">OK</button>
+</section>

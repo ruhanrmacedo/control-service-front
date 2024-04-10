@@ -1,0 +1,122 @@
+.print-container {
+    padding: 1rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+    h1 {
+        color: #333;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 1rem;
+
+        th,
+        td {
+            text-align: left;
+            padding: 0.5rem;
+            border-bottom: 1px solid #ddd;
+
+            &:not(:last-child) {
+                border-right: 1px solid #ddd;
+            }
+        }
+
+        th {
+            background-color: #f8f8f8;
+            font-weight: bold;
+            color: #333;
+        }
+    }
+
+    .total-comissao-container {
+        font-weight: bold;
+        margin-bottom: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        span {
+            font-size: 1.2rem;
+        }
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+
+        button {
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+
+            &:first-child {
+                background-color: #f0f0f0;
+                color: #333;
+
+                &:hover {
+                    background-color: #e0e0e0;
+                }
+            }
+
+            &:last-child {
+                background-color: #5cb85c;
+                color: #fff;
+
+                &:hover {
+                    background-color: #4cae4c;
+                }
+            }
+        }
+    }
+
+    .comissao-total-container {
+        background-color: #f2f2f2; // Uma cor de fundo sutil
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+        font-size: 1.1rem; // Um tamanho de fonte ligeiramente maior
+        text-align: right;
+        font-weight: 500; // Peso de fonte médio
+    }
+
+    button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        text-transform: uppercase; // Texto em maiúsculas para mais destaque
+        letter-spacing: 0.05em; // Espaçamento entre letras para legibilidade
+        transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+        outline: none; // Remove o contorno quando em foco (mas mantenha a acessibilidade em mente)
+        font-size: 0.9rem; // Fonte um pouco menor
+
+        &.print-btn {
+            background-color: #4a90e2; // Uma cor primária para a ação de imprimir
+            color: white;
+
+            &:hover {
+                background-color: darken(#4a90e2, 10%);
+            }
+        }
+
+        &.close-btn {
+            background-color: #7b7b7b; // Uma cor neutra para o botão de fechar
+            color: white;
+            margin-left: 15px; // Espaço entre os botões
+
+            &:hover {
+                background-color: darken(#7b7b7b, 10%);
+            }
+        }
+    }
+}

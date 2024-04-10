@@ -5,10 +5,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { AuthService } from 'src/app/core/services/auth.service';
 import { RegistrarServicosService } from 'src/app/core/services/registrar-servicos.service';
 import { ServicoService } from 'src/app/core/services/servico.service';
 import { TecnicoService } from 'src/app/core/services/tecnico.service';
-import { RegistroServicoDTO, Servico, ServicoGerente, Tecnico } from 'src/app/core/types/type';
+import { listarServicosExecutadosAdmDTO, RegistroServicoDTO, Servico, ServicoGerente, Tecnico } from 'src/app/core/types/type';
 
 @Component({
   selector: 'app-registrar-servicos',
@@ -24,7 +25,9 @@ export class RegistrarServicosComponent implements OnInit {
   tecnicoControl = new FormControl(); // Adicionado o FormControl
   servicoControl = new FormControl();
   servicosExecutadosDataSource = new MatTableDataSource<RegistroServicoDTO>([]);
+  servicosExecutadosAdmDataSource = new MatTableDataSource<listarServicosExecutadosAdmDTO>([]);
   displayedColumns: string[] = ['id', 'contrato', 'os', 'data', 'nomeTecnico', 'descricaoServico', 'valorClaro', 'valorMacedo'];
+  displayedColumnsAdm: string[] = ['id', 'contrato', 'os', 'data', 'nomeTecnico', 'descricaoServico'];
   servicoSelecionado: any = null;
   quantidadeServicos: number | null = null;
   valorTotalClaro: number | null = null;
@@ -32,14 +35,17 @@ export class RegistrarServicosComponent implements OnInit {
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
+  isUserGerenteOuRoot: any;
 
   constructor(
     private changeDetectorRefs: ChangeDetectorRef,
     private fb: FormBuilder,
     private registrarServicosService: RegistrarServicosService,
     private tecnicoService: TecnicoService,
-    private servicoService: ServicoService
+    private servicoService: ServicoService,
+    private authService: AuthService
   ) {
+    this.isUserGerenteOuRoot = this.authService.isGerenteOuRoot();
     this.registroForm = this.fb.group({
       contrato: ['', Validators.required],
       os: ['', Validators.required],
@@ -53,15 +59,21 @@ export class RegistrarServicosComponent implements OnInit {
 
   ngOnInit(): void {
     this.carregarServicosExecutados();
+    this.carregarServicosExecutadosAdm();
     this.loadTecnicos();
     this.loadServicos();
     this.tecnicoService.listarTecnicos(0, 1000).subscribe(tecnicos => {
       this.tecnicos = tecnicos.content; // Supondo que a resposta tenha um campo 'content'
     });
-    this.servicoService.listarServicosGerente(0, 1000).subscribe(servicos => {
-      this.servicos = servicos.content; // Supondo que a resposta tenha um campo 'content'
-    });
-
+    if (this.isUserGerenteOuRoot) {
+      this.servicoService.listarServicosGerente(0, 1000).subscribe(servicos => {
+        this.servicos = servicos.content; // Supondo que a resposta tenha um campo 'content'
+      });
+    } else {
+      this.servicoService.listarServicos(0, 1000).subscribe(servicos => {
+        this.servicos = servicos.content; // Supondo que a resposta tenha um campo 'content'
+      });
+    }
     this.setupAutocompleteFilters();
   }
 
@@ -77,20 +89,20 @@ export class RegistrarServicosComponent implements OnInit {
         valorClaro: formValue.valorClaro,
         valorMacedo: formValue.valorMacedo
       };
-  
+
       this.registrarServicosService.registrarServico(registro).subscribe({
         next: (success) => {
           console.log('Serviço registrado com sucesso');
-  
+
           // Extrai o mês e o ano da data do serviço registrado
           const data = new Date(registro.data);
           const mes = data.getMonth() + 1; // getMonth() retorna mês de 0 a 11
           const ano = data.getFullYear();
-  
+
           // Atualiza a tabela com os serviços do mês do serviço registrado
           this.atualizarListaServicos(mes, ano);
           this.obterResumoMensal(mes, ano);
-  
+
           this.registroForm.reset();
         },
         error: (error) => {
@@ -180,6 +192,19 @@ export class RegistrarServicosComponent implements OnInit {
         this.servicosExecutadosDataSource = new MatTableDataSource<RegistroServicoDTO>(data.content);
         this.servicosExecutadosDataSource.paginator = this.paginator;
         console.log('Dados após atribuição: ', this.servicosExecutadosDataSource.data);
+        this.changeDetectorRefs.detectChanges();
+      },
+      error: (err) => console.error('Error ao carregar dados', err)
+    });
+  }
+
+  carregarServicosExecutadosAdm(): void {
+    this.registrarServicosService.listarServicosExecutadosAdm(0, 20).subscribe({
+      next: (data: any) => {
+        console.log('Dados recebidos: ', data);
+        this.servicosExecutadosAdmDataSource = new MatTableDataSource<listarServicosExecutadosAdmDTO>(data.content);
+        this.servicosExecutadosAdmDataSource.paginator = this.paginator;
+        console.log('Dados após atribuição: ', this.servicosExecutadosAdmDataSource.data);
         this.changeDetectorRefs.detectChanges();
       },
       error: (err) => console.error('Error ao carregar dados', err)
