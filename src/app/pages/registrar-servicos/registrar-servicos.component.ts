@@ -9,7 +9,7 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { RegistrarServicosService } from 'src/app/core/services/registrar-servicos.service';
 import { ServicoService } from 'src/app/core/services/servico.service';
 import { TecnicoService } from 'src/app/core/services/tecnico.service';
-import { listarServicosExecutadosAdmDTO, RegistroServicoDTO, Servico, ServicoGerente, Tecnico } from 'src/app/core/types/type';
+import { listarServicosExecutadosAdmDTO, RegistroServicoDTO, Servico, ServicoExecutadoAdmListagemDTO, ServicoGerente, Tecnico } from 'src/app/core/types/type';
 
 @Component({
   selector: 'app-registrar-servicos',
@@ -74,7 +74,11 @@ export class RegistrarServicosComponent implements OnInit {
         this.servicos = servicos.content; // Supondo que a resposta tenha um campo 'content'
       });
     }
+    this.servicosExecutadosDataSource.filterPredicate = (data: any, filter: string) => {
+      return data.contrato.toString().toLowerCase().includes(filter);
+    };
     this.setupAutocompleteFilters();
+    
   }
 
   registrar(): void {
@@ -89,20 +93,27 @@ export class RegistrarServicosComponent implements OnInit {
         valorClaro: formValue.valorClaro,
         valorMacedo: formValue.valorMacedo
       };
-
+  
       this.registrarServicosService.registrarServico(registro).subscribe({
         next: (success) => {
           console.log('Serviço registrado com sucesso');
-
+  
           // Extrai o mês e o ano da data do serviço registrado
           const data = new Date(registro.data);
           const mes = data.getMonth() + 1; // getMonth() retorna mês de 0 a 11
           const ano = data.getFullYear();
-
-          // Atualiza a tabela com os serviços do mês do serviço registrado
-          this.atualizarListaServicos(mes, ano);
-          this.obterResumoMensal(mes, ano);
-
+  
+          // Verificar o tipo de usuário e chamar o método correto
+          const tipoUsuario = this.authService.getCurrentTipoUsuarioLogado(); // Substitua pelo seu método real
+          if (tipoUsuario === 'ADMINISTRADOR') {
+            this.obterResumoMensalAdmin(mes, ano);
+            this.atualizarListaServicosAdm(mes, ano);
+          } else {
+            // Atualiza a tabela com os serviços do mês do serviço registrado
+            this.atualizarListaServicos(mes, ano);
+            this.obterResumoMensal(mes, ano);
+          }
+  
           this.registroForm.reset();
         },
         error: (error) => {
@@ -119,6 +130,17 @@ export class RegistrarServicosComponent implements OnInit {
       next: (servicos) => {
         this.servicosExecutadosDataSource = new MatTableDataSource<RegistroServicoDTO>(servicos);
         this.servicosExecutadosDataSource.paginator = this.paginator;
+        this.changeDetectorRefs.detectChanges();
+      },
+      error: (err) => console.error('Erro ao carregar serviços executados', err)
+    });
+  }
+
+  atualizarListaServicosAdm(mes: number, ano: number): void {
+    this.registrarServicosService.listarServicosDoAdmPorMesEAno(mes, ano).subscribe({
+      next: (servicos) => {
+        this.servicosExecutadosAdmDataSource = new MatTableDataSource<listarServicosExecutadosAdmDTO>(servicos);
+        this.servicosExecutadosAdmDataSource.paginator = this.paginator;
         this.changeDetectorRefs.detectChanges();
       },
       error: (err) => console.error('Erro ao carregar serviços executados', err)
@@ -278,6 +300,28 @@ export class RegistrarServicosComponent implements OnInit {
       },
       error: (err) => console.error('Erro ao obter o resumo mensal', err)
     });
+  }
+
+  obterResumoMensalAdmin(mes: number, ano: number): void {
+    this.registrarServicosService.calcularResumoMensalAdm(mes, ano).subscribe({
+      next: (resumo) => {
+        // Atualize a tabela ou os dados que você deseja exibir com 'resumo'
+        // Por exemplo:
+        this.quantidadeServicos = resumo.quantidadeServicos;
+        // ...
+        this.changeDetectorRefs.detectChanges();
+      },
+      error: (err) => console.error('Erro ao obter o resumo mensal', err)
+    });
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.servicosExecutadosDataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.servicosExecutadosDataSource.paginator) {
+      this.servicosExecutadosDataSource.paginator.firstPage();
+    }
   }
 }
 

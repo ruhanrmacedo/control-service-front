@@ -73,6 +73,13 @@
     </form>
   </div>
 
+  <div class="search-container">
+    <mat-form-field appearance="fill">
+      <mat-label>Buscar por contrato</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Digite o número do contrato" #input>
+    </mat-form-field>
+  </div>
+
   <div class="tabela-listar-servicos" *ngIf="isUserGerenteOuRoot">
     <table mat-table [dataSource]="servicosExecutadosDataSource" class="mat-elevation-z8">
 
@@ -200,15 +207,17 @@
       <span class="label">Quantidade de Serviços:</span>
       <span class="value">{{ quantidadeServicos }}</span>
     </div>
-    <div class="summary-field-container">
+    <div class="summary-field-container" *ngIf="isUserGerenteOuRoot">
       <span class="label">Valor Total Claro:</span>
       <span class="value">{{ valorTotalClaro | currency:'BRL' }}</span>
     </div>
-    <div class="summary-field-container">
+    <div class="summary-field-container" *ngIf="isUserGerenteOuRoot">
       <span class="label">Valor Total Macedo:</span>
       <span class="value">{{ valorTotalMacedos | currency:'BRL' }}</span>
     </div>
   </div>
+
+
 
   <div class="links">
     <a routerLink="/">Voltar para Home</a>

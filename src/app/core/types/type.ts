@@ -67,6 +67,10 @@ export interface ResumoMensalServicoDTO {
   valorTotalMacedos: number;
 }
 
+export interface ResumoMensalAdmDTO {
+  quantidadeServicos: number;
+}
+
 export interface ContratoExecutadoDTO {
   id: number;
   contrato: string;
@@ -85,4 +89,13 @@ export interface ContratoExecutadoImpressao {
   data: string;
   descricaoServico: number;
   comissao?: number;
+}
+
+export interface ServicoExecutadoAdmListagemDTO {
+  id: number;
+  contrato: string;
+  os: string;
+  data: string;
+  nomeTecnico: string;
+  descricaoServico: string;
 }

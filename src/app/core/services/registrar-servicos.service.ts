@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ResumoMensalServicoDTO } from '../types/type';
+import { listarServicosExecutadosAdmDTO, ResumoMensalAdmDTO, ResumoMensalServicoDTO, ServicoExecutadoAdmListagemDTO } from '../types/type';
 
 @Injectable({
   providedIn: 'root'
@@ -58,5 +58,19 @@ export class RegistrarServicosService {
     const headers = this.getHeaders();
     const params = { params: new HttpParams().set('mes', mes.toString()).set('ano', ano.toString()) };
     return this.http.get<any>(`${this.apiUrl}/listarPorMesEAno`, { headers, ...params });
+  }
+
+  calcularResumoMensalAdm(mes: number, ano: number): Observable<ResumoMensalAdmDTO> {
+    const headers = this.getHeaders();
+    return this.http.get<ResumoMensalAdmDTO>(`${this.apiUrl}/calcularResumoMensalAdm`, {
+      params: new HttpParams().set('mes', mes.toString()).set('ano', ano.toString()),
+      headers: headers
+    });
+  }
+
+  listarServicosDoAdmPorMesEAno(mes: number, ano: number): Observable<listarServicosExecutadosAdmDTO[]>{
+    const headers = this.getHeaders();
+    const params = { params: new HttpParams().set('mes', mes.toString()).set('ano', ano.toString()) };
+    return this.http.get<listarServicosExecutadosAdmDTO[]>(`${this.apiUrl}/listarServicosAdmPorMesEAno`, { headers, ...params });
   }
 }
