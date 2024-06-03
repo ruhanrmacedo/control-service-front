@@ -8,11 +8,29 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { ModalEditarTecnicoComponent } from 'src/app/shared/modal/tecnico/modal-editar-tecnico/modal-editar-tecnico.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+import { DatePipe } from '@angular/common';
+
+export const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMMM YYYY',
+    dateA11yLabel: 'DD/MM/YYYY',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @Component({
   selector: 'app-tecnico',
   templateUrl: './tecnico.component.html',
-  styleUrls: ['./tecnico.component.scss']
+  styleUrls: ['./tecnico.component.scss'],
+  providers: [
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    DatePipe
+  ]
 })
 export class TecnicoComponent {
   tecnicoForm: FormGroup;
@@ -33,7 +51,8 @@ export class TecnicoComponent {
     private fb: FormBuilder,
     private tecnicoService: TecnicoService,
     private authService: AuthService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private dateAdapter: DateAdapter<Date>
   ) {
     this.isUserGerenteOuRoot = this.authService.isGerenteOuRoot();
     this.tecnicoForm = this.fb.group({
@@ -42,8 +61,9 @@ export class TecnicoComponent {
       login: ['', Validators.required],
       placa: ['', Validators.required],
       dataAdmissao: ['', Validators.required]
-      //dataDesligamento: ['', Validators.required]
     });
+
+    this.dateAdapter.setLocale('pt-BR'); // Define o locale para pt-BR
   }
 
   carregarTecnicos(): void {
@@ -122,11 +142,14 @@ export class TecnicoComponent {
           login: this.tecnicoSelecionado.login,
           placa: this.tecnicoSelecionado.placa
         }
+        
       });
 
       dialogRef.afterClosed().subscribe(result => {
         console.log('O modal foi fechado.');
-        // Lógica após fechar o modal
+        if (result) {
+          this.carregarTodosTecnicos(); // Recarrega a lista de técnicos após editar
+        }
       });
     } else {
       console.log("Nenhum técnico selecionado.");

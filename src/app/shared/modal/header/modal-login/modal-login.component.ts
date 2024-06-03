@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { MatDialogRef } from '@angular/material/dialog';
 
@@ -9,6 +9,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class ModalLoginComponent {
   
+  @Output() loginSuccess = new EventEmitter<void>();
   login: string = '';
   senha: string = '';
   loginSucesso: boolean = false;
@@ -28,6 +29,8 @@ export class ModalLoginComponent {
         this.loginSucesso = true;
         this.tipoUsuario = data.tipoUsuario;
         localStorage.setItem('token', data.token);
+        this.loginSuccess.emit(); // Emitir evento de sucesso de login
+        this.dialogRef.close();
       },
       error: (error) => {
         console.error('Erro no login', error);

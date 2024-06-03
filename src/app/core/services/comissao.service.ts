@@ -48,4 +48,11 @@ export class ComissaoService {
       .set('ano', ano);
     return this.http.get<{ valorMacedoTotal: number, valorClaroTotal: number }>(`${this.apiUrl}/valores-executados`, { headers, params });
   }
+
+  // Obter a evolução dos valores
+  getEvolucaoValor(tecnicoId: number): Observable<any[]> {
+    const headers = this.getHeaders();
+    const params = new HttpParams().set('tecnicoId', tecnicoId);
+    return this.http.get<any[]>(`${this.apiUrl}/evolucao-valor`, { headers, params });
+  }
 }

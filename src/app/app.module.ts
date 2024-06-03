@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -46,7 +48,8 @@ import { PainelComponent } from './pages/painel/painel.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatIconModule } from '@angular/material/icon';
-import { ModalComissaoComponent } from './shared/modal/painel/modal-comissao/modal-comissao.component'; 
+import { ModalComissaoComponent } from './shared/modal/painel/modal-comissao/modal-comissao.component';
+import { FormatDatePipe } from './pipes/format-date.pipe'; 
 
 
 @NgModule({
@@ -75,9 +78,11 @@ import { ModalComissaoComponent } from './shared/modal/painel/modal-comissao/mod
     ModalEditarServicoExecutadoComponent,
     PainelComponent,
     ModalComissaoComponent,
+    FormatDatePipe,
 
   ],
   imports: [
+    CommonModule,
     BrowserModule,
     AppRoutingModule,
     MatToolbarModule,
@@ -99,9 +104,10 @@ import { ModalComissaoComponent } from './shared/modal/painel/modal-comissao/mod
     MatAutocompleteModule,
     MatSelectModule,
     MatSlideToggleModule,
-    MatIconModule
+    MatIconModule,
   ],
   providers: [
+    DatePipe,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]

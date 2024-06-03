@@ -1,10 +1,5 @@
 <section class="homepage">
-    <app-banner
-        src="assets/imagens/bannerInstalacao.png"
-        alt="Banner logo Macedos"
-    ></app-banner>
-    <app-container>
-        <h2>Ferramentas</h2>
+    <app-container  *ngIf="isLoggedIn">
         <div class="card-wrapper">
             <app-card-servicos></app-card-servicos>
             <app-card-tecnico></app-card-tecnico>

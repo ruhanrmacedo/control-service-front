@@ -15,8 +15,12 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription.add(
       interval(120000).subscribe(() => { // Verifica a cada 20 minutos
-        if (this.authService.tokenExpirou()) {
-          alert("Sessão encerrada. Sua sessão expirou!");
+        if (this.authService.isLoggedIn()) {
+          if (this.authService.tokenExpirou()) {
+            alert("Sessão encerrada. Sua sessão expirou!");
+            this.authService.logout();
+            window.location.reload(); // Recarrega a página após logout
+          }
         }
       })
     );

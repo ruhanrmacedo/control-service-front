@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TecnicoService } from 'src/app/core/services/tecnico.service';
 
@@ -16,7 +16,6 @@ export class ModalEditarTecnicoComponent {
     private dialogRef: MatDialogRef<ModalEditarTecnicoComponent>,
     private tecnicoService: TecnicoService,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private cdr: ChangeDetectorRef
   ) {}
 
   salvarAlteracoes(): void {

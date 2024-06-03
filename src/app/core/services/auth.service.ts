@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
 import { Usuario } from '../types/type';
@@ -9,7 +9,8 @@ import { jwtDecode } from 'jwt-decode';
 })
 export class AuthService {
   private usuarioAtualSubject = new BehaviorSubject<any>(null);
-  private usuarioAtual = this.usuarioAtualSubject.asObservable();
+  public usuarioAtual = this.usuarioAtualSubject.asObservable();
+  public logoutEvent = new EventEmitter<void>();
 
   private apiURL = '/api/login/efetuarLogin'
 
@@ -41,10 +42,12 @@ export class AuthService {
       localStorage.setItem('loginUsuarioLogado', response.login);
       localStorage.setItem('tipoUsuarioLogado', response.tipoUsuario);
       localStorage.setItem('usuarioId', response.id); // Armazena o ID do usuário
+      this.usuarioAtualSubject.next(response); // Atualiza o BehaviorSubject
       console.log('ID do usuário armazenado:', response.id);
     })
   }
 
+  // Métodos para obter informações do usuário logado a partir do localStorage
   getCurrentUsuarioLogado(): string {
     return localStorage.getItem('usuarioLogado') || '';
   }
@@ -70,15 +73,25 @@ export class AuthService {
     return !!localStorage.getItem('token');
   }
 
+  // Método para logout
   logout(): void {
     localStorage.removeItem('token');
+    localStorage.removeItem('usuarioLogado');
+    localStorage.removeItem('cpfUsuarioLogado');
+    localStorage.removeItem('loginUsuarioLogado');
+    localStorage.removeItem('tipoUsuarioLogado');
+    localStorage.removeItem('usuarioId');
+    this.logoutEvent.emit(); // Emitir evento de logout
+    this.usuarioAtualSubject.next(null); // Atualiza o BehaviorSubject
   }
 
+  // Atualiza informações do usuário
   atualizarUsuario(dadosAtualizados: any): Observable<any> {
     const url = '/api/usuarios/editarUsuario'; 
     return this.http.put<any>(url, dadosAtualizados);
   }
 
+  // Atualiza as informações do usuário logado no localStorage
   public atualizarInformacoesUsuarioLogado(usuario: any): void {
     localStorage.setItem('usuarioLogado', usuario.nome);
     localStorage.setItem('cpfUsuarioLogado', usuario.cpf);
@@ -87,15 +100,18 @@ export class AuthService {
     this.usuarioAtualSubject.next(usuario);
   }
 
+  // Verifica se o usuário é Gerente ou Root
   public isGerenteOuRoot(): boolean {
     const tipoUsuario = localStorage.getItem('tipoUsuarioLogado');
     return tipoUsuario === 'GERENTE' || tipoUsuario === 'ROOT';
   }
 
+  // Lista todos os usuários para Gerente ou ROOT
   listarTodosUsuarios(): Observable<{ content: Usuario[] }> {
     return this.http.get<any>('/api/usuarios/listarTodosUsuarios');
   }
 
+  // Altera a senha do usuário
   alterarSenha(dados: { id: number, novaSenha: string, confirmarSenha: string }): Observable<void> {
     const params = new HttpParams()
     .set('novaSenha', dados.novaSenha)
@@ -106,6 +122,7 @@ export class AuthService {
     return this.http.put<void>(url, {}, {params });
   }
 
+  // Verifica se o token JWT expirou
   tokenExpirou(): boolean {
     const token = localStorage.getItem('token');
     if (token) {

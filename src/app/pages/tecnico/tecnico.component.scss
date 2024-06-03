@@ -1,127 +1,126 @@
 .tecnico-page-container {
-    min-height: 100vh;
-    padding: 60px 0;
-
-    .tecnico-container {
-        position: relative;
-        max-width: 80%;
-        margin: auto;
-        padding: 25px;
-        border: 1px solid #ddd;
-        border-radius: 10px;
-        background-color: rgba(249, 249, 249, 0.8);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-        h2 {
-            text-align: center;
-            margin-bottom: 25px;
-            color: #333;
-        }
-
-        form {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 40px;
-
-            label {
-                display: block;
-                font-weight: bold;
-                margin-bottom: 5px;
-                color: #333;
-            }
-
-            input,
-            select,
-            button[type="submit"] {
-                padding: 6px 12px;
-                border: 1px solid #ccc;
-                border-radius: 4px;
-                margin-bottom: 20px;
-            }
-
-            input[type="text"],
-            select {
-                width: 100%;
-            }
-
-            button[type="submit"] {
-                padding: 10px 15px;
-                background-color: #333;
-                color: white;
-                cursor: pointer;
-                border: none;
-                border-radius: 4px;
-                justify-self: center;
-                grid-column: 1 / -1;
-
-                &:hover {
-                    background-color: darken(#333, 10%);
-                }
-            }
-        }
+    max-width: 100%;
+    margin: auto;
+    padding: 25px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: rgba(249, 249, 249, 0.8);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+    .tecnico-container, .tabela-listar-tecnicos {
+      max-width: 80%; /* Ajuste para manter a mesma largura */
+      margin: auto;
+      padding: 25px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background-color: rgba(249, 249, 249, 0.8);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+      h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #333;
+      }
     }
-
-    .tabela-listar-tecnicos {
-        margin-top: 60px;
-        max-width: 80%;
-        margin: auto;
-        overflow-x: auto;
-        padding: 25px;
-        border: 1px solid #ddd;
-        border-radius: 10px;
-        background-color: rgba(249, 249, 249, 0.8);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-        table {
-            width: 100%;
-            margin: 40px auto;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
-            th,
-            td {
-                padding: 8px 16px;
-                border-bottom: 1px solid #ddd;
-            }
-
-            th {
-                background-color: #333;
-                color: white;
-            }
-
-            tr:hover {
-                background-color: rgba(0, 0, 0, 0.05);
-            }
-        }
-
-        .botoes-container {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .btn-editar, .btn-excluir {
-            background-color: #333;
-            color: #f9f9f9;
-        }
-
-        .linha-selecionada {
-            background-color: #333;
-        }
-    }
-
-    .links {
+  
+    .tecnico-form-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+  
+      .linha {
         display: flex;
-        justify-content: space-between;
-        margin-top: 30px;
+        flex-wrap: wrap;
+        gap: 20px;
+        width: 100%;
+      }
+  
+      .mat-form-field {
+        flex: 1;
+        min-width: calc(50% - 20px); /* Ajuste para responsividade */
+      }
+  
+      .login-control,
+      .placa-control,
+      .data-control {
+        flex: 1;
+        min-width: calc(33.33% - 20px);
+      }
 
-        a,
-        button {
-            color: #333;
-            text-decoration: none;
-            padding: 10px;
-            background: none;
-            border: none;
-            cursor: pointer;
+      .nome-control,
+      .cpf-control{
+        flex: 1;
+        min-width: calc(50% - 20px);
+      }
+  
+      button[mat-raised-button] {
+        background-color: #333;
+        color: white;
+        width: 100%;
+        margin-top: 20px;
+  
+        &:hover {
+          background-color: darken(#333, 10%);
         }
+      }
     }
-}
+  
+    .tabela-listar-tecnicos {
+      margin-top: 60px;
+      overflow-x: auto;
+  
+      table {
+        width: 100%;
+        margin: 40px auto;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  
+        th,
+        td {
+          padding: 8px 16px;
+          border-bottom: 1px solid #ddd;
+        }
+  
+        th {
+          background-color: #333;
+          color: white;
+        }
+  
+        tr:hover {
+          background-color: rgba(0, 0, 0, 0.05);
+        }
+      }
+  
+      .botoes-container {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+      }
+  
+      .btn-editar,
+      .btn-excluir {
+        background-color: #333;
+        color: #f9f9f9;
+      }
+  
+      .linha-selecionada {
+        background-color: #333;
+      }
+    }
+  
+    .links {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+  
+      a,
+      button {
+        color: #333;
+        text-decoration: none;
+        padding: 10px;
+        background: none;
+        border: none;
+        cursor: pointer;
+      }
+    }
+  }
+  

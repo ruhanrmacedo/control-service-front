@@ -55,8 +55,8 @@ export class UsuarioService {
 
   listarTodosUsuarios(page: number, size: number): Observable<any> {
     const headers = this.getHeaders(); 
-    const params = { params: new HttpParams().set('page', String(page)).set('size', String(size)) };
-    return this.http.get<any>(`${this.apiUrl}/listarTodosUsuarios`, { headers, ...params });
+    const params = new HttpParams().set('page', String(page)).set('size', String(size));
+    return this.http.get<any>(`${this.apiUrl}/listarTodosUsuarios`, { headers, params });
   }
 
   desligarUsuario(id: number, dataInativacao: string): Observable<any> {

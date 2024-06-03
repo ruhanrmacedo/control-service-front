@@ -1,9 +1,13 @@
 .servico-page-container {
-    min-height: 100vh;
-    padding: 60px 0;
+    max-width: 100%;
+    margin: auto;
+    padding: 25px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: rgba(249, 249, 249, 0.8);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
-    .servico-container {
-        position: relative;
+    .servico-container, .tabela-listar-servicos {
         max-width: 80%;
         margin: auto;
         padding: 25px;
@@ -17,60 +21,48 @@
             margin-bottom: 25px;
             color: #333;
         }
+    }
 
-        form {
-            display: grid;
-            grid-template-columns: 3fr 1fr 1fr 1fr;
-            gap: 40px;
+    .servico-form-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
 
-            label {
-                display: block;
-                font-weight: bold;
-                margin-bottom: 5px;
-                color: #333;
-            }
+        .linha {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            width: 100%;
+        }
 
-            input,
-            select,
-            button[type="submit"] {
-                padding: 6px 12px;
-                border: 1px solid #ccc;
-                border-radius: 4px;
-                margin-bottom: 20px;
-            }
+        .mat-form-field {
+            flex: 1;
+            min-width: calc(50% - 20px);
+        }
 
-            input[type="text"],
-            select {
-                width: 100%;
-            }
+        .descricao-control,
+        .valorClaro-control,
+        .valorMacedo-control,
+        .tipoServico-control {
+            flex: 1;
+            min-width: calc(25% - 20px);
+        }
 
-            button[type="submit"] {
-                padding: 10px 15px;
-                background-color: #333;
-                color: white;
-                cursor: pointer;
-                border: none;
-                border-radius: 4px;
-                justify-self: center; // Centraliza o botão na coluna
-                grid-column: 1 / -1; // Faz o botão ocupar todas as colunas
+        button[mat-raised-button] {
+            background-color: #333;
+            color: white;
+            width: 100%;
+            margin-top: 20px;
 
-                &:hover {
-                    background-color: darken(#333, 10%);
-                }
+            &:hover {
+                background-color: darken(#333, 10%);
             }
         }
     }
 
     .tabela-listar-servicos {
         margin-top: 60px;
-        max-width: 80%; // Define a largura máxima da tabela para corresponder à do formulário
-        margin: auto; // Centraliza a tabela
         overflow-x: auto;
-        padding: 25px;
-        border: 1px solid #ddd;
-        border-radius: 10px;
-        background-color: rgba(249, 249, 249, 0.8);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
         table {
             width: 100%;
@@ -95,21 +87,19 @@
 
         .botoes-container {
             display: flex;
-            justify-content: center; // Alinha os itens horizontalmente ao centro
-            gap: 10px; // Adiciona espaço entre os botões
+            justify-content: center;
+            gap: 10px;
         }
 
-        .btn-editar, .btn-excluir {
+        .btn-editar,
+        .btn-excluir {
             background-color: #333;
             color: #f9f9f9;
         }
 
-        // Estilo para linha selecionada na tabela
         .linha-selecionada {
-            background-color: #333; // Cor de fundo para a linha selecionada
+            background-color: #333;
         }
-
-
     }
 
     .links {

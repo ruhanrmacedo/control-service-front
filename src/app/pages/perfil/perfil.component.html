@@ -83,13 +83,13 @@
             <!-- Coluna Data de Ativação -->
             <ng-container matColumnDef="dataAtivacao">
                 <th mat-header-cell *matHeaderCellDef> Data de Ativação </th>
-                <td mat-cell *matCellDef="let element"> {{element.dataAtivacao | date}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.dataAtivacao | formatDate}} </td>
             </ng-container>
 
             <!-- Coluna Data de Inativação -->
             <ng-container matColumnDef="dataInativacao">
                 <th mat-header-cell *matHeaderCellDef> Data de Inativação </th>
-                <td mat-cell *matCellDef="let element"> {{element.dataInativacao | date}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.dataInativacao | formatDate}} </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -101,16 +101,16 @@
         </table>
 
         <mat-paginator 
-            [length]="usuariosDataSource.data.length" [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"
-            aria-label="Select page of technicians">
+            [length]="totalUsuarios" 
+            [pageSize]="10" 
+            [pageSizeOptions]="[5, 10, 20]" 
+            (page)="handlePageEvent($event)">
         </mat-paginator>
 
         <div class="botoes-container">
             <button class="btn-editar" mat-button (click)="editarUsuario()">Editar Usuário</button>
-            <button class="btn-excluir" mat-button (click)="desligarUsuario()">Desligar Usuário</button>
-            <button class="btn-readmitir" mat-button (click)="readimitirUsuario()">Readimirtir Usuário</button>
+            <button class="btn-excluir" mat-button (click)="desligarUsuario()">Inativar Usuário</button>
+            <button class="btn-readmitir" mat-button (click)="readmitirUsuario()">Reativar Usuário</button>
         </div>
-        
-
     </div>
 </div>

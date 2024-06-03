@@ -23,7 +23,7 @@ export class ModalEditarUsuarioComponent {
   constructor(
     private dialogRef: MatDialogRef<ModalEditarUsuarioComponent>,
     private usuarioService: UsuarioService,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
   ) {}
 
   salvarAlteracoes(): void {

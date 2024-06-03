@@ -8,6 +8,7 @@ import { ComissaoService } from 'src/app/core/services/comissao.service';
 import { TecnicoService } from 'src/app/core/services/tecnico.service';
 import { ContratoExecutadoDTO, ContratoExecutadoImpressao, Tecnico } from 'src/app/core/types/type';
 import { ModalComissaoComponent } from 'src/app/shared/modal/painel/modal-comissao/modal-comissao.component';
+import { ChartData, ChartOptions } from 'chart.js';
 
 @Component({
   selector: 'app-painel',
@@ -30,6 +31,21 @@ export class PainelComponent implements OnInit {
   isPrinting = false;
   nomeTecnico: string = '';
 
+  // Variáveis para o gráfico
+  evolucaoValores: ChartData<'line'> = {
+    labels: [],
+    datasets: [
+      {
+        data: [],
+        label: 'Valor Claro',
+        fill: false,
+        borderColor: '#4bc0c0'
+      }
+    ]
+  };
+  evolucaoOptions: ChartOptions<'line'> = {
+    responsive: true
+  };
 
   constructor(
     private fb: FormBuilder,
@@ -94,6 +110,18 @@ export class PainelComponent implements OnInit {
     ).subscribe(comissao => {
       this.comissaoTotal = comissao;
     });
+
+
+    // Buscar e processar dados de evolução para o gráfico
+    this.comissaoService.getEvolucaoValor(requestValue.tecnicoId).subscribe(
+      data => {
+        this.evolucaoValores.labels = data.map(item => `${item[1]}-${item[0]}`); // ano-mes
+        this.evolucaoValores.datasets[0].data = data.map(item => item[2]); // valorClaro
+      },
+      error => {
+        console.error('Erro ao buscar evolução dos valores:', error);
+      }
+    );
   }
 
   private loadTecnicos() {

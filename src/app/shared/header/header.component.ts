@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ModalLoginComponent } from '../modal/header/modal-login/modal-login.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalUsuarioComponent } from '../modal/header/modal-usuario/modal-usuario.component';
@@ -10,12 +10,19 @@ import { Router } from '@angular/router';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   constructor (
     private router: Router, 
     public dialog: MatDialog, 
     private authService: AuthService
   ) { }
+
+  ngOnInit(): void {
+    this.authService.fetchCurrentUsuarioLogado();
+    this.authService.logoutEvent.subscribe(() => {
+      window.location.reload(); // Recarregar a página após logout
+    });
+  }
 
   get isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
@@ -34,10 +41,13 @@ export class HeaderComponent {
       width: '50%' // ou qualquer outra largura que você preferir
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed'); // Lógica após fechar o diálogo, se necessário
+    dialogRef.componentInstance.loginSuccess.subscribe(() => {
+      window.location.reload(); // Recarrega a página após o login bem-sucedido
     });
 
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
   }
 
   openUsuarioDialog(): void {
