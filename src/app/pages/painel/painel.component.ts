@@ -8,7 +8,7 @@ import { ComissaoService } from 'src/app/core/services/comissao.service';
 import { TecnicoService } from 'src/app/core/services/tecnico.service';
 import { ContratoExecutadoDTO, ContratoExecutadoImpressao, Tecnico } from 'src/app/core/types/type';
 import { ModalComissaoComponent } from 'src/app/shared/modal/painel/modal-comissao/modal-comissao.component';
-import { ChartData, ChartOptions } from 'chart.js';
+import { Color, ScaleType } from '@swimlane/ngx-charts';
 
 @Component({
   selector: 'app-painel',
@@ -31,21 +31,19 @@ export class PainelComponent implements OnInit {
   isPrinting = false;
   nomeTecnico: string = '';
 
-  // Variáveis para o gráfico
-  evolucaoValores: ChartData<'line'> = {
-    labels: [],
-    datasets: [
-      {
-        data: [],
-        label: 'Valor Claro',
-        fill: false,
-        borderColor: '#4bc0c0'
-      }
-    ]
+  // Configurações para o gráfico
+  evolucaoValores: any[] = [];
+  colorScheme: any = {
+    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
   };
-  evolucaoOptions: ChartOptions<'line'> = {
-    responsive: true
-  };
+  showXAxis = true;
+  showYAxis = true;
+  gradient = false;
+  showLegend = true;
+  showXAxisLabel = true;
+  xAxisLabel = 'Year';
+  showYAxisLabel = true;
+  yAxisLabel = 'Value';
 
   constructor(
     private fb: FormBuilder,
@@ -71,6 +69,7 @@ export class PainelComponent implements OnInit {
       this.tecnicos = tecnicos.content;
     });
     this.setupAutoCompleteFilters();
+    this.evolucaoValores = [];
   }
 
   onSubmit(): void {
@@ -115,20 +114,28 @@ export class PainelComponent implements OnInit {
     // Buscar e processar dados de evolução para o gráfico
     this.comissaoService.getEvolucaoValor(requestValue.tecnicoId).subscribe(
       data => {
-        this.evolucaoValores.labels = data.map(item => `${item[1]}-${item[0]}`); // ano-mes
-        this.evolucaoValores.datasets[0].data = data.map(item => item[2]); // valorClaro
+          console.log('Dados brutos recebidos:', data);
+          this.evolucaoValores = [
+              {
+                  name: 'Evolução',
+                  series: data.map(item => ({
+                      name: `${item[1]}-${item[0]}`,
+                      value: item[2]
+                  }))
+              }
+          ];
+          console.log('Dados mapeados para o gráfico:', this.evolucaoValores);
       },
       error => {
-        console.error('Erro ao buscar evolução dos valores:', error);
+          console.error('Erro ao buscar evolução dos valores:', error);
       }
-    );
+  );
   }
 
   private loadTecnicos() {
     // Altere o número de página e tamanho conforme necessário
     this.tecnicoService.listarTecnicos(0, 1000).subscribe({
       next: (response) => {
-        // Atualize aqui com a propriedade correta da sua resposta, se for diferente
         this.tecnicos = response.content;
       },
       error: (error) => {

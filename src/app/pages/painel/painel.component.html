@@ -38,11 +38,21 @@
   </form>
 
 
-  <!-- Gráfico de Evolução 
-  <div style="display: block;">
-    <canvas baseChart [data]="evolucaoValores" [options]="evolucaoOptions" chartType="line">
-    </canvas>
-  </div>-->
+  <!-- Gráfico de Evolução -->
+  <ngx-charts-line-chart
+    [view]="[700, 400]"
+    [scheme]="colorScheme"
+    [results]="evolucaoValores"
+    [gradient]="gradient"
+    [xAxis]="showXAxis"
+    [yAxis]="showYAxis"
+    [legend]="showLegend"
+    [legendTitle]="'Legenda'"
+    [showXAxisLabel]="showXAxisLabel"
+    [showYAxisLabel]="showYAxisLabel"
+    [xAxisLabel]="xAxisLabel"
+    [yAxisLabel]="yAxisLabel">
+  </ngx-charts-line-chart>
 
   <!-- Tabela de Serviços Executados -->
   <table mat-table [dataSource]="contratosExecutadosDataSource" class="mat-elevation-z8">

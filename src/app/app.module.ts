@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { DatePipe } from '@angular/common';
 import { CommonModule } from '@angular/common';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -79,7 +80,6 @@ import { FormatDatePipe } from './pipes/format-date.pipe';
     PainelComponent,
     ModalComissaoComponent,
     FormatDatePipe,
-
   ],
   imports: [
     CommonModule,
@@ -105,6 +105,7 @@ import { FormatDatePipe } from './pipes/format-date.pipe';
     MatSelectModule,
     MatSlideToggleModule,
     MatIconModule,
+    NgxChartsModule 
   ],
   providers: [
     DatePipe,
