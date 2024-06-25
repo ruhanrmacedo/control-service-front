@@ -178,4 +178,22 @@ export class TecnicoComponent {
       alert('Por favor, selecione um usuário para excluir.');
     }
   }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.tecnicoGerenteDataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.tecnicoGerenteDataSource.paginator) {
+      this.tecnicoGerenteDataSource.paginator.firstPage();
+    }
+  }
+
+  applyFilterAdm(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.tecnicosDataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.tecnicosDataSource.paginator) {
+      this.tecnicosDataSource.paginator.firstPage();
+    }
+  }
 }

@@ -1,5 +1,5 @@
-<section class="homepage">
-    <app-container  *ngIf="isLoggedIn">
+<section class="homepage" *ngIf="isLoggedIn">
+    <app-container >
         <div class="card-wrapper">
             <app-card-servicos></app-card-servicos>
             <app-card-tecnico></app-card-tecnico>
@@ -10,4 +10,12 @@
             <app-card-painel></app-card-painel>
         </div>
     </app-container>
+</section>
+
+<section class="welcome-section" *ngIf="!isLoggedIn">
+    <div class="welcome-container">
+        <div class="loading-spinner"></div>
+        <h1>Bem-vindo ao ControlService</h1>
+        <p>Por favor, efetue o login para acessar o sistema.</p>
+    </div>
 </section>

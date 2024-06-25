@@ -20,11 +20,12 @@ export class ServicoComponent {
   servicos: Servico[] = [];
   displayedColumns: string[] = ['idServico', 'descricao', 'tipoServico']; 
   servicosGerente: ServicoGerente[] = [];
-  displayedColumnsGerente: string[] = ['idServico', 'descricao', 'valorClaro', 'valorMacedo', 'tipoServico', 'ativo']; 
+  displayedColumnsGerente: string[] = ['idServico', 'descricao', 'valor1', 'valor2', 'tipoServico', 'ativo']; 
   isUserGerenteOuRoot: boolean = false;
   servicoSelecionado: any = null;
   servicoGerenteDataSource = new MatTableDataSource<ServicoGerente>([]);
   servicosDataSource = new MatTableDataSource<Servico>([]);
+  errorMessage: string = '';
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
@@ -39,8 +40,8 @@ export class ServicoComponent {
     this.isUserGerenteOuRoot = this.authService.isGerenteOuRoot();
     this.servicoForm = this.fb.group({
       descricao: ['', Validators.required],
-      valorClaro: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
-      valorMacedo: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      valor1: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      valor2: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
       tipoServico: ['', Validators.required]
     });
 
@@ -57,7 +58,7 @@ export class ServicoComponent {
   }
 
   carregarServicos(): void {
-    this.servicoService.listarServicos(0, 20).subscribe({
+    this.servicoService.listarServicos(0, 200).subscribe({
       next: (data: any) => {
         console.log('Dados recebidos:', data);
         this.servicosDataSource = new MatTableDataSource<Servico>(data.content);
@@ -71,7 +72,7 @@ export class ServicoComponent {
 
   carregarServicosGerente(): void {
     if (this.isUserGerenteOuRoot) {
-      this.servicoService.listarServicosGerente(0, 20).subscribe({
+      this.servicoService.listarServicosGerente(0, 200).subscribe({
         next: (data: any) => {
           console.log('Dados Serviço Gerente recebidos:', data);
           this.servicoGerenteDataSource = new MatTableDataSource<ServicoGerente>(data.content);
@@ -108,10 +109,11 @@ export class ServicoComponent {
           this.servicoForm.reset(); // Limpar o formulário após o cadastro
           this.carregarServicos(); // Recarrega os serviços para atualizar a tabela
           this.carregarServicosGerente();
+          this.errorMessage = '';
         },
         error: (err) => {
           console.error('Erro ao cadastrar serviço', err);
-          // Implementar tratamento de erro
+          this.errorMessage = err.error.message || 'Erro ao cadastrar o serviço. Tente novamente mais tarde.';
         }
       });
     }
@@ -128,8 +130,8 @@ export class ServicoComponent {
         data: { 
           idServico: this.servicoSelecionado.idServico,
           descricao: this.servicoSelecionado.descricao,
-          valorClaro: this.servicoSelecionado.valorClaro,
-          valorMacedo: this.servicoSelecionado.valorMacedo,
+          valor1: this.servicoSelecionado.valor1,
+          valor2: this.servicoSelecionado.valor2,
           tipoServico: this.servicoSelecionado.tipoServico 
         }
       });
@@ -162,6 +164,24 @@ export class ServicoComponent {
       alert('Por favor, selecione um serviço para excluir.');
     }
 
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.servicoGerenteDataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.servicoGerenteDataSource.paginator) {
+      this.servicoGerenteDataSource.paginator.firstPage();
+    }
+  }
+
+  applyFilterAdm(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.servicosDataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.servicosDataSource.paginator) {
+      this.servicosDataSource.paginator.firstPage();
+    }
   }
 
 }

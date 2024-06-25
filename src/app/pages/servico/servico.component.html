@@ -11,21 +11,21 @@
                     </mat-error>
                 </mat-form-field>
 
-                <mat-form-field appearance="fill" class="valorClaro-control">
-                    <mat-label>Valor Claro</mat-label>
-                    <input matInput formControlName="valorClaro" required>
-                    <mat-error *ngIf="servicoForm.get('valorClaro')?.invalid && servicoForm.get('valorClaro')?.touched">
-                        O campo Valor Claro é obrigatório.
+                <mat-form-field appearance="fill" class="valor1-control">
+                    <mat-label>Valor 1</mat-label>
+                    <input matInput formControlName="valor1" required>
+                    <mat-error *ngIf="servicoForm.get('valor1')?.invalid && servicoForm.get('valor1')?.touched">
+                        O campo Valor 1 é obrigatório.
                     </mat-error>
                 </mat-form-field>
             </div>
 
             <div class="linha">
-                <mat-form-field appearance="fill" class="valorMacedo-control">
-                    <mat-label>Valor Macedo</mat-label>
-                    <input matInput formControlName="valorMacedo" required>
-                    <mat-error *ngIf="servicoForm.get('valorMacedo')?.invalid && servicoForm.get('valorMacedo')?.touched">
-                        O campo Valor Macedo é obrigatório.
+                <mat-form-field appearance="fill" class="valor2-control">
+                    <mat-label>Valor 2</mat-label>
+                    <input matInput formControlName="valor2" required>
+                    <mat-error *ngIf="servicoForm.get('valor2')?.invalid && servicoForm.get('valor2')?.touched">
+                        O campo Valor 2 é obrigatório.
                     </mat-error>
                 </mat-form-field>
 
@@ -34,7 +34,8 @@
                     <mat-select formControlName="tipoServico" required>
                         <mat-option *ngFor="let tipo of tiposServico" [value]="tipo">{{tipo}}</mat-option>
                     </mat-select>
-                    <mat-error *ngIf="servicoForm.get('tipoServico')?.invalid && servicoForm.get('tipoServico')?.touched">
+                    <mat-error
+                        *ngIf="servicoForm.get('tipoServico')?.invalid && servicoForm.get('tipoServico')?.touched">
                         O campo Tipo de Serviço é obrigatório.
                     </mat-error>
                 </mat-form-field>
@@ -42,6 +43,24 @@
 
             <button mat-raised-button type="submit" [disabled]="!servicoForm.valid">Cadastrar Serviço</button>
         </form>
+        <!-- Exibir mensagem de erro -->
+        <div *ngIf="errorMessage" class="error-message">
+            {{ errorMessage }}
+        </div>
+    </div>
+
+    <div class="search-container" *ngIf="isUserGerenteOuRoot">
+        <mat-form-field appearance="fill" class="search-bar">
+          <mat-label>Buscar Serviço</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Digite a ID, Descrição, Valor ou Tipo de Serviço" #input>
+        </mat-form-field>
+    </div>
+
+    <div class="search-container" *ngIf="!isUserGerenteOuRoot">
+        <mat-form-field appearance="fill" class="search-bar">
+          <mat-label>Buscar Serviço</mat-label>
+          <input matInput (keyup)="applyFilterAdm($event)" placeholder="Digite a ID, Descrição ou Tipo de Serviço" #input>
+        </mat-form-field>
     </div>
 
     <div class="tabela-listar-servicos" *ngIf="!isUserGerenteOuRoot">
@@ -71,8 +90,7 @@
 
         </table>
 
-        <mat-paginator 
-            [length]="servicosDataSource.data.length" [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"
+        <mat-paginator [length]="servicosDataSource.data.length" [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"
             aria-label="Select page of technicians">
         </mat-paginator>
 
@@ -80,7 +98,7 @@
 
 
     <div class="tabela-listar-servicos" *ngIf="isUserGerenteOuRoot">
-        <table  mat-table [dataSource]="servicoGerenteDataSource" class="mat-elevation-z8">
+        <table mat-table [dataSource]="servicoGerenteDataSource" class="mat-elevation-z8">
 
             <!-- Coluna ID -->
             <ng-container matColumnDef="idServico">
@@ -94,16 +112,16 @@
                 <td mat-cell *matCellDef="let element"> {{element.descricao}} </td>
             </ng-container>
 
-            <!-- Coluna Valor Claro -->
-            <ng-container matColumnDef="valorClaro">
-                <th mat-header-cell *matHeaderCellDef> Valor Claro </th>
-                <td mat-cell *matCellDef="let element"> {{element.valorClaro}} </td>
+            <!-- Coluna Valor 1 -->
+            <ng-container matColumnDef="valor1">
+                <th mat-header-cell *matHeaderCellDef> Valor 1 </th>
+                <td mat-cell *matCellDef="let element"> {{element.valor1}} </td>
             </ng-container>
 
-            <!-- Coluna Valor Macedo -->
-            <ng-container matColumnDef="valorMacedo">
-                <th mat-header-cell *matHeaderCellDef> Valor Macedo </th>
-                <td mat-cell *matCellDef="let element"> {{element.valorMacedo}} </td>
+            <!-- Coluna Valor 2 -->
+            <ng-container matColumnDef="valor2">
+                <th mat-header-cell *matHeaderCellDef> Valor 2 </th>
+                <td mat-cell *matCellDef="let element"> {{element.valor2}} </td>
             </ng-container>
 
             <!-- Coluna Tipo Serviço -->
@@ -120,15 +138,13 @@
 
             <tr mat-header-row *matHeaderRowDef="displayedColumnsGerente"></tr>
             <!-- Linhas da Tabela -->
-            <tr mat-row *matRowDef="let row; columns: displayedColumnsGerente;" 
-                (click)="selecionarServico(row)"
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsGerente;" (click)="selecionarServico(row)"
                 [class.linha-selecionada]="row === servicoSelecionado">
             </tr>
 
         </table>
 
-        <mat-paginator 
-            [length]="servicoGerenteDataSource.data.length" [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"
+        <mat-paginator [length]="servicoGerenteDataSource.data.length" [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"
             aria-label="Select page of technicians">
         </mat-paginator>
 

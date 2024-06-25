@@ -19,8 +19,8 @@ export interface Servico {
 export interface ServicoGerente {
   idServico: number;
   descricao: string;
-  valorClaro: number;
-  valorMacedo: number;
+  valor1: number;
+  valor2: number;
   tipoServico: string;
   ativo: boolean;
 }
@@ -49,8 +49,8 @@ export interface RegistroServicoDTO {
   data: string;
   idTecnico: number;
   idServico: number;
-  valorClaro?: number;
-  valorMacedo?: number;
+  valor1?: number;
+  valor2?: number;
 }
 
 export interface listarServicosExecutadosAdmDTO {
@@ -63,8 +63,8 @@ export interface listarServicosExecutadosAdmDTO {
 
 export interface ResumoMensalServicoDTO {
   quantidadeServicos: number;
-  valorTotalClaro: number;
-  valorTotalMacedos: number;
+  valorTotal1: number;
+  valorTotal2: number;
 }
 
 export interface ResumoMensalAdmDTO {
@@ -78,8 +78,8 @@ export interface ContratoExecutadoDTO {
   data: string;
   nomeTecnico: number;
   descricaoServico: number;
-  valorClaro?: number;
-  valorMacedo?: number;
+  valor1?: number;
+  valor2?: number;
   comissao?: number;
 }
 

@@ -40,13 +40,13 @@ export class ComissaoService {
   }
 
   // Obter os valores executados
-  getValoresExecutados(tecnicoId: number, mes: number, ano: number): Observable<{ valorMacedoTotal: number, valorClaroTotal: number }> {
+  getValoresExecutados(tecnicoId: number, mes: number, ano: number): Observable<{ valor2Total: number, valor1Total: number }> {
     const headers = this.getHeaders();
     const params = new HttpParams()
       .set('tecnicoId', tecnicoId)
       .set('mes', mes)
       .set('ano', ano);
-    return this.http.get<{ valorMacedoTotal: number, valorClaroTotal: number }>(`${this.apiUrl}/valores-executados`, { headers, params });
+    return this.http.get<{ valor2Total: number, valor1Total: number }>(`${this.apiUrl}/valores-executados`, { headers, params });
   }
 
   // Obter a evolução dos valores
@@ -54,5 +54,15 @@ export class ComissaoService {
     const headers = this.getHeaders();
     const params = new HttpParams().set('tecnicoId', tecnicoId);
     return this.http.get<any[]>(`${this.apiUrl}/evolucao-valor`, { headers, params });
+  }
+
+  // Obter a evolução de contratos executados
+  getContratosPorTecnico(tecnicoId: number, mes: number, ano: number): Observable<{ tecnicoNome: string, contratosCount: number }[]> {
+    const headers = this.getHeaders();
+    const params = new HttpParams()
+      .set('tecnicoId', tecnicoId)
+      .set('mes', mes)
+      .set('ano', ano);
+    return this.http.get<{ tecnicoNome: string, contratosCount: number }[]>(`${this.apiUrl}/evolucao-contratos`, { headers, params });
   }
 }

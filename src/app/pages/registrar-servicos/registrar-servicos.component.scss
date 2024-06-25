@@ -54,7 +54,16 @@
         }
     }
 
+    .search-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+        margin-top: 20px;
 
+        .search-bar {
+            width: 50%;
+        }
+    }
 
     .tabela-listar-servicos {
         overflow-x: auto;
@@ -67,7 +76,7 @@
 
     table {
         width: 100%;
-        margin-top: 40px;
+        margin-top: 20px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
         th {

@@ -37,9 +37,8 @@
     <button type="submit" mat-raised-button color="primary">Buscar</button>
   </form>
 
-
-  <!-- Gráfico de Evolução -->
-  <ngx-charts-line-chart
+  <!-- Gráfico exclusivo para Administradores -->
+  <ngx-charts-line-chart *ngIf="isAdmin"
     [view]="[700, 400]"
     [scheme]="colorScheme"
     [results]="evolucaoValores"
@@ -53,6 +52,22 @@
     [xAxisLabel]="xAxisLabel"
     [yAxisLabel]="yAxisLabel">
   </ngx-charts-line-chart>
+
+  <!-- Gráfico de Evolução - Exibir apenas para usuários não administradores -->
+  <ngx-charts-bar-vertical *ngIf="!isAdmin"
+    [view]="[700, 400]"
+    [scheme]="colorScheme"
+    [results]="contratosPorTecnico"
+    [gradient]="gradient"
+    [xAxis]="showXAxis"
+    [yAxis]="showYAxis"
+    [legend]="showLegend"
+    [legendTitle]="'Legenda'"
+    [showXAxisLabel]="showXAxisLabel"
+    [showYAxisLabel]="showYAxisLabel"
+    [xAxisLabel]="xAxisLabel"
+    [yAxisLabel]="yAxisLabel">
+  </ngx-charts-bar-vertical>
 
   <!-- Tabela de Serviços Executados -->
   <table mat-table [dataSource]="contratosExecutadosDataSource" class="mat-elevation-z8">
@@ -93,16 +108,16 @@
       <td mat-cell *matCellDef="let element"> {{element.descricaoServico}} </td>
     </ng-container>
 
-    <!-- Coluna Valor Claro -->
-    <ng-container matColumnDef="valorClaro">
-      <th mat-header-cell *matHeaderCellDef> Valor Claro </th>
-      <td mat-cell *matCellDef="let element"> {{element.valorClaro}} </td>
+    <!-- Coluna Valor 1 -->
+    <ng-container matColumnDef="valor1">
+      <th mat-header-cell *matHeaderCellDef> Valor 1 </th>
+      <td mat-cell *matCellDef="let element"> {{element.valor1}} </td>
     </ng-container>
 
-    <!-- Coluna Valor Macedo -->
-    <ng-container matColumnDef="valorMacedo">
-      <th mat-header-cell *matHeaderCellDef> Valor Macedo </th>
-      <td mat-cell *matCellDef="let element"> {{element.valorMacedo}} </td>
+    <!-- Coluna Valor 2 -->
+    <ng-container matColumnDef="valor2">
+      <th mat-header-cell *matHeaderCellDef> Valor 2 </th>
+      <td mat-cell *matCellDef="let element"> {{element.valor2}} </td>
     </ng-container>
 
     <!-- Coluna Valor Comissao -->
@@ -122,12 +137,12 @@
       <span class="value">{{ contratosExecutadosDataSource.data.length }}</span>
     </div>
     <div class="summary-field-container">
-      <span class="label">Valor Total Claro:</span>
-      <span class="value">{{ valorTotalClaro | currency:'BRL' }}</span>
+      <span class="label">Valor Total 1:</span>
+      <span class="value">{{ valorTotal1 | currency:'BRL' }}</span>
     </div>
     <div class="summary-field-container">
-      <span class="label">Valor Total Macedo:</span>
-      <span class="value">{{ valorTotalMacedo | currency:'BRL' }}</span>
+      <span class="label">Valor Total 2:</span>
+      <span class="value">{{ valorTotal2 | currency:'BRL' }}</span>
     </div>
     <div class="summary-field-container">
       <span class="label">Comissão Total:</span>

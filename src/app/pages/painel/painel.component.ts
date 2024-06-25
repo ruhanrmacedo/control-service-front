@@ -9,6 +9,7 @@ import { TecnicoService } from 'src/app/core/services/tecnico.service';
 import { ContratoExecutadoDTO, ContratoExecutadoImpressao, Tecnico } from 'src/app/core/types/type';
 import { ModalComissaoComponent } from 'src/app/shared/modal/painel/modal-comissao/modal-comissao.component';
 import { Color, ScaleType } from '@swimlane/ngx-charts';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-painel',
@@ -20,16 +21,18 @@ export class PainelComponent implements OnInit {
   tecnicosFiltrados: Observable<Tecnico[]> | undefined;
   contratosExecutadosDataSource = new MatTableDataSource<ContratoExecutadoDTO>([]);
   contratosExecutadosImpressaoDataSource = new MatTableDataSource<ContratoExecutadoImpressao>([]);
-  displayedColumns: string[] = ['id', 'contrato', 'os', 'data', 'nomeTecnico', 'descricaoServico', 'valorClaro', 'valorMacedo', 'comissao'];
+  displayedColumns: string[] = ['id', 'contrato', 'os', 'data', 'nomeTecnico', 'descricaoServico', 'valor1', 'valor2', 'comissao'];
   displayedColumnsImpressao: string[] = ['contrato', 'os', 'data', 'descricaoServico', 'comissao'];
   tecnicoControl = new FormControl();
   tecnicos: Tecnico[] = [];
   anos: number[] = [];
-  valorTotalMacedo: number = 0;
-  valorTotalClaro: number = 0;
+  valorTotal2: number = 0;
+  valorTotal1: number = 0;
   comissaoTotal: number = 0;
   isPrinting = false;
   nomeTecnico: string = '';
+  contratosPorTecnico: any[] = [];
+  isAdmin = false;
 
   // Configurações para o gráfico
   evolucaoValores: any[] = [];
@@ -41,15 +44,16 @@ export class PainelComponent implements OnInit {
   gradient = false;
   showLegend = true;
   showXAxisLabel = true;
-  xAxisLabel = 'Year';
+  xAxisLabel = 'Ano';
   showYAxisLabel = true;
-  yAxisLabel = 'Value';
+  yAxisLabel = 'Valor';
 
   constructor(
     private fb: FormBuilder,
     private tecnicoService: TecnicoService,
     private comissaoService: ComissaoService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private authService: AuthService
   ) {
     this.registroForm = this.fb.group({
       idTecnico: [''],
@@ -70,6 +74,7 @@ export class PainelComponent implements OnInit {
     });
     this.setupAutoCompleteFilters();
     this.evolucaoValores = [];
+    this.isAdmin = this.authService.isGerenteOuRoot();
   }
 
   onSubmit(): void {
@@ -100,8 +105,8 @@ export class PainelComponent implements OnInit {
     this.comissaoService.getValoresExecutados(
       formValue.idTecnico, formValue.mes, formValue.ano
     ).subscribe(valores => {
-      this.valorTotalMacedo = valores.valorMacedoTotal;
-      this.valorTotalClaro = valores.valorClaroTotal;
+      this.valorTotal2 = valores.valor2Total;
+      this.valorTotal1 = valores.valor1Total;
     });
 
     this.comissaoService.calcularComissao(
@@ -110,26 +115,53 @@ export class PainelComponent implements OnInit {
       this.comissaoTotal = comissao;
     });
 
+    if (this.isAdmin) {
+      // Buscar e processar dados para o gráfico de contratos por técnico
+      this.comissaoService.getContratosPorTecnico(requestValue.tecnicoId, requestValue.mes, requestValue.ano).subscribe(
+        data => {
+          this.contratosPorTecnico = [
+            {
+              name: 'Contratos',
+              series: data.map(item => ({
+                name: item.tecnicoNome,
+                value: item.contratosCount
+              }))
+            }
+          ];
+        },
+        error => {
+          console.error('Erro ao buscar contratos por técnico:', error);
+        }
+      );
+    }
 
     // Buscar e processar dados de evolução para o gráfico
     this.comissaoService.getEvolucaoValor(requestValue.tecnicoId).subscribe(
       data => {
-          console.log('Dados brutos recebidos:', data);
-          this.evolucaoValores = [
-              {
-                  name: 'Evolução',
-                  series: data.map(item => ({
-                      name: `${item[1]}-${item[0]}`,
-                      value: item[2]
-                  }))
-              }
-          ];
-          console.log('Dados mapeados para o gráfico:', this.evolucaoValores);
+        console.log('Dados brutos recebidos:', data);
+        this.evolucaoValores = [
+          {
+            name: 'Evolução',
+            series: data.map(item => ({
+              name: this.getFormattedDate(item[0], item[1]), 
+              value: item[2]
+            }))
+          }
+        ];
+        console.log('Dados mapeados para o gráfico:', this.evolucaoValores);
       },
       error => {
-          console.error('Erro ao buscar evolução dos valores:', error);
+        console.error('Erro ao buscar evolução dos valores:', error);
       }
-  );
+    );
+  }
+
+  getFormattedDate(month: number, year: number): string {
+    const months = [
+      'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+      'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+    ];
+    return `${months[month - 1]}/${year}`;
   }
 
   private loadTecnicos() {
@@ -170,6 +202,11 @@ export class PainelComponent implements OnInit {
 
   displayFnTecnico(tecnico?: Tecnico): string {
     return tecnico ? tecnico.nome : '';
+  }
+
+  get isRootOrGerente(): boolean {
+    const tipoUsuario = localStorage.getItem('tipoUsuarioLogado');
+    return tipoUsuario === 'ROOT' || tipoUsuario === 'GERENTE';
   }
 
   openPrintModal(): void {

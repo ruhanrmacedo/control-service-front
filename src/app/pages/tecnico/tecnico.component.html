@@ -1,172 +1,185 @@
 <div class="tecnico-page-container">
-    <div class="tecnico-container" *ngIf="isUserGerenteOuRoot">
-      <h2>Cadastro de Novo Técnico</h2>
-      <form [formGroup]="tecnicoForm" (ngSubmit)="onSubmit()" novalidate class="tecnico-form-container">
-        <div class="linha">
-          <mat-form-field appearance="fill" class="nome-control">
-            <mat-label>Nome</mat-label>
-            <input matInput formControlName="nome" required>
-            <mat-error *ngIf="tecnicoForm.get('nome')?.invalid && tecnicoForm.get('nome')?.touched">
-              O campo Nome é obrigatório.
-            </mat-error>
-          </mat-form-field>
-  
-          <mat-form-field appearance="fill" class="cpf-control">
-            <mat-label>CPF</mat-label>
-            <input matInput formControlName="cpf" required>
-            <mat-error *ngIf="tecnicoForm.get('cpf')?.invalid && tecnicoForm.get('cpf')?.touched">
-              O campo CPF é obrigatório.
-            </mat-error>
-          </mat-form-field>
-        </div>
-        
-        <div class="linha">
-          <mat-form-field appearance="fill" class="login-control">
-            <mat-label>Login</mat-label>
-            <input matInput formControlName="login" required>
-            <mat-error *ngIf="tecnicoForm.get('login')?.invalid && tecnicoForm.get('login')?.touched">
-              O campo Login é obrigatório.
-            </mat-error>
-          </mat-form-field>
-  
-          <mat-form-field appearance="fill" class="placa-control">
-            <mat-label>Placa</mat-label>
-            <input matInput formControlName="placa" required>
-            <mat-error *ngIf="tecnicoForm.get('placa')?.invalid && tecnicoForm.get('placa')?.touched">
-              O campo Placa é obrigatório.
-            </mat-error>
-          </mat-form-field>
-  
-          <mat-form-field appearance="fill" class="data-control">
-            <mat-label>Data de Admissão</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="dataAdmissao" required>
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-            <mat-error *ngIf="tecnicoForm.get('dataAdmissao')?.invalid && tecnicoForm.get('dataAdmissao')?.touched">
-              A data de admissão é obrigatória.
-            </mat-error>
-          </mat-form-field>
-        </div>
-        
-        <button mat-raised-button type="submit" [disabled]="!tecnicoForm.valid">Cadastrar Técnico</button>
-      </form>
-    </div>
-  
-    <div class="tabela-listar-tecnicos" *ngIf="!isUserGerenteOuRoot">
-        <table mat-table [dataSource]="tecnicosDataSource" class="mat-elevation-z8">
+  <div class="tecnico-container" *ngIf="isUserGerenteOuRoot">
+    <h2>Cadastro de Novo Técnico</h2>
+    <form [formGroup]="tecnicoForm" (ngSubmit)="onSubmit()" novalidate class="tecnico-form-container">
+      <div class="linha">
+        <mat-form-field appearance="fill" class="nome-control">
+          <mat-label>Nome</mat-label>
+          <input matInput formControlName="nome" required>
+          <mat-error *ngIf="tecnicoForm.get('nome')?.invalid && tecnicoForm.get('nome')?.touched">
+            O campo Nome é obrigatório.
+          </mat-error>
+        </mat-form-field>
 
-            <!-- Coluna ID -->
-            <ng-container matColumnDef="idTecnico">
-                <th mat-header-cell *matHeaderCellDef> ID </th>
-                <td mat-cell *matCellDef="let element"> {{element.idTecnico}} </td>
-            </ng-container>
+        <mat-form-field appearance="fill" class="cpf-control">
+          <mat-label>CPF</mat-label>
+          <input matInput formControlName="cpf" required>
+          <mat-error *ngIf="tecnicoForm.get('cpf')?.invalid && tecnicoForm.get('cpf')?.touched">
+            O campo CPF é obrigatório.
+          </mat-error>
+        </mat-form-field>
+      </div>
 
-            <!-- Coluna Nome -->
-            <ng-container matColumnDef="nome">
-                <th mat-header-cell *matHeaderCellDef> Descrição </th>
-                <td mat-cell *matCellDef="let element"> {{element.nome}} </td>
-            </ng-container>
+      <div class="linha">
+        <mat-form-field appearance="fill" class="login-control">
+          <mat-label>Login</mat-label>
+          <input matInput formControlName="login" required>
+          <mat-error *ngIf="tecnicoForm.get('login')?.invalid && tecnicoForm.get('login')?.touched">
+            O campo Login é obrigatório.
+          </mat-error>
+        </mat-form-field>
 
-            <!-- Coluna Tipo Login -->
-            <ng-container matColumnDef="login">
-                <th mat-header-cell *matHeaderCellDef> Login </th>
-                <td mat-cell *matCellDef="let element"> {{element.login}} </td>
-            </ng-container>
+        <mat-form-field appearance="fill" class="placa-control">
+          <mat-label>Placa</mat-label>
+          <input matInput formControlName="placa" required>
+          <mat-error *ngIf="tecnicoForm.get('placa')?.invalid && tecnicoForm.get('placa')?.touched">
+            O campo Placa é obrigatório.
+          </mat-error>
+        </mat-form-field>
 
-            <!-- Coluna Tipo Placa -->
-            <ng-container matColumnDef="placa">
-                <th mat-header-cell *matHeaderCellDef> Placa </th>
-                <td mat-cell *matCellDef="let element"> {{element.placa}} </td>
-            </ng-container>
+        <mat-form-field appearance="fill" class="data-control">
+          <mat-label>Data de Admissão</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="dataAdmissao" required>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="tecnicoForm.get('dataAdmissao')?.invalid && tecnicoForm.get('dataAdmissao')?.touched">
+            A data de admissão é obrigatória.
+          </mat-error>
+        </mat-form-field>
+      </div>
 
-            <!-- Coluna Data Admissão -->
-            <ng-container matColumnDef="dataAdmissao">
-                <th mat-header-cell *matHeaderCellDef> Data Admissão </th>
-                <td mat-cell *matCellDef="let element"> {{element.dataAdmissao | formatDate}} </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <!-- Linhas da Tabela -->
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-        </table>
-
-        <mat-paginator 
-            [length]="tecnicosDataSource.data.length" [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"
-            aria-label="Select page of technicians">
-        </mat-paginator>
-    </div>
-
-
-    <div class="tabela-listar-tecnicos" *ngIf="isUserGerenteOuRoot">
-        <table mat-table [dataSource]="tecnicoGerenteDataSource" class="mat-elevation-z8">
-
-            <!-- Coluna ID -->
-            <ng-container matColumnDef="idTecnico">
-                <th mat-header-cell *matHeaderCellDef> ID </th>
-                <td mat-cell *matCellDef="let element"> {{element.idTecnico}} </td>
-            </ng-container>
-
-            <!-- Coluna Nome -->
-            <ng-container matColumnDef="nome">
-                <th mat-header-cell *matHeaderCellDef> Nome </th>
-                <td mat-cell *matCellDef="let element"> {{element.nome}} </td>
-            </ng-container>
-
-            <!-- Coluna CPF -->
-            <ng-container matColumnDef="cpf">
-                <th mat-header-cell *matHeaderCellDef> CPF </th>
-                <td mat-cell *matCellDef="let element"> {{element.cpf}} </td>
-            </ng-container>
-
-            <!-- Coluna Tipo Login -->
-            <ng-container matColumnDef="login">
-                <th mat-header-cell *matHeaderCellDef> Login </th>
-                <td mat-cell *matCellDef="let element"> {{element.login}} </td>
-            </ng-container>
-
-            <!-- Coluna Tipo Placa -->
-            <ng-container matColumnDef="placa">
-                <th mat-header-cell *matHeaderCellDef> Placa </th>
-                <td mat-cell *matCellDef="let element"> {{element.placa}} </td>
-            </ng-container>
-
-            <!-- Coluna Data Admissão -->
-            <ng-container matColumnDef="dataAdmissao">
-                <th mat-header-cell *matHeaderCellDef> Data Admissão </th>
-                <td mat-cell *matCellDef="let element"> {{element.dataAdmissao | formatDate}} </td>
-            </ng-container>
-
-            <!-- Coluna Data Desligamento -->
-            <ng-container matColumnDef="dataDesligamento">
-                <th mat-header-cell *matHeaderCellDef> Data Desligamento </th>
-                <td mat-cell *matCellDef="let element"> {{element.dataDesligamento | formatDate}} </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumnsGerente"></tr>
-            <!-- Linhas da Tabela -->
-            <tr mat-row *matRowDef="let row; columns: displayedColumnsGerente;" (click)="selecionarTecnico(row)"
-                [class.linha-selecionada]="row === tecnicoSelecionado">
-            </tr>
-
-        </table>
-
-        <mat-paginator 
-            [length]="tecnicoGerenteDataSource.data.length" [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"
-            aria-label="Select page of technicians">
-        </mat-paginator>
-
-
-
-        <div class="botoes-container">
-            <button class="btn-editar" mat-button (click)="editarTecnico()">Editar Técnico</button>
-            <button class="btn-excluir" mat-button (click)="demitirTecnico()">Desligar Técnico</button>
-        </div>
-    </div>
-
-    <div class="links">
-        <a routerLink="/">Voltar para Home</a>
-    </div>
-
+      <button mat-raised-button type="submit" [disabled]="!tecnicoForm.valid">Cadastrar Técnico</button>
+    </form>
   </div>
-  
+
+  <div class="search-container" *ngIf="isUserGerenteOuRoot">
+    <mat-form-field appearance="fill" class="search-bar">
+      <mat-label>Buscar Técnico</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Digite a ID, Descrição, Valor ou Tipo de Serviço"
+        #input>
+    </mat-form-field>
+  </div>
+
+  <div class="search-container" *ngIf="!isUserGerenteOuRoot">
+    <mat-form-field appearance="fill" class="search-bar">
+      <mat-label>Buscar Técnico</mat-label>
+      <input matInput (keyup)="applyFilterAdm($event)" placeholder="Digite a ID, Nome, Login, Placa ou Data de Admissão"
+        #input>
+    </mat-form-field>
+  </div>
+
+  <div class="tabela-listar-tecnicos" *ngIf="!isUserGerenteOuRoot">
+    <table mat-table [dataSource]="tecnicosDataSource" class="mat-elevation-z8">
+
+      <!-- Coluna ID -->
+      <ng-container matColumnDef="idTecnico">
+        <th mat-header-cell *matHeaderCellDef> ID </th>
+        <td mat-cell *matCellDef="let element"> {{element.idTecnico}} </td>
+      </ng-container>
+
+      <!-- Coluna Nome -->
+      <ng-container matColumnDef="nome">
+        <th mat-header-cell *matHeaderCellDef> Nome </th>
+        <td mat-cell *matCellDef="let element"> {{element.nome}} </td>
+      </ng-container>
+
+      <!-- Coluna Tipo Login -->
+      <ng-container matColumnDef="login">
+        <th mat-header-cell *matHeaderCellDef> Login </th>
+        <td mat-cell *matCellDef="let element"> {{element.login}} </td>
+      </ng-container>
+
+      <!-- Coluna Tipo Placa -->
+      <ng-container matColumnDef="placa">
+        <th mat-header-cell *matHeaderCellDef> Placa </th>
+        <td mat-cell *matCellDef="let element"> {{element.placa}} </td>
+      </ng-container>
+
+      <!-- Coluna Data Admissão -->
+      <ng-container matColumnDef="dataAdmissao">
+        <th mat-header-cell *matHeaderCellDef> Data Admissão </th>
+        <td mat-cell *matCellDef="let element"> {{element.dataAdmissao | formatDate}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <!-- Linhas da Tabela -->
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+
+    <mat-paginator [length]="tecnicosDataSource.data.length" [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"
+      aria-label="Select page of technicians">
+    </mat-paginator>
+  </div>
+
+
+  <div class="tabela-listar-tecnicos" *ngIf="isUserGerenteOuRoot">
+    <table mat-table [dataSource]="tecnicoGerenteDataSource" class="mat-elevation-z8">
+
+      <!-- Coluna ID -->
+      <ng-container matColumnDef="idTecnico">
+        <th mat-header-cell *matHeaderCellDef> ID </th>
+        <td mat-cell *matCellDef="let element"> {{element.idTecnico}} </td>
+      </ng-container>
+
+      <!-- Coluna Nome -->
+      <ng-container matColumnDef="nome">
+        <th mat-header-cell *matHeaderCellDef> Nome </th>
+        <td mat-cell *matCellDef="let element"> {{element.nome}} </td>
+      </ng-container>
+
+      <!-- Coluna CPF -->
+      <ng-container matColumnDef="cpf">
+        <th mat-header-cell *matHeaderCellDef> CPF </th>
+        <td mat-cell *matCellDef="let element"> {{element.cpf}} </td>
+      </ng-container>
+
+      <!-- Coluna Tipo Login -->
+      <ng-container matColumnDef="login">
+        <th mat-header-cell *matHeaderCellDef> Login </th>
+        <td mat-cell *matCellDef="let element"> {{element.login}} </td>
+      </ng-container>
+
+      <!-- Coluna Tipo Placa -->
+      <ng-container matColumnDef="placa">
+        <th mat-header-cell *matHeaderCellDef> Placa </th>
+        <td mat-cell *matCellDef="let element"> {{element.placa}} </td>
+      </ng-container>
+
+      <!-- Coluna Data Admissão -->
+      <ng-container matColumnDef="dataAdmissao">
+        <th mat-header-cell *matHeaderCellDef> Data Admissão </th>
+        <td mat-cell *matCellDef="let element"> {{element.dataAdmissao | formatDate}} </td>
+      </ng-container>
+
+      <!-- Coluna Data Desligamento -->
+      <ng-container matColumnDef="dataDesligamento">
+        <th mat-header-cell *matHeaderCellDef> Data Desligamento </th>
+        <td mat-cell *matCellDef="let element"> {{element.dataDesligamento | formatDate}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumnsGerente"></tr>
+      <!-- Linhas da Tabela -->
+      <tr mat-row *matRowDef="let row; columns: displayedColumnsGerente;" (click)="selecionarTecnico(row)"
+        [class.linha-selecionada]="row === tecnicoSelecionado">
+      </tr>
+
+    </table>
+
+    <mat-paginator [length]="tecnicoGerenteDataSource.data.length" [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"
+      aria-label="Select page of technicians">
+    </mat-paginator>
+
+
+
+    <div class="botoes-container">
+      <button class="btn-editar" mat-button (click)="editarTecnico()">Editar Técnico</button>
+      <button class="btn-excluir" mat-button (click)="demitirTecnico()">Desligar Técnico</button>
+    </div>
+  </div>
+
+  <div class="links">
+    <a routerLink="/">Voltar para Home</a>
+  </div>
+
+</div>

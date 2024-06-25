@@ -30,8 +30,8 @@ export class ModalEditarServicoComponent implements	OnInit {
     const dadosAtualizados = {
       idServico: this.data.idServico,
       descricao: this.data.descricao,
-      valorClaro: this.data.valorClaro,
-      valorMacedo: this.data.valorMacedo,
+      valor1: this.data.valor1,
+      valor2: this.data.valor2,
       tipoServico: this.data.novoTipoServico || this.data.tipoServico // Fallback para o tipo atual se nenhum novo for selecionado
     };
 

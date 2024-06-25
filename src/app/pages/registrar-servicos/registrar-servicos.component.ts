@@ -10,6 +10,7 @@ import { RegistrarServicosService } from 'src/app/core/services/registrar-servic
 import { ServicoService } from 'src/app/core/services/servico.service';
 import { TecnicoService } from 'src/app/core/services/tecnico.service';
 import { listarServicosExecutadosAdmDTO, RegistroServicoDTO, Servico, ServicoExecutadoAdmListagemDTO, ServicoGerente, Tecnico } from 'src/app/core/types/type';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-registrar-servicos',
@@ -26,12 +27,13 @@ export class RegistrarServicosComponent implements OnInit {
   servicoControl = new FormControl();
   servicosExecutadosDataSource = new MatTableDataSource<RegistroServicoDTO>([]);
   servicosExecutadosAdmDataSource = new MatTableDataSource<listarServicosExecutadosAdmDTO>([]);
-  displayedColumns: string[] = ['id', 'contrato', 'os', 'data', 'nomeTecnico', 'descricaoServico', 'valorClaro', 'valorMacedo'];
+  displayedColumns: string[] = ['id', 'contrato', 'os', 'data', 'nomeTecnico', 'descricaoServico', 'valor1', 'valor2'];
   displayedColumnsAdm: string[] = ['id', 'contrato', 'os', 'data', 'nomeTecnico', 'descricaoServico'];
   servicoSelecionado: any = null;
   quantidadeServicos: number | null = null;
-  valorTotalClaro: number | null = null;
-  valorTotalMacedos: number | null = null;
+  valorTotal1: number | null = null;
+  valorTotal2: number | null = null;
+  mensagemSucesso: string | null = null;
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
@@ -43,7 +45,8 @@ export class RegistrarServicosComponent implements OnInit {
     private registrarServicosService: RegistrarServicosService,
     private tecnicoService: TecnicoService,
     private servicoService: ServicoService,
-    private authService: AuthService
+    private authService: AuthService,
+    private snackBar: MatSnackBar
   ) {
     this.isUserGerenteOuRoot = this.authService.isGerenteOuRoot();
     this.registroForm = this.fb.group({
@@ -52,8 +55,8 @@ export class RegistrarServicosComponent implements OnInit {
       data: ['', Validators.required],
       idTecnico: [''], // Ajustado para ser parte do FormGroup
       idServico: [''], // Ajustado para ser parte do FormGroup
-      valorClaro: [''],
-      valorMacedo: ['']
+      valor1: [''],
+      valor2: ['']
     });
   }
 
@@ -90,13 +93,18 @@ export class RegistrarServicosComponent implements OnInit {
         data: formValue.data,
         idTecnico: formValue.idTecnico,
         idServico: formValue.idServico,
-        valorClaro: formValue.valorClaro,
-        valorMacedo: formValue.valorMacedo
+        valor1: formValue.valor1,
+        valor2: formValue.valor2
       };
   
       this.registrarServicosService.registrarServico(registro).subscribe({
         next: (success) => {
           console.log('Serviço registrado com sucesso');
+          this.mensagemSucesso = 'Contrato registrado com sucesso.';
+          this.snackBar.open('Contrato registrado com sucesso.', 'Fechar', {
+            duration: 3000
+          });
+          setTimeout(() => this.mensagemSucesso = null, 3000);
   
           // Extrai o mês e o ano da data do serviço registrado
           const data = new Date(registro.data);
@@ -104,7 +112,7 @@ export class RegistrarServicosComponent implements OnInit {
           const ano = data.getFullYear();
   
           // Verificar o tipo de usuário e chamar o método correto
-          const tipoUsuario = this.authService.getCurrentTipoUsuarioLogado(); // Substitua pelo seu método real
+          const tipoUsuario = this.authService.getCurrentTipoUsuarioLogado();
           if (tipoUsuario === 'ADMINISTRADOR') {
             this.obterResumoMensalAdmin(mes, ano);
             this.atualizarListaServicosAdm(mes, ano);
@@ -207,8 +215,8 @@ export class RegistrarServicosComponent implements OnInit {
     return this.servicos.filter(servico => servico.descricao.toLowerCase().includes(filterValue.toLowerCase()));
   }
 
-  carregarServicosExecutados(): void {
-    this.registrarServicosService.listarServicosExecutados(0, 20).subscribe({
+  carregarServicosExecutados(page: number = 0, size: number = 10000): void {
+    this.registrarServicosService.listarServicosExecutados(page, size).subscribe({
       next: (data: any) => {
         console.log('Dados recebidos: ', data);
         this.servicosExecutadosDataSource = new MatTableDataSource<RegistroServicoDTO>(data.content);
@@ -220,8 +228,8 @@ export class RegistrarServicosComponent implements OnInit {
     });
   }
 
-  carregarServicosExecutadosAdm(): void {
-    this.registrarServicosService.listarServicosExecutadosAdm(0, 20).subscribe({
+  carregarServicosExecutadosAdm(page: number = 0, size: number = 10000): void {
+    this.registrarServicosService.listarServicosExecutadosAdm(page, size).subscribe({
       next: (data: any) => {
         console.log('Dados recebidos: ', data);
         this.servicosExecutadosAdmDataSource = new MatTableDataSource<listarServicosExecutadosAdmDTO>(data.content);
@@ -239,8 +247,8 @@ export class RegistrarServicosComponent implements OnInit {
     this.servicoControl.setValue(servico);
     this.registroForm.patchValue({
       idServico: servico.idServico, // Assegure-se que seu objeto ServicoGerente tem essa propriedade.
-      valorClaro: servico.valorClaro, // Isso preencherá o valorClaro automaticamente.
-      valorMacedo: servico.valorMacedo // Isso preencherá o valorMacedo automaticamente.
+      valor1: servico.valor1, // Isso preencherá o valor1 automaticamente.
+      valor2: servico.valor2 // Isso preencherá o valor2 automaticamente.
     });
     this.changeDetectorRefs.detectChanges();
   }
@@ -294,8 +302,8 @@ export class RegistrarServicosComponent implements OnInit {
     this.registrarServicosService.obterResumoMensal(mes, ano).subscribe({
       next: (resumo) => {
         this.quantidadeServicos = resumo.quantidadeServicos;
-        this.valorTotalClaro = resumo.valorTotalClaro;
-        this.valorTotalMacedos = resumo.valorTotalMacedos;
+        this.valorTotal1 = resumo.valorTotal1;
+        this.valorTotal2 = resumo.valorTotal2;
         this.changeDetectorRefs.detectChanges();
       },
       error: (err) => console.error('Erro ao obter o resumo mensal', err)
@@ -321,6 +329,15 @@ export class RegistrarServicosComponent implements OnInit {
 
     if (this.servicosExecutadosDataSource.paginator) {
       this.servicosExecutadosDataSource.paginator.firstPage();
+    }
+  }
+
+  applyFilterAdm(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.servicosExecutadosAdmDataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.servicosExecutadosAdmDataSource.paginator) {
+      this.servicosExecutadosAdmDataSource.paginator.firstPage();
     }
   }
 }

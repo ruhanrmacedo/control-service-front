@@ -37,6 +37,8 @@ export class ModalLoginComponent {
         this.erroLogin = true;
         if (typeof error === 'string') {
           this.mensagemErro = error;
+        } else if (error && error.error) {
+          this.mensagemErro = error.error;
         } else {
           this.mensagemErro = 'Erro desconhecido ao tentar fazer login';
         }
