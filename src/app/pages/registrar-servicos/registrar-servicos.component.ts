@@ -9,7 +9,7 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { RegistrarServicosService } from 'src/app/core/services/registrar-servicos.service';
 import { ServicoService } from 'src/app/core/services/servico.service';
 import { TecnicoService } from 'src/app/core/services/tecnico.service';
-import { listarServicosExecutadosAdmDTO, RegistroServicoDTO, Servico, ServicoExecutadoAdmListagemDTO, ServicoGerente, Tecnico } from 'src/app/core/types/type';
+import { listarServicosExecutadosAdmDTO, RegistroServicoDTO, Servico, ServicoGerente, Tecnico } from 'src/app/core/types/type';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -21,8 +21,8 @@ export class RegistrarServicosComponent implements OnInit {
   registroForm: FormGroup;
   tecnicosFiltrados: Observable<Tecnico[]> | undefined;
   servicosFiltrados: Observable<Servico[]> | undefined;
-  tecnicos: Tecnico[] = []; // Sua lista de técnicos
-  servicos: Servico[] = []; // Sua lista de serviços
+  tecnicos: Tecnico[] = []; // Lista de técnicos
+  servicos: Servico[] = []; // Lista de serviços
   tecnicoControl = new FormControl(); // Adicionado o FormControl
   servicoControl = new FormControl();
   servicosExecutadosDataSource = new MatTableDataSource<RegistroServicoDTO>([]);
@@ -66,11 +66,11 @@ export class RegistrarServicosComponent implements OnInit {
     this.loadTecnicos();
     this.loadServicos();
     this.tecnicoService.listarTecnicos(0, 1000).subscribe(tecnicos => {
-      this.tecnicos = tecnicos.content; // Supondo que a resposta tenha um campo 'content'
+      this.tecnicos = tecnicos.content; 
     });
     if (this.isUserGerenteOuRoot) {
       this.servicoService.listarServicosGerente(0, 1000).subscribe(servicos => {
-        this.servicos = servicos.content; // Supondo que a resposta tenha um campo 'content'
+        this.servicos = servicos.content; 
       });
     } else {
       this.servicoService.listarServicos(0, 1000).subscribe(servicos => {
@@ -80,7 +80,15 @@ export class RegistrarServicosComponent implements OnInit {
     this.servicosExecutadosDataSource.filterPredicate = (data: any, filter: string) => {
       return data.contrato.toString().toLowerCase().includes(filter);
     };
-    this.setupAutocompleteFilters();
+    this.servicoService.listarServicosAtivos(0, 1000).subscribe({
+      next: (response) => {
+        this.servicos = response.content; 
+        this.setupAutocompleteFilters(); // Chamar o setupAutocompleteFilters após carregar os serviços
+      },
+      error: (error) => {
+        console.error('Erro ao carregar serviços', error);
+      }
+    });
     
   }
 

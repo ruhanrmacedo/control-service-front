@@ -33,6 +33,12 @@ export class ServicoService {
     return this.http.get<any>(`${this.apiUrl}/listarServicos`, { headers, ...params });
   }
 
+  listarServicosAtivos(page: number, size: number): Observable<any> {
+    const headers = this.getHeaders();
+    const params = { params: new HttpParams().set('page', String(page)).set('size', String(size)) };
+    return this.http.get<any>(`${this.apiUrl}/listarServicosAtivos`, { headers, ...params });
+  }
+
   listarServicosGerente(page: number, size: number): Observable<any> {
     const headers = this.getHeaders();
     const params = { params: new HttpParams().set('page', String(page)).set('size', String(size)) };
