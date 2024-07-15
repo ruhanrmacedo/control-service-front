@@ -11,6 +11,8 @@ import { ServicoService } from 'src/app/core/services/servico.service';
 import { TecnicoService } from 'src/app/core/services/tecnico.service';
 import { listarServicosExecutadosAdmDTO, RegistroServicoDTO, Servico, ServicoGerente, Tecnico } from 'src/app/core/types/type';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ModalEditarServicoExecutadoComponent } from 'src/app/shared/modal/registrar-servico/modal-editar-servico-executado/modal-editar-servico-executado.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-registrar-servicos',
@@ -21,18 +23,20 @@ export class RegistrarServicosComponent implements OnInit {
   registroForm: FormGroup;
   tecnicosFiltrados: Observable<Tecnico[]> | undefined;
   servicosFiltrados: Observable<Servico[]> | undefined;
+  servicoAdicionalFiltrados: Observable<Servico[]> | undefined;
   tecnicos: Tecnico[] = []; // Lista de técnicos
   servicos: Servico[] = []; // Lista de serviços
+  servicosAdicionais: ServicoGerente[] = []; // Lista de serviços adicionais
   tecnicoControl = new FormControl(); // Adicionado o FormControl
   servicoControl = new FormControl();
+  servicoAdicionalControl = new FormControl(); // Control para serviços adicionais
   servicosExecutadosDataSource = new MatTableDataSource<RegistroServicoDTO>([]);
   servicosExecutadosAdmDataSource = new MatTableDataSource<listarServicosExecutadosAdmDTO>([]);
-  displayedColumns: string[] = ['id', 'contrato', 'os', 'data', 'nomeTecnico', 'descricaoServico', 'valor1', 'valor2'];
-  displayedColumnsAdm: string[] = ['id', 'contrato', 'os', 'data', 'nomeTecnico', 'descricaoServico'];
+  displayedColumns: string[] = ['id', 'contrato', 'os', 'data', 'nomeTecnico', 'descricaoServico', 'descricaoServicosAdicionais', 'valor1', 'valorTotal'];
+  displayedColumnsAdm: string[] = ['id', 'contrato', 'os', 'data', 'nomeTecnico', 'descricaoServico', 'descricaoServicosAdicionais'];
   servicoSelecionado: any = null;
   quantidadeServicos: number | null = null;
   valorTotal1: number | null = null;
-  valorTotal2: number | null = null;
   mensagemSucesso: string | null = null;
 
   @ViewChild(MatPaginator)
@@ -46,7 +50,8 @@ export class RegistrarServicosComponent implements OnInit {
     private tecnicoService: TecnicoService,
     private servicoService: ServicoService,
     private authService: AuthService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    public dialog: MatDialog
   ) {
     this.isUserGerenteOuRoot = this.authService.isGerenteOuRoot();
     this.registroForm = this.fb.group({
@@ -55,12 +60,14 @@ export class RegistrarServicosComponent implements OnInit {
       data: ['', Validators.required],
       idTecnico: [''], // Ajustado para ser parte do FormGroup
       idServico: [''], // Ajustado para ser parte do FormGroup
+      servicosAdicionais: [''],
       valor1: [''],
-      valor2: ['']
+      valorTotal: ['']
     });
   }
 
   ngOnInit(): void {
+    this.servicosExecutadosDataSource.paginator = this.paginator;
     this.carregarServicosExecutados();
     this.carregarServicosExecutadosAdm();
     this.loadTecnicos();
@@ -101,10 +108,13 @@ export class RegistrarServicosComponent implements OnInit {
         data: formValue.data,
         idTecnico: formValue.idTecnico,
         idServico: formValue.idServico,
+        servicosAdicionais: this.servicosAdicionais.map(s => s.idServico), // Array de IDs de serviços adicionais
         valor1: formValue.valor1,
-        valor2: formValue.valor2
+        valorTotal: formValue.valorTotal
       };
   
+      console.log('Registro enviado:', registro); // Adicionado aqui para verificar os dados enviados
+
       this.registrarServicosService.registrarServico(registro).subscribe({
         next: (success) => {
           console.log('Serviço registrado com sucesso');
@@ -131,6 +141,7 @@ export class RegistrarServicosComponent implements OnInit {
           }
   
           this.registroForm.reset();
+          this.servicosAdicionais = [];
         },
         error: (error) => {
           console.error('Ocorreu um erro:', error);
@@ -182,6 +193,7 @@ export class RegistrarServicosComponent implements OnInit {
     });
   }
 
+  // Método para carregar os serviços
   private loadServicos() {
     // Altere o número de página e tamanho conforme necessário
     this.servicoService.listarServicosGerente(0, 1000).subscribe({
@@ -195,6 +207,7 @@ export class RegistrarServicosComponent implements OnInit {
     });
   }
 
+  // Método para configurar os filtros de autocomplete
   private setupAutocompleteFilters() {
     this.tecnicosFiltrados = this.tecnicoControl.valueChanges
       .pipe(
@@ -207,28 +220,38 @@ export class RegistrarServicosComponent implements OnInit {
       .pipe(
         startWith(''),
         map(value => typeof value === 'string' ? value : value.descricao),
-        map(descricao => descricao ? this.filterServicos(descricao) : this.servicos.slice())
+        map(descricao => descricao ? this.filterServicos(descricao) : this.servicos.filter(s => s.ativo).slice())
       );
+
+    this.servicoAdicionalFiltrados = this.servicoAdicionalControl.valueChanges.pipe(
+      startWith(''),
+      map(value => typeof value === 'string' ? value : value.descricao),
+      map(descricao => descricao ? this.filterServicos(descricao) : this.servicos.filter(s => s.ativo).slice())
+    );
   }
 
+  // Método para filtrar os técnicos
   private filterTecnicos(value: any): Tecnico[] {
     if (!value) return this.tecnicos; // Se o valor for null ou undefined, retorna todos os técnicos
     let filterValue = value instanceof Object ? value.nome : value.toString();
     return this.tecnicos.filter(tecnico => tecnico.nome.toLowerCase().includes(filterValue.toLowerCase()));
   }
 
+  // Método para filtrar os serviços
   private filterServicos(value: any): Servico[] {
-    if (!value) return this.servicos; // Se o valor for null ou undefined, retorna todos os serviços
+    if (!value) return this.servicos.filter(s => s.ativo); // Se o valor for null ou undefined, retorna todos os serviços
     let filterValue = value instanceof Object ? value.descricao : value.toString();
-    return this.servicos.filter(servico => servico.descricao.toLowerCase().includes(filterValue.toLowerCase()));
+    return this.servicos.filter(servico => servico.descricao.toLowerCase().includes(filterValue.toLowerCase()) && servico.ativo);
   }
 
+  // Método para carregar os serviços executados
   carregarServicosExecutados(page: number = 0, size: number = 10000): void {
     this.registrarServicosService.listarServicosExecutados(page, size).subscribe({
       next: (data: any) => {
         console.log('Dados recebidos: ', data);
-        this.servicosExecutadosDataSource = new MatTableDataSource<RegistroServicoDTO>(data.content);
+        this.servicosExecutadosDataSource.data = data.content;
         this.servicosExecutadosDataSource.paginator = this.paginator;
+        this.servicosExecutadosDataSource.paginator.length = data.totalElements;
         console.log('Dados após atribuição: ', this.servicosExecutadosDataSource.data);
         this.changeDetectorRefs.detectChanges();
       },
@@ -236,6 +259,7 @@ export class RegistrarServicosComponent implements OnInit {
     });
   }
 
+  // Método para carregar os serviços executados para o administrador
   carregarServicosExecutadosAdm(page: number = 0, size: number = 10000): void {
     this.registrarServicosService.listarServicosExecutadosAdm(page, size).subscribe({
       next: (data: any) => {
@@ -249,6 +273,7 @@ export class RegistrarServicosComponent implements OnInit {
     });
   }
 
+  // Método para o autocomplete de serviços e atualizar os valores do formulário
   onServicoSelected(event: MatAutocompleteSelectedEvent): void {
     const servico: ServicoGerente = event.option.value;
     console.log('Serviço selecionado:', servico);
@@ -256,16 +281,45 @@ export class RegistrarServicosComponent implements OnInit {
     this.registroForm.patchValue({
       idServico: servico.idServico, // Assegure-se que seu objeto ServicoGerente tem essa propriedade.
       valor1: servico.valor1, // Isso preencherá o valor1 automaticamente.
-      valor2: servico.valor2 // Isso preencherá o valor2 automaticamente.
+      valorTotal: this.calculateValorTotal(servico.valor1, this.servicosAdicionais) // Isso preencherá o valorTotal automaticamente.
     });
     this.changeDetectorRefs.detectChanges();
   }
 
+  // Método para calcular o valor total do serviço
+  private calculateValorTotal(valorPrincipal: number, servicosAdicionais: ServicoGerente[]): number {
+    const valorTotalAdicionais = servicosAdicionais.reduce((total, servico) => total + servico.valor1, 0);
+    return valorPrincipal + valorTotalAdicionais;
+  }
+
+  // Método para adicionar um serviço adicional
+  onServicoAdicionalSelected(event: MatAutocompleteSelectedEvent): void {
+    const servico: ServicoGerente = event.option.value;
+    if (!this.servicosAdicionais.includes(servico)) {
+      this.servicosAdicionais.push(servico);
+    }
+    this.servicoAdicionalControl.setValue('');
+    this.registroForm.patchValue({
+      valorTotal: this.calculateValorTotal(this.registroForm.value.valor1, this.servicosAdicionais)
+    });
+    this.changeDetectorRefs.detectChanges();
+  }
+
+  // Método para remover um serviço adicional
+  removeServicoAdicional(servico: ServicoGerente): void {
+    this.servicosAdicionais = this.servicosAdicionais.filter(s => s.idServico !== servico.idServico);
+    this.registroForm.patchValue({
+      valorTotal: this.calculateValorTotal(this.registroForm.value.valor1, this.servicosAdicionais)
+    }); 
+    this.changeDetectorRefs.detectChanges();
+  }
+
+  // Método para obter o valor total dos serviços adicionais
   onTecnicoSelected(event: MatAutocompleteSelectedEvent): void {
     const tecnico: Tecnico = event.option.value;
     this.tecnicoControl.setValue(tecnico);
     this.registroForm.patchValue({
-      idTecnico: tecnico.idTecnico // Assegure-se que seu objeto Tecnico tem essa propriedade.
+      idTecnico: tecnico.idTecnico 
     });
   }
 
@@ -277,13 +331,34 @@ export class RegistrarServicosComponent implements OnInit {
     return servico ? servico.descricao : '';
   }
 
+  displayFnServicosAdicionais(servico?: Servico): string {
+    return servico ? servico.descricao : '';
+  }
+
   selecionarServico(servico: any): void {
     this.servicoSelecionado = servico;
     console.log("Serviço selecionado:", this.servicoSelecionado);
   }
 
-  editarServico(): void {
-
+  editarServicoRegistrado(): void {
+    if (this.servicoSelecionado) {
+      const dialogRef = this.dialog.open(ModalEditarServicoExecutadoComponent, {
+        data: {
+          id: this.servicoSelecionado.id,
+          contrato: this.servicoSelecionado.contrato,
+          os: this.servicoSelecionado.os,
+          data: this.servicoSelecionado.data,
+          idTecnico: this.servicoSelecionado.idTecnico,
+          idServico: this.servicoSelecionado.idServico,
+          servicosAdicionais: this.servicoSelecionado.servicosAdicionais,
+        }
+      });
+  
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('O modal foi fechado.');
+        // Lógica após fechar o modal
+      });
+    }
   }
 
   excluirServico(): void {
@@ -311,7 +386,6 @@ export class RegistrarServicosComponent implements OnInit {
       next: (resumo) => {
         this.quantidadeServicos = resumo.quantidadeServicos;
         this.valorTotal1 = resumo.valorTotal1;
-        this.valorTotal2 = resumo.valorTotal2;
         this.changeDetectorRefs.detectChanges();
       },
       error: (err) => console.error('Erro ao obter o resumo mensal', err)

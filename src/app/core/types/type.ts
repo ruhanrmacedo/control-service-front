@@ -13,14 +13,13 @@ export type EditableField = 'nome' | 'cpf' | 'login';
 export interface Servico {
   idServico: number;
   descricao: string;
-
+  ativo: boolean;
 }
 
 export interface ServicoGerente {
   idServico: number;
   descricao: string;
   valor1: number;
-  valor2: number;
   tipoServico: string;
   ativo: boolean;
 }
@@ -49,8 +48,9 @@ export interface RegistroServicoDTO {
   data: string;
   idTecnico: number;
   idServico: number;
+  servicosAdicionais: number[];
   valor1?: number;
-  valor2?: number;
+  valorTotal?: number;
 }
 
 export interface listarServicosExecutadosAdmDTO {
@@ -59,12 +59,13 @@ export interface listarServicosExecutadosAdmDTO {
   data: string;
   idTecnico: number;
   idServico: number;
+  idServicoExecutado: number;
 }
 
 export interface ResumoMensalServicoDTO {
   quantidadeServicos: number;
   valorTotal1: number;
-  valorTotal2: number;
+  somaValorTotal: number;
 }
 
 export interface ResumoMensalAdmDTO {
@@ -78,8 +79,9 @@ export interface ContratoExecutadoDTO {
   data: string;
   nomeTecnico: number;
   descricaoServico: number;
+  descricaoServicosAdicionais: string[];
   valor1?: number;
-  valor2?: number;
+  valorTotal?: number;
   comissao?: number;
 }
 
@@ -88,6 +90,7 @@ export interface ContratoExecutadoImpressao {
   os: string;
   data: string;
   descricaoServico: number;
+  descricaoServicosAdicionais: string[];
   comissao?: number;
 }
 
@@ -98,4 +101,5 @@ export interface ServicoExecutadoAdmListagemDTO {
   data: string;
   nomeTecnico: string;
   descricaoServico: string;
+  descricaoServicosAdicionais: string[];
 }
