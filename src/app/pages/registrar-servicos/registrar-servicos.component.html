@@ -246,7 +246,11 @@
     </div>
     <div class="summary-field-container" *ngIf="isUserGerenteOuRoot">
       <span class="label">Valor Principal:</span>
-      <span class="value">{{ valorTotal1 }}</span>
+      <span class="value">{{ valorTotal1 | currency:'BRL' }}</span>
+    </div>
+    <div class="summary-field-container" *ngIf="isUserGerenteOuRoot">
+      <span class="label">Valor Total:</span>
+      <span class="value">{{ somaValorTotal | currency:'BRL' }}</span>
     </div>
   </div>
 

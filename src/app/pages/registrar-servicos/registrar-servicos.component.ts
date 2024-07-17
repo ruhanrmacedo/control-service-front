@@ -37,6 +37,7 @@ export class RegistrarServicosComponent implements OnInit {
   servicoSelecionado: any = null;
   quantidadeServicos: number | null = null;
   valorTotal1: number | null = null;
+  somaValorTotal: number | null = null;
   mensagemSucesso: string | null = null;
 
   @ViewChild(MatPaginator)
@@ -397,6 +398,7 @@ export class RegistrarServicosComponent implements OnInit {
       next: (resumo) => {
         this.quantidadeServicos = resumo.quantidadeServicos;
         this.valorTotal1 = resumo.valorTotal1;
+        this.somaValorTotal = resumo.somaValorTotal;
         this.changeDetectorRefs.detectChanges();
       },
       error: (err) => console.error('Erro ao obter o resumo mensal', err)
