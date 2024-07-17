@@ -68,19 +68,19 @@ export class RegistrarServicosComponent implements OnInit {
 
   ngOnInit(): void {
     this.servicosExecutadosDataSource.paginator = this.paginator;
-    this.carregarServicosExecutados();
-    this.carregarServicosExecutadosAdm();
     this.loadTecnicos();
     this.loadServicos();
-    this.tecnicoService.listarTecnicos(0, 1000).subscribe(tecnicos => {
+    this.tecnicoService.listarTecnicos(0, 100).subscribe(tecnicos => {
       this.tecnicos = tecnicos.content; 
     });
     if (this.isUserGerenteOuRoot) {
-      this.servicoService.listarServicosGerente(0, 1000).subscribe(servicos => {
+      this.carregarServicosExecutados(0, 200);
+      this.servicoService.listarServicosGerente(0, 300).subscribe(servicos => {
         this.servicos = servicos.content; 
       });
     } else {
-      this.servicoService.listarServicos(0, 1000).subscribe(servicos => {
+      this.carregarServicosExecutadosAdm();
+      this.servicoService.listarServicos(0, 300).subscribe(servicos => {
         this.servicos = servicos.content; // Supondo que a resposta tenha um campo 'content'
       });
     }
@@ -182,7 +182,7 @@ export class RegistrarServicosComponent implements OnInit {
 
   private loadTecnicos() {
     // Altere o número de página e tamanho conforme necessário
-    this.tecnicoService.listarTecnicos(0, 1000).subscribe({
+    this.tecnicoService.listarTecnicos(0, 200).subscribe({
       next: (response) => {
         // Atualize aqui com a propriedade correta da sua resposta, se for diferente
         this.tecnicos = response.content;
@@ -195,8 +195,7 @@ export class RegistrarServicosComponent implements OnInit {
 
   // Método para carregar os serviços
   private loadServicos() {
-    // Altere o número de página e tamanho conforme necessário
-    this.servicoService.listarServicosGerente(0, 1000).subscribe({
+    this.servicoService.listarServicosGerente(0, 300).subscribe({
       next: (response) => {
         // Atualize aqui com a propriedade correta da sua resposta, se for diferente
         this.servicos = response.content;
@@ -245,29 +244,41 @@ export class RegistrarServicosComponent implements OnInit {
   }
 
   // Método para carregar os serviços executados
-  carregarServicosExecutados(page: number = 0, size: number = 10000): void {
+  carregarServicosExecutados(page: number = 0, size: number = 200): void {
     this.registrarServicosService.listarServicosExecutados(page, size).subscribe({
       next: (data: any) => {
         console.log('Dados recebidos: ', data);
-        this.servicosExecutadosDataSource.data = data.content;
+
+        this.servicosExecutadosDataSource.data = this.servicosExecutadosDataSource.data.concat(data.content);
         this.servicosExecutadosDataSource.paginator = this.paginator;
         this.servicosExecutadosDataSource.paginator.length = data.totalElements;
         console.log('Dados após atribuição: ', this.servicosExecutadosDataSource.data);
         this.changeDetectorRefs.detectChanges();
+
+        // Carregar a próxima página se houver mais dados
+        if ((page + 1) * size < data.totalElements) {
+          this.carregarServicosExecutados(page + 1, size);
+        }
       },
       error: (err) => console.error('Error ao carregar dados', err)
     });
   }
 
   // Método para carregar os serviços executados para o administrador
-  carregarServicosExecutadosAdm(page: number = 0, size: number = 10000): void {
+  carregarServicosExecutadosAdm(page: number = 0, size: number = 200): void {
     this.registrarServicosService.listarServicosExecutadosAdm(page, size).subscribe({
       next: (data: any) => {
         console.log('Dados recebidos: ', data);
-        this.servicosExecutadosAdmDataSource = new MatTableDataSource<listarServicosExecutadosAdmDTO>(data.content);
+
+        this.servicosExecutadosAdmDataSource.data = this.servicosExecutadosAdmDataSource.data.concat(data.content);
         this.servicosExecutadosAdmDataSource.paginator = this.paginator;
+        this.servicosExecutadosAdmDataSource.paginator.length = data.totalElements;
         console.log('Dados após atribuição: ', this.servicosExecutadosAdmDataSource.data);
         this.changeDetectorRefs.detectChanges();
+
+        if ((page + 1) * size < data.totalElements) {
+          this.carregarServicosExecutadosAdm(page + 1, size);
+        }
       },
       error: (err) => console.error('Error ao carregar dados', err)
     });
