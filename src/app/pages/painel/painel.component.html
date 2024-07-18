@@ -110,19 +110,19 @@
 
     <!-- Coluna Valor 1 -->
     <ng-container matColumnDef="valor1">
-      <th mat-header-cell *matHeaderCellDef> Valor 1 </th>
+      <th mat-header-cell *matHeaderCellDef> Valor Principal </th>
       <td mat-cell *matCellDef="let element"> {{element.valor1}} </td>
     </ng-container>
 
     <!-- Coluna Valor 2 -->
     <ng-container matColumnDef="valor2">
-      <th mat-header-cell *matHeaderCellDef> Valor 2 </th>
+      <th mat-header-cell *matHeaderCellDef> Valor Total </th>
       <td mat-cell *matCellDef="let element"> {{element.valor2}} </td>
     </ng-container>
 
     <!-- Coluna Valor Comissao -->
     <ng-container matColumnDef="comissao">
-      <th mat-header-cell *matHeaderCellDef> Comissão </th>
+      <th mat-header-cell *matHeaderCellDef> Gratificação </th>
       <td mat-cell *matCellDef="let element"> {{element.comissao}} </td>
     </ng-container>
 
@@ -137,15 +137,15 @@
       <span class="value">{{ contratosExecutadosDataSource.data.length }}</span>
     </div>
     <div class="summary-field-container">
-      <span class="label">Valor Total 1:</span>
+      <span class="label">Valor Principal Total:</span>
       <span class="value">{{ valorTotal1 | currency:'BRL' }}</span>
     </div>
     <div class="summary-field-container">
-      <span class="label">Valor Total 2:</span>
+      <span class="label">Valor Total:</span>
       <span class="value">{{ valorTotal2 | currency:'BRL' }}</span>
     </div>
     <div class="summary-field-container">
-      <span class="label">Comissão Total:</span>
+      <span class="label">Gratificação Total:</span>
       <span class="value">{{ comissaoTotal | currency:'BRL' }}</span>
     </div>
   </div>
