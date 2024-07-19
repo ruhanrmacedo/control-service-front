@@ -307,9 +307,7 @@ export class RegistrarServicosComponent implements OnInit {
   // Método para adicionar um serviço adicional
   onServicoAdicionalSelected(event: MatAutocompleteSelectedEvent): void {
     const servico: ServicoGerente = event.option.value;
-    if (!this.servicosAdicionais.includes(servico)) {
-      this.servicosAdicionais.push(servico);
-    }
+    this.servicosAdicionais.push(servico);
     this.servicoAdicionalControl.setValue('');
     this.registroForm.patchValue({
       valorTotal: this.calculateValorTotal(this.registroForm.value.valor1, this.servicosAdicionais)
