@@ -27,6 +27,13 @@
           <label>Tipo de Usuário:</label>
           <span>{{ data.tipoUsuario }}</span>
         </div>
+
+        <div class="checkbox-group">
+          <p><strong>Tipo de Usuário</strong></p>
+          <label><input type="radio" name="tipo" [(ngModel)]="tipoUsuario" value="ADMINISTRADOR">Administrador</label>
+          <label><input type="radio" name="tipo" [(ngModel)]="tipoUsuario" value="GERENTE">Gerente</label>
+          <label><input type="radio" name="tipo" [(ngModel)]="tipoUsuario" value="ROOT">Root</label>
+        </div>
   
         <div class="actions">
           <button mat-button (click)="mostrarFormAlterarSenha()">Alterar Senha</button>

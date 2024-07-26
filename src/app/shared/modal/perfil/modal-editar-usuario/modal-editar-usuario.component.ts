@@ -18,13 +18,16 @@ export class ModalEditarUsuarioComponent {
   novaSenha: string = '';
   confirmarSenha: string = '';
   alterarSenhaSucesso: boolean = false;
+  tipoUsuario: string = '';
   
 
   constructor(
     private dialogRef: MatDialogRef<ModalEditarUsuarioComponent>,
     private usuarioService: UsuarioService,
     @Inject(MAT_DIALOG_DATA) public data: any,
-  ) {}
+  ) {
+    this.tipoUsuario = data.tipoUsuario;
+  }
 
   salvarAlteracoes(): void {
     const dadosAtualizados = {
@@ -32,6 +35,7 @@ export class ModalEditarUsuarioComponent {
       nome: this.data.nome,
       cpf: this.data.cpf,
       login: this.data.login,
+      tipoUsuario: this.tipoUsuario
     };
     this.usuarioService.editarUsuario(dadosAtualizados)
     .subscribe({
