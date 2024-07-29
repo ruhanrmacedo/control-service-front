@@ -1,76 +1,74 @@
 <section class="modal-editar-usuario">
-    <h1 mat-dialog-title>Editar Usuário</h1>
-    <div mat-dialog-content>
-      <div class="modal-editar-container">
-  
-        <div class="modal-editar-item">
-          <label>Id Usuário:</label>
-          <span>{{ data.usuarioId }}</span>
-        </div>
-  
-        <div class="modal-editar-item">
-          <label>Nome:</label>
-          <input type="text" [(ngModel)]="data.nome" />
-        </div>
-  
-        <div class="modal-editar-item">
-          <label>CPF:</label>
-          <input type="text" [(ngModel)]="data.cpf" />
-        </div>
-  
-        <div class="modal-editar-item">
-          <label>Login:</label>
-          <input type="text" [(ngModel)]="data.login" />
-        </div>
-  
-        <div class="modal-editar-item">
-          <label>Tipo de Usuário:</label>
-          <span>{{ data.tipoUsuario }}</span>
-        </div>
-
-        <div class="checkbox-group">
-          <p><strong>Tipo de Usuário</strong></p>
-          <label><input type="radio" name="tipo" [(ngModel)]="tipoUsuario" value="ADMINISTRADOR">Administrador</label>
-          <label><input type="radio" name="tipo" [(ngModel)]="tipoUsuario" value="GERENTE">Gerente</label>
-          <label><input type="radio" name="tipo" [(ngModel)]="tipoUsuario" value="ROOT">Root</label>
-        </div>
-  
-        <div class="actions">
-          <button mat-button (click)="mostrarFormAlterarSenha()">Alterar Senha</button>
-          <button mat-button (click)="salvarAlteracoes()">Salvar</button>
-          <button mat-button (click)="fecharModal()">Cancelar</button>
-        </div>
+  <h1 mat-dialog-title>Editar Usuário</h1>
+  <div mat-dialog-content>
+    <div class="modal-editar-container">
+      <div class="modal-editar-item">
+        <label>Id Usuário:</label>
+        <span>{{ data.usuarioId }}</span>
       </div>
 
-      <div class="mostrar-alterar-senha" *ngIf="mostrarAlterarSenha">
-        <form class="form-alterar-senha" (ngSubmit)="alterarSenha($event)">
-          <div class="input-field">
-              <label for="novaSenha">Nova Senha:</label>
-              <input type="password" id="novaSenha" [(ngModel)]="novaSenha" name="novaSenha" required/>
-          </div>
+      <div class="modal-editar-item">
+        <label>Nome:</label>
+        <input type="text" [(ngModel)]="data.nome" />
+      </div>
 
-          <div class="input-field">
-              <label for="confirmarSenha">Repetir Senha:</label>
-              <input type="password" id="confirmarSenha" [(ngModel)]="confirmarSenha" name="confirmarSenha" required/>
-          </div>
+      <div class="modal-editar-item">
+        <label>CPF:</label>
+        <input type="text" [(ngModel)]="data.cpf" />
+      </div>
 
-          <div mat-dialog-actions>
-              <button type="submit" class="btn-alterar" mat-flat-button>Alterar Senha</button>
-              <button type="button" class="btn-limpar" mat-flat-button (click)="limparFormulario()">Limpar</button>
-          </div>
-      </form>
+      <div class="modal-editar-item">
+        <label>Login:</label>
+        <input type="text" [(ngModel)]="data.login" />
+      </div>
+
+      <div class="modal-editar-item">
+        <label>Tipo de Usuário:</label>
+        <span>{{ data.tipoUsuario }}</span>
+      </div>
+
+      <div class="checkbox-group">
+        <p><strong>Alterar Tipo de Usuário</strong></p>
+        <label><input type="radio" name="tipo" [(ngModel)]="data.tipoUsuario" value="ADMINISTRADOR">Administrador</label>
+        <label><input type="radio" name="tipo" [(ngModel)]="data.tipoUsuario" value="GERENTE">Gerente</label>
+        <label><input type="radio" name="tipo" [(ngModel)]="data.tipoUsuario" value="ROOT">Root</label>
+      </div>
+
+      <div class="actions">
+        <button class="btn-alterar-senha" mat-button (click)="mostrarFormAlterarSenha()">Alterar Senha</button>
+        <button class="btn-salvar" mat-button (click)="salvarAlteracoes()">Salvar</button>
+        <button class="btn-cancelar" mat-button (click)="fecharModal()">Cancelar</button>
       </div>
     </div>
-</section>
 
+    <div class="mostrar-alterar-senha" *ngIf="mostrarAlterarSenha">
+      <form class="form-alterar-senha" (ngSubmit)="alterarSenha($event)">
+        <div class="input-field">
+          <label for="novaSenha">Nova Senha:</label>
+          <input type="password" id="novaSenha" [(ngModel)]="novaSenha" name="novaSenha" required />
+        </div>
+
+        <div class="input-field">
+          <label for="confirmarSenha">Repetir Senha:</label>
+          <input type="password" id="confirmarSenha" [(ngModel)]="confirmarSenha" name="confirmarSenha" required />
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn-alterar" mat-flat-button>Alterar Senha</button>
+          <button type="button" class="btn-limpar" mat-flat-button (click)="limparFormulario()">Limpar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
 
 <section class="modal-mensagem modal-sucesso" *ngIf="editadoComSucesso">
-    <h2>Edição bem-sucedida!</h2>
-    <p>{{ data.nome }}, editado com sucesso</p>
-    <button (click)="fecharModal()">OK</button>
+  <h2>Edição bem-sucedida!</h2>
+  <p>{{ data.nome }}, editado com sucesso</p>
+  <button (click)="fecharModal()">OK</button>
 </section>
 <section class="modal-mensagem modal-erro" *ngIf="erroEditar">
-    <h2>Erro no cadastrado</h2>
-    <p>{{ mensagemErro }}</p>
-    <button (click)="fecharModalErro()">OK</button>
+  <h2>Erro no cadastro</h2>
+  <p>{{ mensagemErro }}</p>
+  <button (click)="fecharModalErro()">OK</button>
 </section>
