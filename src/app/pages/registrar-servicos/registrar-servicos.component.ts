@@ -13,6 +13,7 @@ import { listarServicosExecutadosAdmDTO, RegistroServicoDTO, Servico, ServicoGer
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ModalEditarServicoExecutadoComponent } from 'src/app/shared/modal/registrar-servico/modal-editar-servico-executado/modal-editar-servico-executado.component';
 import { MatDialog } from '@angular/material/dialog';
+import { duration } from 'html2canvas/dist/types/css/property-descriptors/duration';
 
 @Component({
   selector: 'app-registrar-servicos',
@@ -39,6 +40,7 @@ export class RegistrarServicosComponent implements OnInit {
   valorTotal1: number | null = null;
   somaValorTotal: number | null = null;
   mensagemSucesso: string | null = null;
+  isLoading = false;
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
@@ -102,6 +104,7 @@ export class RegistrarServicosComponent implements OnInit {
 
   registrar(): void {
     if (this.registroForm.valid) {
+      this.isLoading = true;
       const formValue = this.registroForm.value;
       const registro: RegistroServicoDTO = {
         contrato: formValue.contrato,
@@ -119,11 +122,13 @@ export class RegistrarServicosComponent implements OnInit {
       this.registrarServicosService.registrarServico(registro).subscribe({
         next: (success) => {
           console.log('Serviço registrado com sucesso');
+          this.isLoading = false;
           this.mensagemSucesso = 'Contrato registrado com sucesso.';
           this.snackBar.open('Contrato registrado com sucesso.', 'Fechar', {
             duration: 3000
           });
           setTimeout(() => this.mensagemSucesso = null, 3000);
+
   
           // Extrai o mês e o ano da data do serviço registrado
           const data = new Date(registro.data);
@@ -145,7 +150,11 @@ export class RegistrarServicosComponent implements OnInit {
           this.servicosAdicionais = [];
         },
         error: (error) => {
+          this.isLoading = false; // Desativa o carregamento
           console.error('Ocorreu um erro:', error);
+          this.snackBar.open('Erro ao registrar o contrato: ' + error.message, 'Fechar', {
+            duration: 5000
+          });
         }
       });
     } else {

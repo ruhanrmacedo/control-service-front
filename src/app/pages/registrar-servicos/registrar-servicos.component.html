@@ -1,7 +1,17 @@
 <div class="registro-servicos-page-container">
-  <div class="registro-servicos-container">
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="loading-spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+  
+  <!-- Conteúdo do formulário -->
+  <div *ngIf="!isLoading" class="registro-servicos-container">
     <form [formGroup]="registroForm" (ngSubmit)="registrar()" novalidate class="registro-form-container">
+      
+      <!-- Título do Formulário -->
+      <h2>Registrar Serviço</h2>
 
+      <!-- Campos do Formulário -->
       <div class="form-row">
         <mat-form-field appearance="fill" class="contrato-control">
           <mat-label>Contrato</mat-label>
@@ -89,10 +99,11 @@
         </div>
       </div>
 
+      <!-- Botão de Submissão -->
       <button mat-raised-button type="submit" [disabled]="!registroForm.valid">Registrar</button>
-
     </form>
 
+    <!-- Mensagem de sucesso -->
     <div *ngIf="mensagemSucesso" class="mensagem-sucesso">
       {{ mensagemSucesso }}
     </div>
@@ -177,8 +188,8 @@
 
     </table>
 
-    <mat-paginator [length]="servicosExecutadosDataSource.data.length" [pageSize]="50" [pageSizeOptions]="[10, 25, 50, 100]"
-      aria-label="Select page of technicians">
+    <mat-paginator [length]="servicosExecutadosDataSource.data.length" [pageSize]="50"
+      [pageSizeOptions]="[10, 25, 50, 100]" aria-label="Select page of technicians">
     </mat-paginator>
 
     <div class="botoes-container">

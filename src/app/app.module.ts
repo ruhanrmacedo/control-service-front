@@ -51,7 +51,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { ModalComissaoComponent } from './shared/modal/painel/modal-comissao/modal-comissao.component';
 import { FormatDatePipe } from './pipes/format-date.pipe'; 
-
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -105,7 +105,8 @@ import { FormatDatePipe } from './pipes/format-date.pipe';
     MatSelectModule,
     MatSlideToggleModule,
     MatIconModule,
-    NgxChartsModule 
+    NgxChartsModule,
+    MatProgressSpinnerModule
   ],
   providers: [
     DatePipe,
