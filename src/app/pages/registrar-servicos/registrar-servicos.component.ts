@@ -13,7 +13,6 @@ import { listarServicosExecutadosAdmDTO, RegistroServicoDTO, Servico, ServicoGer
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ModalEditarServicoExecutadoComponent } from 'src/app/shared/modal/registrar-servico/modal-editar-servico-executado/modal-editar-servico-executado.component';
 import { MatDialog } from '@angular/material/dialog';
-import { duration } from 'html2canvas/dist/types/css/property-descriptors/duration';
 
 @Component({
   selector: 'app-registrar-servicos',

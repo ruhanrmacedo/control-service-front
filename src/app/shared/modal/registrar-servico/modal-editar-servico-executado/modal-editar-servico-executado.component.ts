@@ -42,16 +42,16 @@ export class ModalEditarServicoExecutadoComponent implements OnInit {
   ngOnInit(): void {
     this.loadTecnicos();
     this.loadServicos();
-    this.setupAutocompleteFilters();
-    // Inicializar controles com valores recebidos via `data`
     this.tecnicoControl.setValue(this.data.tecnico);
     this.servicoControl.setValue(this.data.servico);
+    this.setupAutocompleteFilters();
   }
 
   private loadTecnicos() {
     this.tecnicoService.listarTecnicos(0, 1000).subscribe({
       next: (response) => {
         this.tecnicos = response.content;
+        console.log('Técnicos carregados:', this.tecnicos);
       },
       error: (error) => {
         console.error('Erro ao carregar técnicos', error);
@@ -63,6 +63,7 @@ export class ModalEditarServicoExecutadoComponent implements OnInit {
     this.servicoService.listarServicosAtivos(0, 1000).subscribe({
       next: (response) => {
         this.servicos = response.content;
+        console.log('Serviços carregados:', this.servicos);
       },
       error: (error) => {
         console.error('Erro ao carregar serviços', error);

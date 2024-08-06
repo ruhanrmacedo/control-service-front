@@ -29,9 +29,9 @@
             <div class="modal-editar-item">
                 <mat-form-field appearance="fill">
                     <mat-label>Técnico</mat-label>
-                    <input type="text" matInput [formControl]="tecnicoControl" [matAutocomplete]="autoTecnico">
-                    <mat-autocomplete #autoTecnico="matAutocomplete" (optionSelected)="onTecnicoSelected($event)"
-                        [displayWith]="displayFnTecnico">
+                    <input type="text" matInput [formControl]="tecnicoControl" [matAutocomplete]="autoTecnico" required>
+                    <mat-autocomplete #autoTecnico="matAutocomplete" [displayWith]="displayFnTecnico"
+                        (optionSelected)="onTecnicoSelected($event)">
                         <mat-option *ngFor="let tecnico of tecnicosFiltrados | async" [value]="tecnico">
                             {{ tecnico.nome }}
                         </mat-option>
