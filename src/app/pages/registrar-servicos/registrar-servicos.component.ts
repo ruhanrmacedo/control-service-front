@@ -332,7 +332,7 @@ export class RegistrarServicosComponent implements OnInit {
     this.changeDetectorRefs.detectChanges();
   }
 
-  // Método para obter o valor total dos serviços adicionais
+
   onTecnicoSelected(event: MatAutocompleteSelectedEvent): void {
     const tecnico: Tecnico = event.option.value;
     this.tecnicoControl.setValue(tecnico);

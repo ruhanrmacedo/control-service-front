@@ -42,8 +42,10 @@ export class ModalEditarServicoExecutadoComponent implements OnInit {
   ngOnInit(): void {
     this.loadTecnicos();
     this.loadServicos();
+    console.log('Data inicial recebida:', this.data);
     this.tecnicoControl.setValue(this.data.tecnico);
     this.servicoControl.setValue(this.data.servico);
+    this.servicoAdicionalControl.setValue(this.data.servicosAdicionais);
     this.setupAutocompleteFilters();
   }
 
@@ -75,21 +77,32 @@ export class ModalEditarServicoExecutadoComponent implements OnInit {
     this.tecnicosFiltrados = this.tecnicoControl.valueChanges
       .pipe(
         startWith(''),
-        map(value => typeof value === 'string' ? value : value.nome),
+        map(value => {
+          console.log('Valor do controle de técnico:', value);
+          return typeof value === 'string' ? value : value.nome;
+        }),
         map(nome => nome ? this.filterTecnicos(nome) : this.tecnicos.slice())
       );
 
     this.servicosFiltrados = this.servicoControl.valueChanges
       .pipe(
         startWith(''),
-        map(value => typeof value === 'string' ? value : value.descricao),
+        map(value => {
+          console.log('Valor do controle de serviço:', value);
+          return typeof value === 'string' ? value : value.descricao;
+        }),
         map(descricao => descricao ? this.filterServicos(descricao) : this.servicos.slice())
+  
       );
 
-    this.servicosAdicionaisFiltrados = this.servicoAdicionalControl.valueChanges.pipe(
-      startWith(''),
-      map(value => typeof value === 'string' ? value : value.descricao),
-      map(descricao => descricao ? this.filterServicos(descricao) : this.servicos.slice())
+    this.servicosAdicionaisFiltrados = this.servicoAdicionalControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => {
+          console.log('Valor do controle de serviço adicional:', value);
+          return typeof value === 'string' ? value : value.descricao;
+        }),
+        map(descricao => descricao ? this.filterServicos(descricao) : this.servicos.slice())
     );
   }
 
