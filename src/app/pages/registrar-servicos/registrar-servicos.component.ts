@@ -361,6 +361,8 @@ export class RegistrarServicosComponent implements OnInit {
   editarServicoRegistrado(): void {
     if (this.servicoSelecionado) {
       const dialogRef = this.dialog.open(ModalEditarServicoExecutadoComponent, {
+        width: '90%', // Aumentando a largura do modal
+        maxWidth: '1200px', // Definindo um limite máximo de largura
         data: {
           id: this.servicoSelecionado.id,
           contrato: this.servicoSelecionado.contrato,

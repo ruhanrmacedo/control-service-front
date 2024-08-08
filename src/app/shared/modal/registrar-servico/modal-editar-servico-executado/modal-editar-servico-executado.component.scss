@@ -1,60 +1,63 @@
 .modal-editar-servico-executado {
-    padding: 40px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-      font-size: 24px;
-      color: #3f51b5;
+  padding: 40px; // Reduzindo o padding para evitar excesso de espaço interno
+  background-color: #ffffff; // Cor de fundo do modal
+  border-radius: 8px; // Borda arredondada do modal
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); // Sombra do modal
+  width: 90%; // Aumentando a largura do modal
+  max-width: 1200px; // Definindo um limite máximo de largura
+
+  h1 {
+    text-align: center; // Alinhamento do texto
+    margin-bottom: 20px; // Espaçamento inferior do texto
+    font-size: 24px; // Tamanho da fonte
+    color: #3f51b5; // Cor do texto
+  }
+
+  .modal-editar-container {
+    display: grid; // Usando grid layout
+    grid-template-columns: repeat(3, 1fr); // 3 colunas
+    gap: 20px; // Espaçamento entre os elementos
+  }
+
+  .modal-editar-item {
+    display: flex; // Exibição em linha dos elementos
+    flex-direction: column; // Direção da coluna
+  }
+
+  .modal-buttons {
+    grid-column: span 3; // Faz os botões ocuparem toda a largura
+    display: flex; // Exibição em linha dos elementos    
+    justify-content: flex-end; // Alinhamento dos elementos no final
+    gap: 10px; // Espaçamento entre os elementos
+    margin-top: 20px; // Espaçamento superior dos elementos
+
+    button {
+      min-width: 100px; // Largura mínima do botão
     }
-  
-    .modal-editar-container {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-  
-    .modal-editar-item {
-      display: flex;
-      flex-direction: column;
-    }
-  
-    .modal-buttons {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-top: 20px;
-  
-      button {
-        min-width: 100px;
+  }
+
+  .additional-services {
+    grid-column: span 3; // Faz a seção de serviços adicionais ocupar toda a largura
+    display: flex; // Exibição em linha dos elementos
+    flex-direction: column; // Direção da coluna
+    gap: 10px; // Espaçamento entre os elementos
+    margin-top: 10px; // Espaçamento superior dos elementos
+
+    .additional-service {
+      display: flex; // Exibição em linha dos elementos
+      justify-content: space-between; // Alinhamento dos elementos
+      align-items: center; // Alinhamento dos itens
+      padding: 8px 12px; // Espaçamento interno
+      background-color: #f5f5f5; // Cor de fundo
+      border-radius: 4px; // Borda arredondada
+
+      span {
+        font-size: 14px; // Tamanho da fonte
       }
-    }
-  
-    .additional-services {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 10px;
-  
-      .additional-service {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 8px 12px;
-        background-color: #f5f5f5;
-        border-radius: 4px;
-  
-        span {
-          font-size: 14px;
-        }
-  
-        button {
-          margin-left: 10px;
-        }
+
+      button {
+        margin-left: 10px; // Espaçamento à esquerda
       }
     }
   }
-  
+}
