@@ -40,6 +40,7 @@ export class RegistrarServicosComponent implements OnInit {
   somaValorTotal: number | null = null;
   mensagemSucesso: string | null = null;
   isLoading = false;
+  isLoadingData = false;
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
@@ -73,12 +74,12 @@ export class RegistrarServicosComponent implements OnInit {
     this.loadTecnicos();
     this.loadServicos();
     this.tecnicoService.listarTecnicos(0, 100).subscribe(tecnicos => {
-      this.tecnicos = tecnicos.content; 
+      this.tecnicos = tecnicos.content;
     });
     if (this.isUserGerenteOuRoot) {
       this.carregarServicosExecutados(0, 200);
       this.servicoService.listarServicosGerente(0, 300).subscribe(servicos => {
-        this.servicos = servicos.content; 
+        this.servicos = servicos.content;
       });
     } else {
       this.carregarServicosExecutadosAdm();
@@ -91,19 +92,20 @@ export class RegistrarServicosComponent implements OnInit {
     };
     this.servicoService.listarServicosAtivos(0, 1000).subscribe({
       next: (response) => {
-        this.servicos = response.content; 
+        this.servicos = response.content;
         this.setupAutocompleteFilters(); // Chamar o setupAutocompleteFilters após carregar os serviços
       },
       error: (error) => {
         console.error('Erro ao carregar serviços', error);
       }
     });
-    
+
   }
 
   registrar(): void {
     if (this.registroForm.valid) {
       this.isLoading = true;
+      this.isLoadingData = true; // Parar de carregar dados enquanto o registro está em andamento
       const formValue = this.registroForm.value;
       const registro: RegistroServicoDTO = {
         contrato: formValue.contrato,
@@ -115,7 +117,7 @@ export class RegistrarServicosComponent implements OnInit {
         valor1: formValue.valor1,
         valorTotal: formValue.valorTotal
       };
-  
+
       console.log('Registro enviado:', registro); // Adicionado aqui para verificar os dados enviados
 
       this.registrarServicosService.registrarServico(registro).subscribe({
@@ -128,12 +130,16 @@ export class RegistrarServicosComponent implements OnInit {
           });
           setTimeout(() => this.mensagemSucesso = null, 3000);
 
-  
+
           // Extrai o mês e o ano da data do serviço registrado
           const data = new Date(registro.data);
           const mes = data.getMonth() + 1; // getMonth() retorna mês de 0 a 11
           const ano = data.getFullYear();
-  
+          const dia = data.getDate();
+
+          // Limpa a tabela de serviços executados
+          this.servicosExecutadosDataSource.data = []; 
+
           // Verificar o tipo de usuário e chamar o método correto
           const tipoUsuario = this.authService.getCurrentTipoUsuarioLogado();
           if (tipoUsuario === 'ADMINISTRADOR') {
@@ -141,15 +147,17 @@ export class RegistrarServicosComponent implements OnInit {
             this.atualizarListaServicosAdm(mes, ano);
           } else {
             // Atualiza a tabela com os serviços do mês do serviço registrado
-            this.atualizarListaServicos(mes, ano);
+            this.atualizarListaServicosQuinzenal(mes, ano, dia);
             this.obterResumoMensal(mes, ano);
           }
-  
+
           this.registroForm.reset();
           this.servicosAdicionais = [];
+          this.isLoadingData = false; // Retoma o carregamento de dados após o registro
         },
         error: (error) => {
           this.isLoading = false; // Desativa o carregamento
+          this.isLoadingData = false; // Em caso de erro, parar o carregamento  contínuo
           console.error('Ocorreu um erro:', error);
           this.snackBar.open('Erro ao registrar o contrato: ' + error.message, 'Fechar', {
             duration: 5000
@@ -164,13 +172,48 @@ export class RegistrarServicosComponent implements OnInit {
   atualizarListaServicos(mes: number, ano: number): void {
     this.registrarServicosService.listarServicosPorMesEAno(mes, ano).subscribe({
       next: (servicos) => {
-        this.servicosExecutadosDataSource = new MatTableDataSource<RegistroServicoDTO>(servicos);
+        this.servicosExecutadosDataSource.data = servicos;
         this.servicosExecutadosDataSource.paginator = this.paginator;
         this.changeDetectorRefs.detectChanges();
       },
       error: (err) => console.error('Erro ao carregar serviços executados', err)
     });
   }
+
+  // Método para atualizar a lista de serviços executados quinzenalmente  
+  atualizarListaServicosQuinzenal(mes: number, ano: number, dia: number): void {
+    let dataInicio: Date;
+    let dataFim: Date;
+
+    // Verifica em qual quinzena o dia pertence e define o período
+    if (dia <= 15) {
+      // Primeira quinzena
+      dataInicio = new Date(ano, mes - 1, 1); // Lembre-se que os meses em JavaScript vão de 0 a 11
+      dataFim = new Date(ano, mes - 1, 15);
+    } else {
+      // Segunda quinzena
+      dataInicio = new Date(ano, mes - 1, 16);
+      // Calcula o último dia do mês
+      dataFim = new Date(ano, mes, 0); // Passando 0 como dia retorna o último dia do mês anterior
+    }
+
+    const dataInicioStr = dataInicio.toISOString().split('T')[0];
+    const dataFimStr = dataFim.toISOString().split('T')[0];
+
+    this.registrarServicosService.listarServicosPorPeriodo(dataInicioStr, dataFimStr).subscribe({
+      next: (servicos) => {
+          this.servicosExecutadosDataSource.data = servicos; // Atualiza os dados da tabela com os serviços obtidos
+
+          // Adicione as linhas abaixo logo após a atualização dos dados
+          this.servicosExecutadosDataSource.filter = ''; // Limpa o filtro atual, se houver
+          this.servicosExecutadosDataSource.paginator?.firstPage(); // Retorna à primeira página da tabela
+          
+          this.changeDetectorRefs.detectChanges();
+      },
+      error: (err) => console.error('Erro ao carregar serviços executados quinzenalmente', err)
+  });
+  }
+
 
   atualizarListaServicosAdm(mes: number, ano: number): void {
     this.registrarServicosService.listarServicosDoAdmPorMesEAno(mes, ano).subscribe({
@@ -254,11 +297,21 @@ export class RegistrarServicosComponent implements OnInit {
 
   // Método para carregar os serviços executados
   carregarServicosExecutados(page: number = 0, size: number = 200): void {
+    if (this.isLoadingData) return; // Evita múltiplas chamadas simultâneas
+
+    this.isLoadingData = true;
+
     this.registrarServicosService.listarServicosExecutados(page, size).subscribe({
       next: (data: any) => {
         console.log('Dados recebidos: ', data);
 
-        this.servicosExecutadosDataSource.data = this.servicosExecutadosDataSource.data.concat(data.content);
+        if (page === 0) {
+          // Se for a primeira página, atribua os dados diretamente
+          this.servicosExecutadosDataSource.data = data.content;
+        } else {
+          this.servicosExecutadosDataSource.data = this.servicosExecutadosDataSource.data.concat(data.content);
+        }
+
         this.servicosExecutadosDataSource.paginator = this.paginator;
         this.servicosExecutadosDataSource.paginator.length = data.totalElements;
         console.log('Dados após atribuição: ', this.servicosExecutadosDataSource.data);
@@ -267,9 +320,14 @@ export class RegistrarServicosComponent implements OnInit {
         // Carregar a próxima página se houver mais dados
         if ((page + 1) * size < data.totalElements) {
           this.carregarServicosExecutados(page + 1, size);
+        } else {
+          this.isLoadingData = false; // Atualiza o status de carregamento
         }
       },
-      error: (err) => console.error('Error ao carregar dados', err)
+      error: (err) => {
+        console.error('Error ao carregar dados', err);
+        this.isLoadingData = false; // Atualiza o status de carregamento
+      }
     });
   }
 
@@ -328,7 +386,7 @@ export class RegistrarServicosComponent implements OnInit {
     this.servicosAdicionais = this.servicosAdicionais.filter(s => s.idServico !== servico.idServico);
     this.registroForm.patchValue({
       valorTotal: this.calculateValorTotal(this.registroForm.value.valor1, this.servicosAdicionais)
-    }); 
+    });
     this.changeDetectorRefs.detectChanges();
   }
 
@@ -337,7 +395,7 @@ export class RegistrarServicosComponent implements OnInit {
     const tecnico: Tecnico = event.option.value;
     this.tecnicoControl.setValue(tecnico);
     this.registroForm.patchValue({
-      idTecnico: tecnico.idTecnico 
+      idTecnico: tecnico.idTecnico
     });
   }
 
@@ -373,7 +431,7 @@ export class RegistrarServicosComponent implements OnInit {
           servicosAdicionais: this.servicoSelecionado.servicosAdicionais,
         }
       });
-  
+
       dialogRef.afterClosed().subscribe(result => {
         console.log('O modal foi fechado.');
         // Lógica após fechar o modal

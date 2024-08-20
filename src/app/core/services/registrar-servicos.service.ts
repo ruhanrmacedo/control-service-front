@@ -60,6 +60,13 @@ export class RegistrarServicosService {
     return this.http.get<any>(`${this.apiUrl}/listarPorMesEAno`, { headers, ...params });
   }
 
+  //Método para chamar o endpoint de listar serviços por período
+  listarServicosPorPeriodo(dataInicio: string, dataFim: string): Observable<any>{
+    const headers = this.getHeaders();
+    const params = new HttpParams().set('dataInicio', dataInicio).set('dataFim', dataFim);
+    return this.http.get<any>(`${this.apiUrl}/listarPorPeriodo`, { headers, params });
+}
+
   calcularResumoMensalAdm(mes: number, ano: number): Observable<ResumoMensalAdmDTO> {
     const headers = this.getHeaders();
     return this.http.get<ResumoMensalAdmDTO>(`${this.apiUrl}/calcularResumoMensalAdm`, {
