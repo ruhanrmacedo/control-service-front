@@ -137,8 +137,18 @@ export class RegistrarServicosComponent implements OnInit {
           const ano = data.getFullYear();
           const dia = data.getDate();
 
+          // Define o período de acordo com a data do serviço registrado
+          let dataInicio: string, dataFim: string;
+          if (dia <= 15) {
+            dataInicio = new Date(ano, mes - 1, 1).toISOString().split('T')[0];
+            dataFim = new Date(ano, mes - 1, 15).toISOString().split('T')[0];
+          } else {
+            dataInicio = new Date(ano, mes - 1, 16).toISOString().split('T')[0];
+            dataFim = new Date(ano, mes, 0).toISOString().split('T')[0];
+          }
+
           // Limpa a tabela de serviços executados
-          this.servicosExecutadosDataSource.data = []; 
+          this.servicosExecutadosDataSource.data = [];
 
           // Verificar o tipo de usuário e chamar o método correto
           const tipoUsuario = this.authService.getCurrentTipoUsuarioLogado();
@@ -148,12 +158,12 @@ export class RegistrarServicosComponent implements OnInit {
           } else {
             // Atualiza a tabela com os serviços do mês do serviço registrado
             this.atualizarListaServicosQuinzenal(mes, ano, dia);
-            this.obterResumoMensal(mes, ano);
+            this.obterResumoQuinzenal(dataInicio, dataFim);
           }
 
           this.registroForm.reset();
           this.servicosAdicionais = [];
-          this.isLoadingData = false; // Retoma o carregamento de dados após o registro
+          this.isLoadingData = false;
         },
         error: (error) => {
           this.isLoading = false; // Desativa o carregamento
@@ -202,16 +212,16 @@ export class RegistrarServicosComponent implements OnInit {
 
     this.registrarServicosService.listarServicosPorPeriodo(dataInicioStr, dataFimStr).subscribe({
       next: (servicos) => {
-          this.servicosExecutadosDataSource.data = servicos; // Atualiza os dados da tabela com os serviços obtidos
+        this.servicosExecutadosDataSource.data = servicos; // Atualiza os dados da tabela com os serviços obtidos
 
-          // Adicione as linhas abaixo logo após a atualização dos dados
-          this.servicosExecutadosDataSource.filter = ''; // Limpa o filtro atual, se houver
-          this.servicosExecutadosDataSource.paginator?.firstPage(); // Retorna à primeira página da tabela
-          
-          this.changeDetectorRefs.detectChanges();
+        // Adicione as linhas abaixo logo após a atualização dos dados
+        this.servicosExecutadosDataSource.filter = ''; // Limpa o filtro atual, se houver
+        this.servicosExecutadosDataSource.paginator?.firstPage(); // Retorna à primeira página da tabela
+
+        this.changeDetectorRefs.detectChanges();
       },
       error: (err) => console.error('Erro ao carregar serviços executados quinzenalmente', err)
-  });
+    });
   }
 
 
@@ -459,6 +469,7 @@ export class RegistrarServicosComponent implements OnInit {
 
   }
 
+  // Método para obter o resumo mensal dos serviços executados pelo técnico com os valores totais
   obterResumoMensal(mes: number, ano: number): void {
     this.registrarServicosService.obterResumoMensal(mes, ano).subscribe({
       next: (resumo) => {
@@ -471,13 +482,25 @@ export class RegistrarServicosComponent implements OnInit {
     });
   }
 
+  // Método para obter o resumo quinzenal dos serviços executados pelo técnico com os valores totais
+  obterResumoQuinzenal(dataInicio: string, dataFim: string): void {
+    this.registrarServicosService.obterResumoQuinzenal(dataInicio, dataFim).subscribe({
+      next: (resumo) => {
+        this.quantidadeServicos = resumo.quantidadeServicos;
+        this.valorTotal1 = resumo.valorTotal1;
+        this.somaValorTotal = resumo.somaValorTotal;
+        this.changeDetectorRefs.detectChanges();
+      },
+      error: (err) => console.error('Erro ao obter o resumo quinzenal', err)
+    });
+  }
+
+  // Método para obter o resumo mensal para o administrador
   obterResumoMensalAdmin(mes: number, ano: number): void {
     this.registrarServicosService.calcularResumoMensalAdm(mes, ano).subscribe({
       next: (resumo) => {
         // Atualize a tabela ou os dados que você deseja exibir com 'resumo'
-        // Por exemplo:
         this.quantidadeServicos = resumo.quantidadeServicos;
-        // ...
         this.changeDetectorRefs.detectChanges();
       },
       error: (err) => console.error('Erro ao obter o resumo mensal', err)

@@ -54,6 +54,14 @@ export class RegistrarServicosService {
     });
   }
 
+  obterResumoQuinzenal(dataInicio: string, dataFim: string): Observable<ResumoMensalServicoDTO> {
+    const headers = this.getHeaders();
+    return this.http.get<ResumoMensalServicoDTO>(`${this.apiUrl}/resumoQuinzenal`, {
+      params: new HttpParams().set('dataInicio', dataInicio).set('dataFim', dataFim),
+      headers: headers
+    });
+  }
+
   listarServicosPorMesEAno(mes: number, ano: number): Observable<any>{
     const headers = this.getHeaders();
     const params = { params: new HttpParams().set('mes', mes.toString()).set('ano', ano.toString()) };
