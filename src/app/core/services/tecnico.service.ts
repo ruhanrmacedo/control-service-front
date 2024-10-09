@@ -45,6 +45,11 @@ export class TecnicoService {
     return this.http.put(`${this.apiUrl}/demitirTecnico`, body, { headers })
   }
 
+  readmitirTecnico(idTecnico: number): Observable<any> {
+    const headers = this.getHeaders();
+    return this.http.put(`${this.apiUrl}/readmitirTecnico/${idTecnico}`, {}, { headers });
+  }
+
   buscarTecnicoPorId(idTecnico: number): Observable<any> {
     const headers = this.getHeaders();
     return this.http.get<any>(`${this.apiUrl}/detalharTecnico/${idTecnico}`, { headers })

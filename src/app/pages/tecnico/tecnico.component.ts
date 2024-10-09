@@ -179,6 +179,25 @@ export class TecnicoComponent {
     }
   }
 
+  readmitirTecnico(): void {
+    if (this.tecnicoSelecionado) {
+      const confirmacao = confirm(`Confirma a readmissão do técnico ${this.tecnicoSelecionado.nome}?`);
+      if (confirmacao) {
+        this.tecnicoService.readmitirTecnico(this.tecnicoSelecionado.idTecnico).subscribe({
+          next: () => {
+            alert('Técnico readmitido com sucesso.');
+            this.carregarTodosTecnicos(); // Recarrega a lista de usuários
+          },
+          error: (erro) => {
+            console.error('Erro ao reativar o técnico', erro);
+          }
+        });
+      }
+    } else {
+      alert('Por favor, selecione um usuário para readmitir.');
+    }
+  }
+
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.tecnicoGerenteDataSource.filter = filterValue.trim().toLowerCase();
