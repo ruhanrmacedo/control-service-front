@@ -37,7 +37,7 @@ export class ModalComissaoComponent {
       row.comissao
     ]);
 
-    pdf.text(`Relatório de Comissão - ${this.nomeTecnico}`, 10, 10);
+    pdf.text(`RELATÓRIO DE GRATIFICAÇÃO - ${this.nomeTecnico}`, 10, 10);
     (pdf as any).autoTable({
       head: [columns],
       body: rows,
