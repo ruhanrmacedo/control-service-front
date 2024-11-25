@@ -32,7 +32,7 @@ export class RegistrarServicosComponent implements OnInit {
   servicoAdicionalControl = new FormControl(); // Control para serviços adicionais
   servicosExecutadosDataSource = new MatTableDataSource<RegistroServicoDTO>([]);
   servicosExecutadosAdmDataSource = new MatTableDataSource<listarServicosExecutadosAdmDTO>([]);
-  displayedColumns: string[] = ['id', 'contrato', 'os', 'data', 'nomeTecnico', 'descricaoServico', 'descricaoServicosAdicionais', 'valor1', 'valorTotal'];
+  displayedColumns: string[] = ['id', 'contrato', 'os', 'data', 'nomeTecnico', 'descricaoServico', 'descricaoServicosAdicionais', 'valor1', 'valorTotal', 'nomeCliente', 'metragemCaboDrop'];
   displayedColumnsAdm: string[] = ['id', 'contrato', 'os', 'data', 'nomeTecnico', 'descricaoServico', 'descricaoServicosAdicionais'];
   servicoSelecionado: any = null;
   quantidadeServicos: number | null = null;
@@ -65,7 +65,9 @@ export class RegistrarServicosComponent implements OnInit {
       idServico: [''], // Ajustado para ser parte do FormGroup
       servicosAdicionais: [''],
       valor1: [''],
-      valorTotal: ['']
+      valorTotal: [''],
+      nomeCliente: [''],
+      metragemCaboDrop: ['']
     });
   }
 
@@ -88,7 +90,11 @@ export class RegistrarServicosComponent implements OnInit {
       });
     }
     this.servicosExecutadosDataSource.filterPredicate = (data: any, filter: string) => {
-      return data.contrato.toString().toLowerCase().includes(filter);
+      const dataStr = Object.keys(data)
+        .map((key) => data[key]) // Obtém todos os valores dos campos
+        .join(' ') // Junta todos os valores como uma única string
+        .toLowerCase(); // Converte para minúsculas para comparação
+      return dataStr.includes(filter);
     };
     this.servicoService.listarServicosAtivos(0, 1000).subscribe({
       next: (response) => {
@@ -115,7 +121,9 @@ export class RegistrarServicosComponent implements OnInit {
         idServico: formValue.idServico,
         servicosAdicionais: this.servicosAdicionais.map(s => s.idServico), // Array de IDs de serviços adicionais
         valor1: formValue.valor1,
-        valorTotal: formValue.valorTotal
+        valorTotal: formValue.valorTotal,
+        nomeCliente: formValue.nomeCliente,
+        metragemCaboDrop: formValue.metragemCaboDrop
       };
 
       console.log('Registro enviado:', registro); // Adicionado aqui para verificar os dados enviados
@@ -439,6 +447,8 @@ export class RegistrarServicosComponent implements OnInit {
           idTecnico: this.servicoSelecionado.idTecnico,
           idServico: this.servicoSelecionado.idServico,
           servicosAdicionais: this.servicoSelecionado.servicosAdicionais,
+          nomeCliente: this.servicoSelecionado.nomeCliente,
+          metragemCaboDrop: this.servicoSelecionado.metragemCaboDrop
         }
       });
 
@@ -510,7 +520,7 @@ export class RegistrarServicosComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.servicosExecutadosDataSource.filter = filterValue.trim().toLowerCase();
-
+  
     if (this.servicosExecutadosDataSource.paginator) {
       this.servicosExecutadosDataSource.paginator.firstPage();
     }

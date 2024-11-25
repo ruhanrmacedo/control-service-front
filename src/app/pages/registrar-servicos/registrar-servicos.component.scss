@@ -52,7 +52,8 @@
             .servico-control,
             .servicos-adicionais-control,
             .valor1-control,
-            .valor-total-control {
+            .valor-total-control,
+            .nome-cliente-control {
                 flex: 1 1 calc(25% - 20px);
                 min-width: 200px;
             }

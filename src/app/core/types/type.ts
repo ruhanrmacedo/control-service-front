@@ -51,6 +51,8 @@ export interface RegistroServicoDTO {
   servicosAdicionais: number[];
   valor1?: number;
   valorTotal?: number;
+  nomeCliente: string;
+  metragemCaboDrop: number;
 }
 
 export interface listarServicosExecutadosAdmDTO {

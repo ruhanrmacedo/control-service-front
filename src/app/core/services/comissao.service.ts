@@ -65,4 +65,6 @@ export class ComissaoService {
       .set('ano', ano);
     return this.http.get<{ tecnicoNome: string, contratosCount: number }[]>(`${this.apiUrl}/evolucao-contratos`, { headers, params });
   }
+
+  
 }
