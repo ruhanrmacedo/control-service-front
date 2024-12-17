@@ -1,57 +1,61 @@
 .homepage {
-    .card-wrapper {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      row-gap: 16px;
-      margin-bottom: 40px;
-    }
-  
-    h2 {
-      font-size: 32px;
-    }
-  }
-  
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  
-  .welcome-section {
+  .card-wrapper {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    text-align: center;
+    flex-wrap: wrap; /* Permite que os cards "quebrem" para a próxima linha */
+    justify-content: center; /* Centraliza os cards */
+    gap: 20px; /* Espaçamento uniforme entre os cards */
+    margin-bottom: 40px;
+  }
+
+  h2 {
+    font-size: 32px;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.welcome-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+  animation: fadeIn 1s ease-in-out;
+
+  .welcome-container {
+    max-width: 600px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: rgba(249, 249, 249, 0.8);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     animation: fadeIn 1s ease-in-out;
-  
-    .welcome-container {
-      max-width: 600px;
-      padding: 20px;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      background-color: rgba(249, 249, 249, 0.8);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      animation: fadeIn 1s ease-in-out;
-  
-      h1 {
-        font-size: 2.5em;
-        margin-bottom: 20px;
-      }
-  
-      p {
-        font-size: 1.2em;
-        margin-bottom: 20px;
-      }
-  
-      .loading-spinner {
-        border: 16px solid #f3f3f3; /* Light grey */
-        border-top: 16px solid #3498db; /* Blue */
-        border-radius: 50%;
-        width: 120px;
-        height: 120px;
-        animation: spin 2s linear infinite;
-        margin: 20px auto;
-      }
+
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 1.2em;
+      margin-bottom: 20px;
+    }
+
+    .loading-spinner {
+      border: 16px solid #f3f3f3; /* Light grey */
+      border-top: 16px solid #3498db; /* Blue */
+      border-radius: 50%;
+      width: 120px;
+      height: 120px;
+      animation: spin 2s linear infinite;
+      margin: 20px auto;
     }
   }
+}

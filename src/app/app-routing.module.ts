@@ -31,8 +31,7 @@ const routes: Routes = [
   {
     path: 'gratificacao',
     component: GratificacaoComponent
-  }
-
+  },
   
 ];
 

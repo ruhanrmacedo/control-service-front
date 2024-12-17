@@ -52,6 +52,8 @@ import { ModalComissaoComponent } from './shared/modal/painel/modal-comissao/mod
 import { FormatDatePipe } from './pipes/format-date.pipe'; 
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { GratificacaoComponent } from './pages/gratificacao/gratificacao.component';
+import { CardPainelComponent } from "./shared/card-painel/card-painel.component";
+import { CardControleKmComponent } from './shared/card-controle-km/card-controle-km.component';
 
 @NgModule({
   declarations: [
@@ -80,6 +82,8 @@ import { GratificacaoComponent } from './pages/gratificacao/gratificacao.compone
     GratificacaoComponent,
     ModalComissaoComponent,
     FormatDatePipe,
+    CardControleKmComponent, // Add CardControleKmComponent to the declarations section
+    CardPainelComponent,
   ],
   imports: [
     CommonModule,
@@ -106,8 +110,8 @@ import { GratificacaoComponent } from './pages/gratificacao/gratificacao.compone
     MatSlideToggleModule,
     MatIconModule,
     NgxChartsModule,
-    MatProgressSpinnerModule
-  ],
+    MatProgressSpinnerModule,
+],
   providers: [
     DatePipe,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

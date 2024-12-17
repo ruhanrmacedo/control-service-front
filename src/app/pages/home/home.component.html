@@ -1,21 +1,27 @@
 <section class="homepage" *ngIf="isLoggedIn">
-    <app-container >
+    <app-container>
         <div class="card-wrapper">
-            <app-card-servicos></app-card-servicos>
-            <app-card-tecnico></app-card-tecnico>
-            <app-card-cadastro-servicos></app-card-cadastro-servicos>
+            <app-card variant="primary">
+                <app-card-servicos></app-card-servicos>
+            </app-card>
+            <app-card variant="primary">
+                <app-card-tecnico></app-card-tecnico>
+            </app-card>
+            <app-card variant="primary">
+                <app-card-cadastro-servicos></app-card-cadastro-servicos>
+            </app-card>
         </div>
 
         <div class="card-wrapper">
-            <app-card-gratificacao></app-card-gratificacao>
+            <app-card variant="secondary">
+                <app-card-gratificacao></app-card-gratificacao>
+            </app-card>
+            <app-card variant="secondary">
+                <app-card-painel></app-card-painel>
+            </app-card>
+            <app-card variant="secondary">
+                <app-card-controle-km></app-card-controle-km>
+            </app-card>
         </div>
     </app-container>
-</section>
-
-<section class="welcome-section" *ngIf="!isLoggedIn">
-    <div class="welcome-container">
-        <div class="loading-spinner"></div>
-        <h1>Bem-vindo ao ControlService</h1>
-        <p>Por favor, efetue o login para acessar o sistema.</p>
-    </div>
 </section>

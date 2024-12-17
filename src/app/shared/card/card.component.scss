@@ -1,12 +1,57 @@
 .card {
-    padding: 24px;
-    &.primary {
-        background: #FEF7FF;
-        border: 1px solid #CAC4D0;
-        border-radius: 12px;
+    width: 100%; /* Ocupa a largura total do container */
+    max-width: 320px; /* Limite de largura para evitar expansão */
+    background-color: #FEF7FF; /* Cor de fundo padrão */
+    border-radius: 12px; /* Borda arredondada */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* Sombra sutil */
+    margin: 10px auto; /* Centraliza e dá espaçamento uniforme */
+    overflow: hidden; /* Garante que o conteúdo respeite as bordas */
+    display: flex; /* Flex para alinhar itens internos */
+    flex-direction: column; /* Coloca os itens em coluna */
+
+    /* Imagem do cartão */
+    img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        max-height: 200px; /* Limita a altura da imagem */
     }
-    &.secondary {
-        background: #F5F5F5;
-        border-radius: 16px;
+
+    /* Conteúdo */
+    mat-card-header, mat-card-content, mat-card-actions {
+        padding: 16px 20px; /* Espaçamento interno */
+    }
+
+    mat-card-header {
+        background-color: #333;
+        color: white;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+    }
+
+    mat-card-title {
+        font-size: 1.2em;
+        font-weight: bold;
+    }
+
+    mat-card-actions {
+        margin-top: auto; /* Garante que o botão fique no final */
+        display: flex;
+        justify-content: center;
+
+        button {
+            background-color: #333;
+            color: white;
+            font-weight: bold;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+
+            &:hover {
+                background-color: #555;
+            }
+        }
     }
 }
