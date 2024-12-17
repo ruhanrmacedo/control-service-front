@@ -12,11 +12,11 @@ import { Color, ScaleType } from '@swimlane/ngx-charts';
 import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
-  selector: 'app-painel',
-  templateUrl: './painel.component.html',
-  styleUrls: ['./painel.component.scss']
+  selector: 'app-gratificacao',
+  templateUrl: './gratificacao.component.html',
+  styleUrls: ['./gratificacao.component.scss']
 })
-export class PainelComponent implements OnInit {
+export class GratificacaoComponent implements OnInit {
   registroForm: FormGroup;
   tecnicosFiltrados: Observable<Tecnico[]> | undefined;
   contratosExecutadosDataSource = new MatTableDataSource<ContratoExecutadoDTO>([]);

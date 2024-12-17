@@ -22,7 +22,7 @@ import { CardCadastroServicosComponent } from './shared/card-cadastro-servicos/c
 import { ModalLoginComponent } from './shared/modal/header/modal-login/modal-login.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ModalUsuarioComponent } from './shared/modal/header/modal-usuario/modal-usuario.component';
-import { CardPainelComponent } from './shared/card-painel/card-painel.component';
+import { CardGratificacaoComponent } from './shared/card-gratificacao/card-gratificacao.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './core/services/auth.interceptor';
 import { FormsModule } from '@angular/forms';
@@ -45,13 +45,13 @@ import { ModalEditarTecnicoComponent } from './shared/modal/tecnico/modal-editar
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ModalEditarServicoExecutadoComponent } from './shared/modal/registrar-servico/modal-editar-servico-executado/modal-editar-servico-executado.component';
-import { PainelComponent } from './pages/painel/painel.component'; 
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { ModalComissaoComponent } from './shared/modal/painel/modal-comissao/modal-comissao.component';
 import { FormatDatePipe } from './pipes/format-date.pipe'; 
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { GratificacaoComponent } from './pages/gratificacao/gratificacao.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +67,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     CardCadastroServicosComponent,
     ModalLoginComponent,
     ModalUsuarioComponent,
-    CardPainelComponent,
+    CardGratificacaoComponent,
     PerfilComponent,
     ModalAlterarSenhaComponent,
     ModalEditarUsuarioComponent,
@@ -77,7 +77,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     ModalEditarServicoComponent,
     ModalEditarTecnicoComponent,
     ModalEditarServicoExecutadoComponent,
-    PainelComponent,
+    GratificacaoComponent,
     ModalComissaoComponent,
     FormatDatePipe,
   ],

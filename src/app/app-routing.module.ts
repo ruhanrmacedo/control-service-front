@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
-import { PainelComponent } from './pages/painel/painel.component';
 import { PerfilComponent } from './pages/perfil/perfil.component';
 import { RegistrarServicosComponent } from './pages/registrar-servicos/registrar-servicos.component';
 import { ServicoComponent } from './pages/servico/servico.component';
 import { TecnicoComponent } from './pages/tecnico/tecnico.component';
+import { GratificacaoComponent } from './pages/gratificacao/gratificacao.component';
 
 const routes: Routes = [
   {
@@ -29,8 +29,8 @@ const routes: Routes = [
     component: RegistrarServicosComponent
   },
   {
-    path: 'painel',
-    component: PainelComponent
+    path: 'gratificacao',
+    component: GratificacaoComponent
   }
 
   
