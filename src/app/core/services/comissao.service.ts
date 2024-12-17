@@ -40,13 +40,13 @@ export class ComissaoService {
   }
 
   // Obter os valores executados
-  getValoresExecutados(tecnicoId: number, mes: number, ano: number): Observable<{ valor2Total: number, valor1Total: number }> {
+  getValoresExecutados(tecnicoId: number, mes: number, ano: number): Observable<{ valorTotal: number, valor1Total: number }> {
     const headers = this.getHeaders();
     const params = new HttpParams()
       .set('tecnicoId', tecnicoId)
       .set('mes', mes)
       .set('ano', ano);
-    return this.http.get<{ valor2Total: number, valor1Total: number }>(`${this.apiUrl}/valores-executados`, { headers, params });
+    return this.http.get<{ valorTotal: number, valor1Total: number }>(`${this.apiUrl}/valores-executados`, { headers, params });
   }
 
   // Obter a evolução dos valores

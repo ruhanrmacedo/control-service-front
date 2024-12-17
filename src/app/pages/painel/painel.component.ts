@@ -21,12 +21,12 @@ export class PainelComponent implements OnInit {
   tecnicosFiltrados: Observable<Tecnico[]> | undefined;
   contratosExecutadosDataSource = new MatTableDataSource<ContratoExecutadoDTO>([]);
   contratosExecutadosImpressaoDataSource = new MatTableDataSource<ContratoExecutadoImpressao>([]);
-  displayedColumns: string[] = ['id', 'contrato', 'os', 'data', 'nomeTecnico', 'descricaoServico', 'valor1', 'valor2', 'comissao'];
+  displayedColumns: string[] = ['id', 'contrato', 'os', 'data', 'nomeTecnico', 'descricaoServico', 'valor1', 'valorTotal', 'comissao'];
   displayedColumnsImpressao: string[] = ['contrato', 'os', 'data', 'descricaoServico', 'comissao'];
   tecnicoControl = new FormControl();
   tecnicos: Tecnico[] = [];
   anos: number[] = [];
-  valorTotal2: number = 0;
+  somaValorTotal: number = 0;
   valorTotal1: number = 0;
   comissaoTotal: number = 0;
   isPrinting = false;
@@ -105,7 +105,7 @@ export class PainelComponent implements OnInit {
     this.comissaoService.getValoresExecutados(
       formValue.idTecnico, formValue.mes, formValue.ano
     ).subscribe(valores => {
-      this.valorTotal2 = valores.valor2Total;
+      this.somaValorTotal = valores.valorTotal;
       this.valorTotal1 = valores.valor1Total;
     });
 
