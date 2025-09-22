@@ -85,6 +85,8 @@ export interface ContratoExecutadoDTO {
   valor1?: number;
   valorTotal?: number;
   comissao?: number;
+  nomeCliente?: string;
+  metragemCaboDrop?: number;
 }
 
 export interface ContratoExecutadoImpressao {
@@ -104,4 +106,18 @@ export interface ServicoExecutadoAdmListagemDTO {
   nomeTecnico: string;
   descricaoServico: string;
   descricaoServicosAdicionais: string[];
+}
+
+export interface DetalheServicoExecutadoDTO {
+  id: number;
+  contrato: string;
+  os: string;
+  data: string; // virá como string (yyyy-MM-dd ou dd/MM/yyyy)
+  idTecnico: number;
+  nomeTecnico: string;
+  idServico: number;
+  descricaoServico: string;
+  servicosAdicionais: { idServico: number; descricao: string }[];
+  nomeCliente?: string;
+  metragemCaboDrop?: number;
 }

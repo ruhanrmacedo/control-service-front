@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { listarServicosExecutadosAdmDTO, ResumoMensalAdmDTO, ResumoMensalServicoDTO, ServicoExecutadoAdmListagemDTO } from '../types/type';
+import { DetalheServicoExecutadoDTO, listarServicosExecutadosAdmDTO, ResumoMensalAdmDTO, ResumoMensalServicoDTO, ServicoExecutadoAdmListagemDTO } from '../types/type';
 
 @Injectable({
   providedIn: 'root'
@@ -88,4 +88,9 @@ export class RegistrarServicosService {
     const params = { params: new HttpParams().set('mes', mes.toString()).set('ano', ano.toString()) };
     return this.http.get<listarServicosExecutadosAdmDTO[]>(`${this.apiUrl}/listarServicosAdmPorMesEAno`, { headers, ...params });
   }
+
+  getDetalheServicoExecutado(id: number): Observable<DetalheServicoExecutadoDTO> {
+  const headers = this.getHeaders();
+  return this.http.get<DetalheServicoExecutadoDTO>(`${this.apiUrl}/${id}`, { headers });
+}
 }

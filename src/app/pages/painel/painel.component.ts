@@ -6,38 +6,81 @@ import { MatTableDataSource } from '@angular/material/table';
 import { map, Observable, startWith } from 'rxjs';
 import { ComissaoService } from 'src/app/core/services/comissao.service';
 import { TecnicoService } from 'src/app/core/services/tecnico.service';
-import { ContratoExecutadoDTO, ContratoExecutadoImpressao, Tecnico } from 'src/app/core/types/type';
+import {
+  ContratoExecutadoDTO,
+  ContratoExecutadoImpressao,
+  Tecnico,
+} from 'src/app/core/types/type';
 import { ModalComissaoComponent } from 'src/app/shared/modal/painel/modal-comissao/modal-comissao.component';
-import { Color, ScaleType } from '@swimlane/ngx-charts';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { RegistrarServicosService } from 'src/app/core/services/registrar-servicos.service';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-painel',
   templateUrl: './painel.component.html',
-  styleUrls: ['./painel.component.scss']
+  styleUrls: ['./painel.component.scss'],
 })
 export class PainelComponent implements OnInit {
   registroForm: FormGroup;
   tecnicosFiltrados: Observable<Tecnico[]> | undefined;
-  contratosExecutadosDataSource = new MatTableDataSource<ContratoExecutadoDTO>([]);
-  contratosExecutadosImpressaoDataSource = new MatTableDataSource<ContratoExecutadoImpressao>([]);
-  displayedColumns: string[] = ['id', 'contrato', 'os', 'data', 'nomeTecnico', 'descricaoServico', 'valor1', 'valorTotal', 'comissao'];
-  displayedColumnsImpressao: string[] = ['contrato', 'os', 'data', 'descricaoServico', 'comissao'];
+  contratosExecutadosDataSource = new MatTableDataSource<ContratoExecutadoDTO>(
+    []
+  );
+  contratosExecutadosImpressaoDataSource =
+    new MatTableDataSource<ContratoExecutadoImpressao>([]);
+  displayedColumns: string[] = [
+    'id',
+    'contrato',
+    'os',
+    'data',
+    'nomeTecnico',
+    'descricaoServico',
+    'valor1',
+    'valorTotal',
+    'nomeCliente',
+    'metragemCaboDrop',
+    'comissao',
+  ];
+  displayedColumnsImpressao: string[] = [
+    'contrato',
+    'os',
+    'data',
+    'descricaoServico',
+    'comissao',
+  ];
   tecnicoControl = new FormControl();
   tecnicos: Tecnico[] = [];
   anos: number[] = [];
   somaValorTotal: number = 0;
   valorTotal1: number = 0;
   comissaoTotal: number = 0;
+  totalServicosQuinzenal = 0;
+  somaValorTotalQuinzenal = 0;
   isPrinting = false;
   nomeTecnico: string = '';
   contratosPorTecnico: any[] = [];
   isAdmin = false;
+  quinzenaForm: FormGroup;
+  servicosQuinzenaisDataSource = new MatTableDataSource<any>([]);
+  displayedColumnsQuinzena: string[] = [
+    'id',
+    'contrato',
+    'os',
+    'data',
+    'nomeTecnico',
+    'descricaoServico',
+    'descricaoServicosAdicionais',
+    'valor1',
+    'valorTotal',
+    'nomeCliente',
+    'metragemCaboDrop',
+  ];
 
   // Configurações para o gráfico
   evolucaoValores: any[] = [];
   colorScheme: any = {
-    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
+    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA'],
   };
   showXAxis = true;
   showYAxis = true;
@@ -53,14 +96,22 @@ export class PainelComponent implements OnInit {
     private tecnicoService: TecnicoService,
     private comissaoService: ComissaoService,
     public dialog: MatDialog,
-    private authService: AuthService
+    private authService: AuthService,
+    private registrarServicosService: RegistrarServicosService
   ) {
     this.registroForm = this.fb.group({
       idTecnico: [''],
       mes: [''],
       ano: [''],
-      bonus: [false]
-    })
+      bonus: [false],
+    });
+
+    this.quinzenaForm = this.fb.group({
+      quinzena: [1],
+      mes: [''],
+      ano: [''],
+    });
+
     const anoAtual = new Date().getFullYear();
     for (let i = 0; i < 6; i++) {
       this.anos.push(anoAtual - i);
@@ -69,7 +120,7 @@ export class PainelComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadTecnicos();
-    this.tecnicoService.listarTecnicos(0, 1000).subscribe(tecnicos => {
+    this.tecnicoService.listarTecnicos(0, 1000).subscribe((tecnicos) => {
       this.tecnicos = tecnicos.content;
     });
     this.setupAutoCompleteFilters();
@@ -83,74 +134,87 @@ export class PainelComponent implements OnInit {
       tecnicoId: formValue.idTecnico,
       mes: formValue.mes,
       ano: formValue.ano,
-      bonus: formValue.bonus
+      bonus: formValue.bonus,
     };
 
-    this.comissaoService.getContratosExecutados(
-      requestValue.tecnicoId,
-      requestValue.mes,
-      requestValue.ano,
-      requestValue.bonus
-    ).subscribe(
-      data => {
-        // Processar os dados recebidos
-        this.contratosExecutadosDataSource.data = data;
-      },
-      error => {
-        // Tratar o erro
-        console.error('Erro ao buscar contratos executados:', error);
-      }
-    );
+    this.comissaoService
+      .getContratosExecutados(
+        requestValue.tecnicoId,
+        requestValue.mes,
+        requestValue.ano,
+        requestValue.bonus
+      )
+      .subscribe(
+        (data) => {
+          // Processar os dados recebidos
+          this.contratosExecutadosDataSource.data = data;
+        },
+        (error) => {
+          // Tratar o erro
+          console.error('Erro ao buscar contratos executados:', error);
+        }
+      );
 
-    this.comissaoService.getValoresExecutados(
-      formValue.idTecnico, formValue.mes, formValue.ano
-    ).subscribe(valores => {
-      this.somaValorTotal = valores.valorTotal;
-      this.valorTotal1 = valores.valor1Total;
-    });
+    this.comissaoService
+      .getValoresExecutados(formValue.idTecnico, formValue.mes, formValue.ano)
+      .subscribe((valores) => {
+        this.somaValorTotal = valores.valorTotal;
+        this.valorTotal1 = valores.valor1Total;
+      });
 
-    this.comissaoService.calcularComissao(
-      formValue.idTecnico, formValue.mes, formValue.ano, formValue.bonus
-    ).subscribe(comissao => {
-      this.comissaoTotal = comissao;
-    });
+    this.comissaoService
+      .calcularComissao(
+        formValue.idTecnico,
+        formValue.mes,
+        formValue.ano,
+        formValue.bonus
+      )
+      .subscribe((comissao) => {
+        this.comissaoTotal = comissao;
+      });
 
     if (this.isAdmin) {
       // Buscar e processar dados para o gráfico de contratos por técnico
-      this.comissaoService.getContratosPorTecnico(requestValue.tecnicoId, requestValue.mes, requestValue.ano).subscribe(
-        data => {
-          this.contratosPorTecnico = [
-            {
-              name: 'Contratos',
-              series: data.map(item => ({
-                name: item.tecnicoNome,
-                value: item.contratosCount
-              }))
-            }
-          ];
-        },
-        error => {
-          console.error('Erro ao buscar contratos por técnico:', error);
-        }
-      );
+      this.comissaoService
+        .getContratosPorTecnico(
+          requestValue.tecnicoId,
+          requestValue.mes,
+          requestValue.ano
+        )
+        .subscribe(
+          (data) => {
+            this.contratosPorTecnico = [
+              {
+                name: 'Contratos',
+                series: data.map((item) => ({
+                  name: item.tecnicoNome,
+                  value: item.contratosCount,
+                })),
+              },
+            ];
+          },
+          (error) => {
+            console.error('Erro ao buscar contratos por técnico:', error);
+          }
+        );
     }
 
     // Buscar e processar dados de evolução para o gráfico
     this.comissaoService.getEvolucaoValor(requestValue.tecnicoId).subscribe(
-      data => {
+      (data) => {
         console.log('Dados brutos recebidos:', data);
         this.evolucaoValores = [
           {
             name: 'Evolução',
-            series: data.map(item => ({
-              name: this.getFormattedDate(item[0], item[1]), 
-              value: item[2]
-            }))
-          }
+            series: data.map((item) => ({
+              name: this.getFormattedDate(item[0], item[1]),
+              value: item[2],
+            })),
+          },
         ];
         console.log('Dados mapeados para o gráfico:', this.evolucaoValores);
       },
-      error => {
+      (error) => {
         console.error('Erro ao buscar evolução dos valores:', error);
       }
     );
@@ -158,8 +222,18 @@ export class PainelComponent implements OnInit {
 
   getFormattedDate(month: number, year: number): string {
     const months = [
-      'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-      'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+      'Janeiro',
+      'Fevereiro',
+      'Março',
+      'Abril',
+      'Maio',
+      'Junho',
+      'Julho',
+      'Agosto',
+      'Setembro',
+      'Outubro',
+      'Novembro',
+      'Dezembro',
     ];
     return `${months[month - 1]}/${year}`;
   }
@@ -172,23 +246,24 @@ export class PainelComponent implements OnInit {
       },
       error: (error) => {
         console.error('Erro ao carregar técnicos', error);
-      }
+      },
     });
   }
 
   private setupAutoCompleteFilters() {
-    this.tecnicosFiltrados = this.tecnicoControl.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => typeof value === 'string' ? value : value.nome),
-        map(nome => nome ? this.filterTecnicos(nome) : this.tecnicos.slice())
-      );
+    this.tecnicosFiltrados = this.tecnicoControl.valueChanges.pipe(
+      startWith(''),
+      map((value) => (typeof value === 'string' ? value : value.nome)),
+      map((nome) => (nome ? this.filterTecnicos(nome) : this.tecnicos.slice()))
+    );
   }
 
   private filterTecnicos(value: any): Tecnico[] {
     if (!value) return this.tecnicos; // Se o valor for null ou undefined, retorna todos os técnicos
     let filterValue = value instanceof Object ? value.nome : value.toString();
-    return this.tecnicos.filter(tecnico => tecnico.nome.toLowerCase().includes(filterValue.toLowerCase()));
+    return this.tecnicos.filter((tecnico) =>
+      tecnico.nome.toLowerCase().includes(filterValue.toLowerCase())
+    );
   }
 
   onTecnicoSelected(event: MatAutocompleteSelectedEvent): void {
@@ -196,8 +271,8 @@ export class PainelComponent implements OnInit {
     this.nomeTecnico = tecnico.nome;
     this.tecnicoControl.setValue(tecnico);
     this.registroForm.patchValue({
-      idTecnico: tecnico.idTecnico
-    })
+      idTecnico: tecnico.idTecnico,
+    });
   }
 
   displayFnTecnico(tecnico?: Tecnico): string {
@@ -209,22 +284,75 @@ export class PainelComponent implements OnInit {
     return tipoUsuario === 'ROOT' || tipoUsuario === 'GERENTE';
   }
 
+  buscarResumoQuinzenalGeral(): void {
+    const { quinzena, mes, ano } = this.quinzenaForm.value;
+    if (!mes || !ano) {
+      return;
+    }
+
+    let di: Date, df: Date;
+    if (quinzena === 1) {
+      di = new Date(ano, mes - 1, 1);
+      df = new Date(ano, mes - 1, 15);
+    } else {
+      di = new Date(ano, mes - 1, 16);
+      df = new Date(ano, mes, 0);
+    }
+
+    const dataInicio = di.toISOString().split('T')[0];
+    const dataFim = df.toISOString().split('T')[0];
+
+    this.registrarServicosService
+      .listarServicosPorPeriodo(dataInicio, dataFim)
+      .subscribe({
+        next: (servicos) => {
+          this.servicosQuinzenaisDataSource.data = servicos;
+          this.totalServicosQuinzenal = servicos.length;
+          this.somaValorTotalQuinzenal = servicos.reduce(
+            (acc: number, s: any) => acc + (Number(s?.valorTotal) || 0), 0
+          );
+        },
+        error: (err) =>
+          console.error('Erro ao carregar resumo quinzenal geral', err),
+      });
+  }
+
+  exportarExcelQuinzenal(): void {
+    const rows = this.servicosQuinzenaisDataSource.data.map((s: any) => ({
+      ID: s.id,
+      Contrato: s.contrato,
+      OS: s.os,
+      Data: s.data,
+      'Nome Técnico': s.nomeTecnico,
+      'Descrição Serviço': s.descricaoServico,
+      'Serviços Adicionais': (s.descricaoServicosAdicionais || []).join(', '),
+      'Valor Principal': s.valor1,
+      'Valor Total': s.valorTotal,
+      'Nome Cliente': s.nomeCliente,
+      'Metragem Cabo Drop': s.metragemCaboDrop,
+    }));
+    const ws = XLSX.utils.json_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Resumo_Quinzenal');
+    XLSX.writeFile(wb, 'resumo_quinzenal.xlsx');
+  }
+
   openPrintModal(): void {
     const dialogRef = this.dialog.open(ModalComissaoComponent, {
       width: '80%', // Exemplo de largura, ajuste como necessário
       data: {
         nomeTecnico: this.nomeTecnico,
         contratosExecutadosDataSource: this.contratosExecutadosDataSource,
-        comissaoTotal: this.comissaoTotal
-      }
+        comissaoTotal: this.comissaoTotal,
+      },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       console.log('O modal foi fechado.');
       // Lógica após fechar o modal
     });
   }
-  meses: { nome: string, valor: number }[] = [
+  meses: { nome: string; valor: number }[] = [
     { nome: 'Janeiro', valor: 1 },
     { nome: 'Fevereiro', valor: 2 },
     { nome: 'Março', valor: 3 },

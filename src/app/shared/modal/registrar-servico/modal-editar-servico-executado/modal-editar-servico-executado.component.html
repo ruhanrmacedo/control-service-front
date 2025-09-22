@@ -1,83 +1,112 @@
 <section class="modal-editar-servico-executado">
-    <h1 mat-dialog-title>Editar Serviço Executado</h1>
-    <div mat-dialog-content>
-      <div class="modal-editar-container">
-        <div class="modal-editar-item">
-          <mat-form-field appearance="fill">
-            <mat-label>Id</mat-label>
-            <input matInput [value]="data.id" disabled />
-          </mat-form-field>
-        </div>
-        <div class="modal-editar-item">
-          <mat-form-field appearance="fill">
-            <mat-label>Contrato</mat-label>
-            <input matInput [(ngModel)]="data.contrato" />
-          </mat-form-field>
-        </div>
-        <div class="modal-editar-item">
-          <mat-form-field appearance="fill">
-            <mat-label>OS</mat-label>
-            <input matInput [(ngModel)]="data.os" />
-          </mat-form-field>
-        </div>
-        <div class="modal-editar-item">
-          <mat-form-field appearance="fill">
-            <mat-label>Data</mat-label>
-            <input matInput [matDatepicker]="picker" [(ngModel)]="data.data" required>
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field>
-        </div>
-        <div class="modal-editar-item">
-          <mat-form-field appearance="fill">
-            <mat-label>Técnico</mat-label>
-            <input type="text" matInput [formControl]="tecnicoControl" [matAutocomplete]="autoTecnico" required>
-            <mat-autocomplete #autoTecnico="matAutocomplete" [displayWith]="displayFnTecnico"
-              (optionSelected)="onTecnicoSelected($event)">
-              <mat-option *ngFor="let tecnico of tecnicosFiltrados | async" [value]="tecnico">
-                {{ tecnico.nome }}
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
-        </div>
-        <div class="modal-editar-item">
-          <mat-form-field appearance="fill">
-            <mat-label>Serviço</mat-label>
-            <input type="text" matInput [formControl]="servicoControl" [matAutocomplete]="autoServico">
-            <mat-autocomplete #autoServico="matAutocomplete" (optionSelected)="onServicoSelected($event)"
-              [displayWith]="displayFnServico">
-              <mat-option *ngFor="let servico of servicosFiltrados | async" [value]="servico">
-                {{ servico.descricao }}
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
-        </div>
-        <div class="modal-editar-item">
-          <mat-form-field appearance="fill">
-            <mat-label>Serviços Adicionais</mat-label>
-            <input type="text" matInput [formControl]="servicoAdicionalControl"
-              [matAutocomplete]="autoServicoAdicional">
-            <mat-autocomplete #autoServicoAdicional="matAutocomplete"
-              (optionSelected)="onServicoAdicionalSelected($event)" [displayWith]="displayFnServico">
-              <mat-option *ngFor="let servico of servicosAdicionaisFiltrados | async" [value]="servico">
-                {{ servico.descricao }}
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
-          <div class="additional-services">
-            <div *ngFor="let servico of servicosAdicionais" class="additional-service">
-              <span>{{ servico.descricao }}</span>
-              <button mat-icon-button color="warn" (click)="removeServicoAdicional(servico)">
-                <mat-icon>clear</mat-icon>
-              </button>
-            </div>
+  <h1 mat-dialog-title>Editar Serviço Executado</h1>
+  <div mat-dialog-content>
+    <div class="modal-editar-container">
+      <div class="modal-editar-item">
+        <mat-form-field appearance="fill">
+          <mat-label>Id</mat-label>
+          <input matInput [value]="data.id" disabled />
+        </mat-form-field>
+      </div>
+      <div class="modal-editar-item">
+        <mat-form-field appearance="fill">
+          <mat-label>Contrato</mat-label>
+          <input matInput [(ngModel)]="data.contrato" />
+        </mat-form-field>
+      </div>
+      <div class="modal-editar-item">
+        <mat-form-field appearance="fill">
+          <mat-label>OS</mat-label>
+          <input matInput [(ngModel)]="data.os" />
+        </mat-form-field>
+      </div>
+      <div class="modal-editar-item">
+        <mat-form-field appearance="fill">
+          <mat-label>Data</mat-label>
+          <input matInput [matDatepicker]="picker" [(ngModel)]="data.data" required>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="modal-editar-item">
+        <mat-form-field appearance="fill">
+          <mat-label>Técnico</mat-label>
+          <input type="text" matInput [formControl]="tecnicoControl" [matAutocomplete]="autoTecnico"
+            [readonly]="!!tecnicoControl.value">
+          <mat-autocomplete #autoTecnico="matAutocomplete" [displayWith]="displayFnTecnico"
+            (optionSelected)="onTecnicoSelected($event)">
+            <mat-option *ngFor="let tecnico of tecnicosFiltrados | async" [value]="tecnico">
+              {{ tecnico.nome }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <mat-chip-set *ngIf="tecnicoControl.value">
+          <mat-chip-row (removed)="limparTecnico()">
+            {{ displayFnTecnico(tecnicoControl.value) }}
+            <button matChipRemove mat-icon-button aria-label="Trocar técnico">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-chip-row>
+        </mat-chip-set>
+      </div>
+      <div class="modal-editar-item">
+        <mat-form-field appearance="fill">
+          <mat-label>Serviço</mat-label>
+          <input type="text" matInput [formControl]="servicoControl" [matAutocomplete]="autoServico"
+            [readonly]="!!servicoControl.value">
+          <mat-autocomplete #autoServico="matAutocomplete" (optionSelected)="onServicoSelected($event)"
+            [displayWith]="displayFnServico">
+            <mat-option *ngFor="let servico of servicosFiltrados | async" [value]="servico">
+              {{ servico.descricao }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <mat-chip-set *ngIf="servicoControl.value">
+          <mat-chip-row (removed)="limparServico()">
+            {{ displayFnServico(servicoControl.value) }}
+            <button matChipRemove mat-icon-button aria-label="Trocar serviço">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-chip-row>
+        </mat-chip-set>
+      </div>
+      <div class="modal-editar-item">
+        <mat-form-field appearance="fill">
+          <mat-label>Serviços Adicionais</mat-label>
+          <input type="text" matInput [formControl]="servicoAdicionalControl" [matAutocomplete]="autoServicoAdicional">
+          <mat-autocomplete #autoServicoAdicional="matAutocomplete"
+            (optionSelected)="onServicoAdicionalSelected($event)" [displayWith]="displayFnServico">
+            <mat-option *ngFor="let servico of servicosAdicionaisFiltrados | async" [value]="servico">
+              {{ servico.descricao }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <div class="additional-services">
+          <div *ngFor="let servico of servicosAdicionais" class="additional-service">
+            <span>{{ servico.descricao }}</span>
+            <button mat-icon-button color="warn" (click)="removeServicoAdicional(servico)">
+              <mat-icon>clear</mat-icon>
+            </button>
           </div>
         </div>
-        <div class="modal-buttons">
-          <button mat-raised-button color="primary" (click)="salvarAlteracoes()">Salvar</button>
-          <button mat-raised-button color="warn" (click)="fecharModal()">Cancelar</button>
-        </div>
+      </div>
+      <div class="modal-editar-item">
+        <mat-form-field appearance="fill">
+          <mat-label>Nome Cliente</mat-label>
+          <input matInput [(ngModel)]="data.nomeCliente">
+        </mat-form-field>
+      </div>
+
+      <div class="modal-editar-item">
+        <mat-form-field appearance="fill">
+          <mat-label>Metragem Cabo Drop</mat-label>
+          <input matInput type="number" [(ngModel)]="data.metragemCaboDrop">
+        </mat-form-field>
+      </div>
+      <div class="modal-buttons">
+        <button mat-raised-button color="primary" (click)="salvarAlteracoes()">Salvar</button>
+        <button mat-raised-button color="warn" (click)="fecharModal()">Cancelar</button>
       </div>
     </div>
-  </section>
-  
+  </div>
+</section>

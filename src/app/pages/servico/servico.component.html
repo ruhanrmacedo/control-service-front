@@ -13,9 +13,15 @@
 
                 <mat-form-field appearance="fill" class="valor1-control">
                     <mat-label>Valor 1</mat-label>
-                    <input matInput formControlName="valor1" required>
-                    <mat-error *ngIf="servicoForm.get('valor1')?.invalid && servicoForm.get('valor1')?.touched">
+                    <input matInput formControlName="valor1" inputmode="decimal" type="text"
+                        placeholder="Ex.: -193, 120, 10,50">
+                    <mat-error
+                        *ngIf="servicoForm.get('valor1')?.hasError('required') && servicoForm.get('valor1')?.touched">
                         O campo Valor 1 é obrigatório.
+                    </mat-error>
+                    <mat-error
+                        *ngIf="servicoForm.get('valor1')?.hasError('pattern') && servicoForm.get('valor1')?.touched">
+                        Informe um número válido (aceita negativo e até 2 casas decimais). Ex.: -193, 120, 10,50
                     </mat-error>
                 </mat-form-field>
             </div>
@@ -23,9 +29,15 @@
             <div class="linha">
                 <mat-form-field appearance="fill" class="valor2-control">
                     <mat-label>Valor 2</mat-label>
-                    <input matInput formControlName="valor2" required>
-                    <mat-error *ngIf="servicoForm.get('valor2')?.invalid && servicoForm.get('valor2')?.touched">
+                    <input matInput formControlName="valor2" inputmode="decimal" type="text"
+                        placeholder="Ex.: -193, 120, 10,50">
+                    <mat-error
+                        *ngIf="servicoForm.get('valor2')?.hasError('required') && servicoForm.get('valor2')?.touched">
                         O campo Valor 2 é obrigatório.
+                    </mat-error>
+                    <mat-error
+                        *ngIf="servicoForm.get('valor2')?.hasError('pattern') && servicoForm.get('valor2')?.touched">
+                        Informe um número válido (aceita negativo e até 2 casas decimais). Ex.: -193, 120, 10,50
                     </mat-error>
                 </mat-form-field>
 
@@ -51,15 +63,17 @@
 
     <div class="search-container" *ngIf="isUserGerenteOuRoot">
         <mat-form-field appearance="fill" class="search-bar">
-          <mat-label>Buscar Serviço</mat-label>
-          <input matInput (keyup)="applyFilter($event)" placeholder="Digite a ID, Descrição, Valor ou Tipo de Serviço" #input>
+            <mat-label>Buscar Serviço</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Digite a ID, Descrição, Valor ou Tipo de Serviço"
+                #input>
         </mat-form-field>
     </div>
 
     <div class="search-container" *ngIf="!isUserGerenteOuRoot">
         <mat-form-field appearance="fill" class="search-bar">
-          <mat-label>Buscar Serviço</mat-label>
-          <input matInput (keyup)="applyFilterAdm($event)" placeholder="Digite a ID, Descrição ou Tipo de Serviço" #input>
+            <mat-label>Buscar Serviço</mat-label>
+            <input matInput (keyup)="applyFilterAdm($event)" placeholder="Digite a ID, Descrição ou Tipo de Serviço"
+                #input>
         </mat-form-field>
     </div>
 

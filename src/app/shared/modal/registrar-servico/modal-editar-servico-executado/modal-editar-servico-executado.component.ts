@@ -47,10 +47,54 @@ export class ModalEditarServicoExecutadoComponent implements OnInit {
     this.loadTecnicos(); // Carrega os técnicos disponíveis
     this.loadServicos(); // Carrega os serviços disponíveis
     console.log('Data inicial recebida:', this.data); // Exibe os dados recebidos no modal para debug
-    this.tecnicoControl.setValue(this.data.tecnico); // Define o valor inicial do campo de técnico
-    this.servicoControl.setValue(this.data.servico); // Define o valor inicial do campo de serviço
+    if (this.data.idTecnico && this.data.nomeTecnico) {
+      this.tecnicoControl.setValue({ idTecnico: this.data.idTecnico, nome: this.data.nomeTecnico });
+    }
+    if (this.data.idServico && this.data.descricaoServico) {
+      this.servicoControl.setValue({ idServico: this.data.idServico, descricao: this.data.descricaoServico });
+    }
     this.servicoAdicionalControl.setValue(this.data.servicosAdicionais); // Define o valor inicial do campo de serviços adicionais
+    this.servicosAdicionais = [...(this.data.servicosAdicionais || [])]; // Inicializa a lista de serviços adicionais
     this.setupAutocompleteFilters(); // Configura os filtros dos campos de autocomplete para técnicos e serviços
+    this.registrarServicosService.getDetalheServicoExecutado(this.data.id)
+      .subscribe(det => {
+        const toDate = (s: string | null | undefined): Date | null => {
+          if (!s) return null;
+
+          // yyyy-MM-dd ou yyyy-MM-ddTHH:mm:ss[.sss][Z|±hh:mm]
+          const iso = s.match(/^(\d{4})-(\d{2})-(\d{2})(?:T.*)?$/);
+          if (iso) {
+            const [, y, m, d] = iso;
+            return new Date(+y, +m - 1, +d); // sempre local
+          }
+
+          // dd/MM/yyyy
+          if (/^\d{2}\/\d{2}\/\d{4}$/.test(s)) {
+            const [d, m, y] = s.split('/').map(Number);
+            return new Date(y, m - 1, d); // sempre local
+          }
+
+          const dt = new Date(s);
+          dt.setHours(12, 0, 0, 0);
+          return dt;
+        };
+
+        this.data.contrato = det.contrato;
+        this.data.os = det.os;
+        this.data.data = toDate(det.data);
+        this.data.nomeCliente = det.nomeCliente ?? null;
+        this.data.metragemCaboDrop = det.metragemCaboDrop ?? null;
+
+        this.tecnicoControl.setValue({ idTecnico: det.idTecnico, nome: det.nomeTecnico });
+        this.servicoControl.setValue({ idServico: det.idServico, descricao: det.descricaoServico });
+        this.servicosAdicionais = det.servicosAdicionais.map(a => ({
+          idServico: a.idServico,
+          descricao: a.descricao,
+          ativo: true  // <- adiciona o campo exigido pela interface Servico
+        }));
+
+        this.setupAutocompleteFilters();
+      });
   }
 
   // Método para carregar os técnicos disponíveis
@@ -110,7 +154,7 @@ export class ModalEditarServicoExecutadoComponent implements OnInit {
         }),
         // Mapeia a descrição do serviço para os serviços cuja descrição contém o valor filtrado
         map(descricao => descricao ? this.filterServicos(descricao) : this.servicos.slice())
-  
+
       );
 
     // Configura o filtro para os serviços adicionais
@@ -124,7 +168,7 @@ export class ModalEditarServicoExecutadoComponent implements OnInit {
         }),
         // Mapeia a descrição do serviço adicional para os serviços adicionais cuja descrição contém o valor filtrado
         map(descricao => descricao ? this.filterServicos(descricao) : this.servicos.slice())
-    );
+      );
   }
 
   // Método para filtrar os técnicos disponíveis
@@ -145,7 +189,7 @@ export class ModalEditarServicoExecutadoComponent implements OnInit {
   salvarAlteracoes(): void {
     // Formata a data para o formato yyyy-MM-dd
     const dataFormatada = this.datePipe.transform(this.data.data, 'yyyy-MM-dd');
-    let servicosAdicionaisAtualizados = this.servicosAdicionais.map((s: Servico) => s.idServico);
+    let servicosAdicionaisAtualizados = this.servicosAdicionais.map(s => s.idServico);
 
     // Se não houver serviços adicionais selecionados, mantém os serviços adicionais atuais
     if (servicosAdicionaisAtualizados.length === 0 && this.data.servicosAdicionais) {
@@ -156,13 +200,15 @@ export class ModalEditarServicoExecutadoComponent implements OnInit {
     com os campos de id, contrato, os, data, idTecnico, idServico e servicosAd
     icionais */
     const dadosAtualizados = {
-      id: this.data.id, 
+      id: this.data.id,
       contrato: this.data.contrato,
       os: this.data.os,
       data: dataFormatada,
       idTecnico: this.tecnicoControl.value ? this.tecnicoControl.value.idTecnico : this.data.idTecnico,
       idServico: this.servicoControl.value ? this.servicoControl.value.idServico : this.data.idServico,
       servicosAdicionais: servicosAdicionaisAtualizados,
+      nomeCliente: this.data.nomeCliente ?? null,
+      metragemCaboDrop: this.data.metragemCaboDrop ?? null,
     };
 
     console.log('Dados a serem atualizados', dadosAtualizados);
@@ -171,19 +217,19 @@ export class ModalEditarServicoExecutadoComponent implements OnInit {
     this.registrarServicosService.editarServicoExecutado(dadosAtualizados)
       .subscribe({
         next: (res) => {
-          this.editadoComSucesso = true; // Exibe a mensagem de sucesso
+          this.editadoComSucesso = true;
           alert('Serviço executado atualizado com sucesso');
-          this.dialogRef.close(true);
+          this.dialogRef.close({ ok: true, dados: dadosAtualizados });
         },
         error: (erro) => {
-          this.erroEditar = true; // Exibe a mensagem de erro
+          this.erroEditar = true;
           this.mensagemErro = 'Erro ao atualizar serviço executado';
           console.error('Erro ao atualizar', erro);
         }
       });
   }
 
-  removerServicoAdicional(servico: Servico): void { 
+  removerServicoAdicional(servico: Servico): void {
     this.servicosAdicionais = this.servicosAdicionais.filter(s => s.idServico !== servico.idServico);
     // Atualiza a lista de serviços adicionais do serviço executado
     this.data.servicosAdicionais = this.data.servicosAdicionais.filter((s: Servico) => s.idServico !== servico.idServico);
@@ -225,7 +271,7 @@ export class ModalEditarServicoExecutadoComponent implements OnInit {
   // Método para exibir a descrição do serviço adicional no campo de serviço adicional
   onServicoAdicionalSelected(event: MatAutocompleteSelectedEvent): void {
     const servico: Servico = event.option.value;
-    if (!this.servicosAdicionais.includes(servico)) {
+    if (!this.servicosAdicionais.some(s => s.idServico === servico.idServico)) {
       this.servicosAdicionais.push(servico);
     }
     this.servicoAdicionalControl.setValue('');
@@ -233,6 +279,17 @@ export class ModalEditarServicoExecutadoComponent implements OnInit {
 
   // Método para remover um serviço adicional da lista de serviços adicionais
   removeServicoAdicional(servico: Servico): void {
-    this.servicosAdicionais = this.servicosAdicionais.filter(s => s.idServico !== servico.idServico);
+    this.servicosAdicionais = this.servicosAdicionais
+      .filter(s => s.idServico !== servico.idServico);
+  }
+
+  limparTecnico(): void {
+    this.tecnicoControl.setValue('');
+    this.data.idTecnico = null;
+  }
+
+  limparServico(): void {
+    this.servicoControl.setValue('');
+    this.data.idServico = null;
   }
 }

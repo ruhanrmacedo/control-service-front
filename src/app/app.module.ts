@@ -48,10 +48,17 @@ import { ModalEditarServicoExecutadoComponent } from './shared/modal/registrar-s
 import { PainelComponent } from './pages/painel/painel.component'; 
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
 import { ModalComissaoComponent } from './shared/modal/painel/modal-comissao/modal-comissao.component';
 import { FormatDatePipe } from './pipes/format-date.pipe'; 
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+
+registerLocaleData(localePt);
 
 @NgModule({
   declarations: [
@@ -99,18 +106,20 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatFormFieldModule,
     MatInputModule,
     MatNativeDateModule,
-    ReactiveFormsModule,
+    MatChipsModule,
     MatPaginatorModule,
     MatAutocompleteModule,
     MatSelectModule,
     MatSlideToggleModule,
     MatIconModule,
+    MatDividerModule,
     NgxChartsModule,
     MatProgressSpinnerModule
   ],
   providers: [
     DatePipe,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }
   ],
   bootstrap: [AppComponent]
 })

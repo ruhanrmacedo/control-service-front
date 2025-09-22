@@ -8,7 +8,7 @@ import { ServicoService } from 'src/app/core/services/servico.service';
   styleUrls: ['./modal-editar-servico.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ModalEditarServicoComponent implements	OnInit {
+export class ModalEditarServicoComponent implements OnInit {
 
   editadoComSucesso: boolean = false;
   erroEditar: boolean = false;
@@ -20,36 +20,43 @@ export class ModalEditarServicoComponent implements	OnInit {
     private servicoService: ServicoService,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.carregarTiposServico();
+  }
+
+  private toNumber(value: unknown): number {
+    if (typeof value === 'number') return value;
+    if (typeof value === 'string') {
+      const normalized = value.replace(/\s+/g, '').replace(',', '.');
+      return Number(normalized);
+    }
+    return NaN;
   }
 
   salvarAlteracoes(): void {
     const dadosAtualizados = {
       idServico: this.data.idServico,
       descricao: this.data.descricao,
-      valor1: this.data.valor1,
-      valor2: this.data.valor2,
-      tipoServico: this.data.novoTipoServico || this.data.tipoServico // Fallback para o tipo atual se nenhum novo for selecionado
+      valor1: this.toNumber(this.data.valor1),
+      valor2: this.toNumber(this.data.valor2),
+      tipoServico: this.data.novoTipoServico || this.data.tipoServico
     };
 
     console.log('Dados a serem atualizados', dadosAtualizados);
 
-    this.servicoService.editarServico(dadosAtualizados)
-    .subscribe({
-      next: (res) => {
-        // Tratar sucesso
+    this.servicoService.editarServico(dadosAtualizados).subscribe({
+      next: () => {
         this.editadoComSucesso = true;
         alert('Serviço atualizado com sucesso');
-        this.dialogRef.close(true);
+        this.dialogRef.close(true); // 🔧 devolve "true" para recarregar a lista
       },
       error: (erro) => {
-        // Tratar erros
         this.erroEditar = true;
         this.mensagemErro = 'Erro ao atualizar serviço';
         console.error('Erro ao atualizar', erro);
+        this.cdr.markForCheck();
       }
     });
   }

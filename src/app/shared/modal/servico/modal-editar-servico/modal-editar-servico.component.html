@@ -27,14 +27,14 @@
 
       <div class="modal-editar-item">
         <label>Valor 1:</label>
-        <input type="text" [(ngModel)]="data.valor1" />
+        <input type="text" inputmode="decimal" [(ngModel)]="data.valor1" placeholder="Ex.: -193, 120, 10,50" />
       </div>
 
       <div class="modal-editar-item">
         <label>Valor 2:</label>
-        <input type="text" [(ngModel)]="data.valor2" />
+        <input type="text" inputmode="decimal" [(ngModel)]="data.valor2" placeholder="Ex.: -193, 120, 10,50" />
       </div>
-      
+
       <div class="modal-buttons">
         <button mat-raised-button color="primary" (click)="salvarAlteracoes()">Salvar</button>
         <button mat-raised-button color="warn" (click)="fecharModal()">Cancelar</button>

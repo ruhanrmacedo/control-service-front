@@ -1,123 +1,97 @@
 .painel-container {
-    max-width: 100%;
-    margin: auto;
-    padding: 25px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background-color: rgba(249, 249, 249, 0.8);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  width: 100%;
+  padding: 16px 0;
+  background: transparent;
+}
+.page-limit {
+  width: 100%;
+  max-width: 80%;
+  margin: 0 auto;
+  padding: 0 24px;
 }
 
-/* Aplica estilos ao formulário, semelhante ao .registro-form-container */
+/* Form em grid fluido */
 .form-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  align-items: end;
+  margin-bottom: 12px;
+}
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
 }
 
-/* Estilos para o gráfico */
-canvas {
-    max-width: 100%;
-    margin-top: 20px;
+/* Gráficos */
+.chart-box { width: 100%; min-height: 320px; margin: 8px 0 16px; }
+
+/* Cards principais */
+.block-card,
+.quinzena-card {
+  width: 100%;
+  margin-top: 8px;
+}
+.mr-8 { margin-right: 8px; }
+
+/* Tabela padrão (sem scroll-x) */
+.table-container {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: rgba(249, 249, 249, 0.8);
+  box-shadow: 0 2px 4px rgba(0,0,0,.06);
 }
 
-/* Estilo comum dos campos do formulário */
-.mat-form-field {
-    margin-bottom: 20px;
-    width: 100%;
-    /* Ocupar a largura total em dispositivos menores */
+table.mat-table {
+  width: 100%;
+  border-collapse: collapse;
 }
-
-/* Estilos para botão de busca */
-button[mat-raised-button] {
-    background-color: #333;
-    color: white;
-    width: 100%;
-    margin-top: 20px;
-}
-
-button[mat-raised-button]:hover {
-    background-color: darken(#333, 10%);
-}
-
-/* Estilização da tabela, semelhante ao .tabela-listar-servicos */
-.mat-elevation-z8 {
-    overflow-x: auto;
-    padding: 25px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background-color: rgba(249, 249, 249, 0.8);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-table {
-    width: 100%;
-    margin-top: 40px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
 th {
-    background-color: #333 !important;
-    color: white;
+  background-color: #333 !important;
+  color: #fff;
+  text-align: left;
+}
+td, th {
+  padding: 8px 12px;
+  border-bottom: 1px solid #e5e5e5;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+tr:hover { background: rgba(0,0,0,.04); }
+
+/* Larguras por coluna */
+.mat-column-id { width: 64px; }
+.mat-column-contrato { width: 80px; }
+.mat-column-os { width: 100px; }
+.mat-column-data { width: 110px; }
+.mat-column-valor1, .mat-column-valorTotal { width: 90px; text-align: right; }
+.mat-column-metragemCaboDrop { width: 100px; text-align: right; }
+.mat-column-nomeTecnico, .mat-column-nomeCliente { width: 180px; }
+.mat-column-descricaoServico, .mat-column-descricaoServicosAdicionais { width: auto; }
+
+/* Resumos */
+.resumo-mensal-container,
+.resumo-quinzenal-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  margin-top: 12px;
+  width: 100%;
+  background: #f9f9f9;
+  border-radius: 10px;
+  border: 1px solid #ddd;
 }
 
-td {
-    padding: 8px 16px;
-    border-bottom: 1px solid #ddd;
-}
+/* Links */
+.links { display: flex; justify-content: flex-end; margin: 20px 0 8px; }
+.links a { color: #333; text-decoration: none; padding: 8px 10px; }
 
-tr:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-}
-
-/* Estilização da área de resumo mensal */
-.resumo-mensal-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 25px;
-    margin-top: 20px;
-    width: 97%;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Estilização para links de navegação */
-.links {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 30px;
-}
-
-.links a,
-.links button {
-    color: #333;
-    text-decoration: none;
-    padding: 10px;
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
-/* Resposta visual para campos obrigatórios que não foram tocados */
-.mat-error {
-    color: #d32f2f;
-}
-
-/* Adaptação para dispositivos menores, se necessário */
-@media (max-width: 768px) {
-    .form-container {
-        flex-direction: column;
-    }
-
-    .mat-form-field,
-    button[mat-raised-button] {
-        width: 100%;
-        max-width: none;
-    }
+/* Botão do formulário: 100% só em telas pequenas */
+@media (max-width: 640px) {
+  .form-actions button { width: 100%; }
 }

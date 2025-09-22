@@ -18,9 +18,9 @@ export class ServicoComponent {
   servicoForm: FormGroup;
   tiposServico: any[] = [];
   servicos: Servico[] = [];
-  displayedColumns: string[] = ['idServico', 'descricao', 'tipoServico']; 
+  displayedColumns: string[] = ['idServico', 'descricao', 'tipoServico'];
   servicosGerente: ServicoGerente[] = [];
-  displayedColumnsGerente: string[] = ['idServico', 'descricao', 'valor1', 'valor2', 'tipoServico', 'ativo']; 
+  displayedColumnsGerente: string[] = ['idServico', 'descricao', 'valor1', 'valor2', 'tipoServico', 'ativo'];
   isUserGerenteOuRoot: boolean = false;
   servicoSelecionado: any = null;
   servicoGerenteDataSource = new MatTableDataSource<ServicoGerente>([]);
@@ -29,23 +29,33 @@ export class ServicoComponent {
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
-  
+
   constructor(
-    private changeDetectorRef: ChangeDetectorRef, 
-    private fb: FormBuilder, 
+    private changeDetectorRef: ChangeDetectorRef,
+    private fb: FormBuilder,
     private servicoService: ServicoService,
     private authService: AuthService,
     public dialog: MatDialog
   ) {
     this.isUserGerenteOuRoot = this.authService.isGerenteOuRoot();
+    const moneyPattern = /^-?\d+([.,]\d{1,2})?$/;
     this.servicoForm = this.fb.group({
       descricao: ['', Validators.required],
-      valor1: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
-      valor2: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      valor1: ['', [Validators.required, Validators.pattern(moneyPattern)]],
+      valor2: ['', [Validators.required, Validators.pattern(moneyPattern)]],
       tipoServico: ['', Validators.required]
     });
 
     this.carregarTiposServico();
+  }
+
+  private toNumber(value: unknown): number {
+    if (typeof value === 'number') return value;
+    if (typeof value === 'string') {
+      const normalized = value.replace(/\s+/g, '').replace(',', '.');
+      return Number(normalized);
+    }
+    return NaN;
   }
 
   carregarTiposServico(): void {
@@ -91,7 +101,7 @@ export class ServicoComponent {
     } else {
       console.log('Usuário não tem permissão para ver esses dados');
     }
-    
+
   }
 
   ngOnInit(): void {
@@ -102,18 +112,27 @@ export class ServicoComponent {
 
   onSubmit(): void {
     if (this.servicoForm.valid) {
-      this.servicoService.cadastrarServico(this.servicoForm.value).subscribe({
+      const form = this.servicoForm.value;
+
+      const payload = {
+        descricao: form.descricao,
+        valor1: this.toNumber(form.valor1),
+        valor2: this.toNumber(form.valor2),
+        tipoServico: form.tipoServico
+      };
+
+      this.servicoService.cadastrarServico(payload).subscribe({
         next: (res) => {
           console.log('Serviço cadastrado com sucesso!', res);
-          alert('Serviço cadastrado com sucesso!')
-          this.servicoForm.reset(); // Limpar o formulário após o cadastro
-          this.carregarServicos(); // Recarrega os serviços para atualizar a tabela
+          alert('Serviço cadastrado com sucesso!');
+          this.servicoForm.reset();
+          this.carregarServicos();
           this.carregarServicosGerente();
           this.errorMessage = '';
         },
         error: (err) => {
           console.error('Erro ao cadastrar serviço', err);
-          this.errorMessage = err.error.message || 'Erro ao cadastrar o serviço. Tente novamente mais tarde.';
+          this.errorMessage = err?.error?.message || 'Erro ao cadastrar o serviço. Tente novamente mais tarde.';
         }
       });
     }
@@ -127,26 +146,30 @@ export class ServicoComponent {
   editarServico(): void {
     if (this.servicoSelecionado) {
       const dialogRef = this.dialog.open(ModalEditarServicoComponent, {
-        data: { 
+        data: {
           idServico: this.servicoSelecionado.idServico,
           descricao: this.servicoSelecionado.descricao,
           valor1: this.servicoSelecionado.valor1,
           valor2: this.servicoSelecionado.valor2,
-          tipoServico: this.servicoSelecionado.tipoServico 
+          tipoServico: this.servicoSelecionado.tipoServico
         }
       });
-  
-      dialogRef.afterClosed().subscribe(result => {
-        console.log('O modal foi fechado.');
-        // Lógica após fechar o modal
+
+      // 🔧 Recarrega a lista se houve edição com sucesso
+      dialogRef.afterClosed().subscribe((salvou: boolean) => {
+        if (salvou) {
+          this.carregarServicos();
+          this.carregarServicosGerente();
+        }
       });
     } else {
       console.log("Nenhum usuário selecionado.");
     }
   }
 
+
   excluirServico(): void {
-    if(this.servicoSelecionado) {
+    if (this.servicoSelecionado) {
       if (confirm(`Confirma a exclusão do serviço ${this.servicoSelecionado.descricao}?`)) {
         this.servicoService.excluirServico(this.servicoSelecionado.idServico).subscribe({
           next: () => {

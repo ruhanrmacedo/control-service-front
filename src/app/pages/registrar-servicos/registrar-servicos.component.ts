@@ -75,17 +75,17 @@ export class RegistrarServicosComponent implements OnInit {
     this.servicosExecutadosDataSource.paginator = this.paginator;
     this.loadTecnicos();
     this.loadServicos();
-    this.tecnicoService.listarTecnicos(0, 100).subscribe(tecnicos => {
+    this.tecnicoService.listarTecnicos(0, 300).subscribe(tecnicos => {
       this.tecnicos = tecnicos.content;
     });
     if (this.isUserGerenteOuRoot) {
-      this.carregarServicosExecutados(0, 200);
-      this.servicoService.listarServicosGerente(0, 300).subscribe(servicos => {
+      this.carregarServicosExecutados(0, 500);
+      this.servicoService.listarServicosGerente(0, 700).subscribe(servicos => {
         this.servicos = servicos.content;
       });
     } else {
       this.carregarServicosExecutadosAdm();
-      this.servicoService.listarServicos(0, 300).subscribe(servicos => {
+      this.servicoService.listarServicos(0, 500).subscribe(servicos => {
         this.servicos = servicos.content; // Supondo que a resposta tenha um campo 'content'
       });
     }
@@ -435,28 +435,51 @@ export class RegistrarServicosComponent implements OnInit {
   }
 
   editarServicoRegistrado(): void {
-    if (this.servicoSelecionado) {
-      const dialogRef = this.dialog.open(ModalEditarServicoExecutadoComponent, {
-        width: '90%', // Aumentando a largura do modal
-        maxWidth: '1200px', // Definindo um limite máximo de largura
-        data: {
-          id: this.servicoSelecionado.id,
-          contrato: this.servicoSelecionado.contrato,
-          os: this.servicoSelecionado.os,
-          data: this.servicoSelecionado.data,
-          idTecnico: this.servicoSelecionado.idTecnico,
-          idServico: this.servicoSelecionado.idServico,
-          servicosAdicionais: this.servicoSelecionado.servicosAdicionais,
-          nomeCliente: this.servicoSelecionado.nomeCliente,
-          metragemCaboDrop: this.servicoSelecionado.metragemCaboDrop
-        }
-      });
+    if (!this.servicoSelecionado) return;
 
-      dialogRef.afterClosed().subscribe(result => {
-        console.log('O modal foi fechado.');
-        // Lógica após fechar o modal
-      });
-    }
+    const ref = this.dialog.open(ModalEditarServicoExecutadoComponent, {
+      width: '90%',
+      maxWidth: '1200px',
+      data: { id: this.servicoSelecionado.id }
+    });
+
+    ref.afterClosed().subscribe((result) => {
+      if (!result?.ok) return;
+
+      // result.dados.data vem em 'yyyy-MM-dd' -> parse LOCAL (evita -1 dia)
+      const toLocalDate = (s: string) => {
+        const [y, m, d] = s.split('-').map(Number);
+        return new Date(y, m - 1, d);
+      };
+
+      const dataEditada = toLocalDate(result.dados.data);
+      const mes = dataEditada.getMonth() + 1;
+      const ano = dataEditada.getFullYear();
+      const dia = dataEditada.getDate();
+
+      // calcula janelas da quinzena exatamente como no registrar()
+      let dataInicio: string, dataFim: string;
+      if (dia <= 15) {
+        dataInicio = new Date(ano, mes - 1, 1).toISOString().split('T')[0];
+        dataFim = new Date(ano, mes - 1, 15).toISOString().split('T')[0];
+      } else {
+        dataInicio = new Date(ano, mes - 1, 16).toISOString().split('T')[0];
+        dataFim = new Date(ano, mes, 0).toISOString().split('T')[0];
+      }
+
+      this.servicosExecutadosDataSource.data = [];
+
+      const tipoUsuario = this.authService.getCurrentTipoUsuarioLogado();
+      if (tipoUsuario === 'ADMINISTRADOR') {
+        // caminho do admin: resumo mensal + lista do admin
+        this.obterResumoMensalAdmin(mes, ano);
+        this.atualizarListaServicosAdm(mes, ano);
+      } else {
+        // caminho gerente/root: lista quinzenal + resumo quinzenal
+        this.atualizarListaServicosQuinzenal(mes, ano, dia);
+        this.obterResumoQuinzenal(dataInicio, dataFim);
+      }
+    });
   }
 
   excluirServico(): void {
@@ -520,7 +543,7 @@ export class RegistrarServicosComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.servicosExecutadosDataSource.filter = filterValue.trim().toLowerCase();
-  
+
     if (this.servicosExecutadosDataSource.paginator) {
       this.servicosExecutadosDataSource.paginator.firstPage();
     }
