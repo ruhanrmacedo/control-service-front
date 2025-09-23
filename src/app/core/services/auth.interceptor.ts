@@ -3,38 +3,55 @@ import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
-  HttpInterceptor
+  HttpInterceptor,
+  HttpHeaders
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // Verifica se a requisição atual não é para o endpoint de login
-    if (!req.url.endsWith('/api/login/efetuarLogin')) {
+    // 1) Deixe o preflight passar direto
+    if (req.method === 'OPTIONS') {
+      return next.handle(req);
+    }
+
+    // 2) Se a URL é relativa (começa com /), prefixe com a base da API
+    let url = req.url;
+    if (url.startsWith('/')) {
+      url = `${environment.apiUrl}${url}`;
+    }
+
+    // 3) Não adiciona Authorization no endpoint de login
+    const isLoginEndpoint =
+      url.includes('/api/login/efetuarLogin'); // funciona p/ relativa ou absoluta
+
+    // 4) Se não for login, injete o token (se ainda válido)
+    let request = req.clone({ url });
+
+    if (!isLoginEndpoint) {
       const token = localStorage.getItem('token');
-    
+
       if (this.authService.tokenExpirou()) {
-        // Utiliza o alert do navegador para avisar o usuário
-        alert("Sessão encerrada. Sua sessão expirou!");
-        localStorage.removeItem('token'); // Remover o token expirado
-        this.router.navigate(['/']); // Redirecionar para homepage
-        return next.handle(req); // Você pode optar por cancelar as requisições subsequentes aqui
+        alert('Sessão encerrada. Sua sessão expirou!');
+        localStorage.removeItem('token');
+        this.router.navigate(['/']);
+        return next.handle(request);
       }
-      
+
       if (token) {
-        const cloned = req.clone({
-          headers: req.headers.set("Authorization", "Bearer " + token)
+        request = request.clone({
+          headers: (request.headers || new HttpHeaders()).set('Authorization', `Bearer ${token}`)
         });
-        return next.handle(cloned);
       }
     }
-  
-    return next.handle(req);
+
+    return next.handle(request);
   }
 }
