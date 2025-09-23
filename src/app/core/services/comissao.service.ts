@@ -2,69 +2,76 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ComissaoService {
-  private apiUrl = 'http://localhost:8081/api/comissaoTecnico'; // URL base do seu backend
+  private readonly base = '/api/comissoaoTecnico';
 
   constructor(private http: HttpClient) { }
 
-  // Configura os headers da requisição, incluindo o token de autorização
-  private getHeaders(): HttpHeaders {
-    return new HttpHeaders({
-      'Authorization': `Bearer ${localStorage.getItem('token')}` // Substitua conforme necessário para buscar o token
-    });
-  }
-
-  // Buscar contratos executados
-  getContratosExecutados(tecnicoId: number, mes: number, ano: number, bonus: boolean): Observable<any[]> {
-    const headers = this.getHeaders();
+  getContratosExecutados(
+    tecnicoId: number,
+    mes: number,
+    ano: number,
+    bonus: boolean
+  ): Observable<any[]> {
     const params = new HttpParams()
       .set('tecnicoId', tecnicoId)
       .set('mes', mes)
       .set('ano', ano)
-      .set('bonus', bonus); // Atenção para booleanos, pode precisar de .toString() se o backend espera uma string
-    return this.http.get<any[]>(`${this.apiUrl}/contratos-executados`, { headers, params });
+      .set('bonus', String(bonus)); // boolean -> string
+    return this.http.get<any[]>(`${this.base}/contratos-executados`, { params });
   }
 
   // Calcular a comissão total
-  calcularComissao(tecnicoId: number, mes: number, ano: number, bonus: boolean): Observable<number> {
-    const headers = this.getHeaders();
+  calcularComissao(
+    tecnicoId: number,
+    mes: number,
+    ano: number,
+    bonus: boolean
+  ): Observable<number> {
     const params = new HttpParams()
       .set('tecnicoId', tecnicoId)
       .set('mes', mes)
       .set('ano', ano)
-      .set('bonus', bonus);
-    return this.http.get<number>(`${this.apiUrl}/calcular`, { headers, params });
+      .set('bonus', String(bonus));
+    return this.http.get<number>(`${this.base}/calcular`, { params });
   }
 
   // Obter os valores executados
-  getValoresExecutados(tecnicoId: number, mes: number, ano: number): Observable<{ valorTotal: number, valor1Total: number }> {
-    const headers = this.getHeaders();
+  getValoresExecutados(
+    tecnicoId: number,
+    mes: number,
+    ano: number
+  ): Observable<{ valorTotal: number; valor1Total: number }> {
     const params = new HttpParams()
       .set('tecnicoId', tecnicoId)
       .set('mes', mes)
       .set('ano', ano);
-    return this.http.get<{ valorTotal: number, valor1Total: number }>(`${this.apiUrl}/valores-executados`, { headers, params });
+    return this.http.get<{ valorTotal: number; valor1Total: number }>(
+      `${this.base}/valores-executados`,
+      { params }
+    );
   }
 
   // Obter a evolução dos valores
   getEvolucaoValor(tecnicoId: number): Observable<any[]> {
-    const headers = this.getHeaders();
     const params = new HttpParams().set('tecnicoId', tecnicoId);
-    return this.http.get<any[]>(`${this.apiUrl}/evolucao-valor`, { headers, params });
+    return this.http.get<any[]>(`${this.base}/evolucao-valor`, { params });
   }
 
   // Obter a evolução de contratos executados
-  getContratosPorTecnico(tecnicoId: number, mes: number, ano: number): Observable<{ tecnicoNome: string, contratosCount: number }[]> {
-    const headers = this.getHeaders();
+  getContratosPorTecnico(
+    tecnicoId: number,
+    mes: number,
+    ano: number
+  ): Observable<{ tecnicoNome: string; contratosCount: number }[]> {
     const params = new HttpParams()
       .set('tecnicoId', tecnicoId)
       .set('mes', mes)
       .set('ano', ano);
-    return this.http.get<{ tecnicoNome: string, contratosCount: number }[]>(`${this.apiUrl}/evolucao-contratos`, { headers, params });
+    return this.http.get<{ tecnicoNome: string; contratosCount: number }[]>(
+      `${this.base}/evolucao-contratos`,
+      { params }
+    );
   }
-
-  
 }

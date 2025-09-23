@@ -1,63 +1,51 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ServicoService {
-  private apiUrl = 'http://localhost:8081/api/servicos';
+  private readonly base = '/api/servicos';
 
-  constructor( private http: HttpClient ) { }
-
-  private getHeaders(): HttpHeaders {
-    return new HttpHeaders({
-      'Authorization': `Bearer ${localStorage.getItem('token')}`
-    });
-  }
+  constructor(private http: HttpClient) { }
 
   cadastrarServico(dadosServico: any): Observable<any> {
-    const headers = this.getHeaders();
-    return this.http.post(`${this.apiUrl}/cadastrarServico`, dadosServico, { headers });
+    return this.http.post<any>(`${this.base}/cadastrarServico`, dadosServico);
   }
 
   getTiposServico(): Observable<any[]> {
-    const headers = this.getHeaders();
-    return this.http.get<any[]>(`${this.apiUrl}/tipo-servico`, { headers });
+    return this.http.get<any[]>(`${this.base}/tipo-servico`);
   }
 
   listarServicos(page: number, size: number): Observable<any> {
-    const headers = this.getHeaders();
-    const params = { params: new HttpParams().set('page', String(page)).set('size', String(size)) };
-    return this.http.get<any>(`${this.apiUrl}/listarServicos`, { headers, ...params });
+    const params = new HttpParams()
+      .set('page', String(page))
+      .set('size', String(size));
+    return this.http.get<any>(`${this.base}/listarServicos`, { params });
   }
 
   listarServicosAtivos(page: number, size: number): Observable<any> {
-    const headers = this.getHeaders();
-    const params = { params: new HttpParams().set('page', String(page)).set('size', String(size)) };
-    return this.http.get<any>(`${this.apiUrl}/listarServicosAtivos`, { headers, ...params });
+    const params = new HttpParams()
+      .set('page', String(page))
+      .set('size', String(size));
+    return this.http.get<any>(`${this.base}/listarServicosAtivos`, { params });
   }
 
   listarServicosGerente(page: number, size: number): Observable<any> {
-    const headers = this.getHeaders();
-    const params = { params: new HttpParams().set('page', String(page)).set('size', String(size)) };
-    return this.http.get<any>(`${this.apiUrl}/listarServicosGerente`, { headers, ...params });
+    const params = new HttpParams()
+      .set('page', String(page))
+      .set('size', String(size));
+    return this.http.get<any>(`${this.base}/listarServicosGerente`, { params });
   }
 
   editarServico(dadosAtualizados: any): Observable<any> {
-    const headers = this.getHeaders();
-    return this.http.put<any>(`${this.apiUrl}/editarServico`, dadosAtualizados, { headers })
+    return this.http.put<any>(`${this.base}/editarServico`, dadosAtualizados);
   }
 
-  excluirServico(idServico: number): Observable<any> {
-    const headers = this.getHeaders();
-    return this.http.delete(`${this.apiUrl}/excluirServico/${idServico}`, { headers })
+  excluirServico(idServico: number): Observable<void> {
+    return this.http.delete<void>(`${this.base}/excluirServico/${idServico}`);
   }
 
   buscarServicoPorId(idServico: number): Observable<any> {
-    const headers = this.getHeaders();
-    // Observe que removemos as chaves {idServico} do final da URL.
-    return this.http.get<any>(`${this.apiUrl}/detalharServico/${idServico}`, { headers });
+    return this.http.get<any>(`${this.base}/detalharServico/${idServico}`);
   }
 }

@@ -1,64 +1,50 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class TecnicoService {
-  private apiUrl = 'http://localhost:8081/api/tecnicos'
+  private readonly base = '/api/tecnicos';
 
   constructor(private http: HttpClient) { }
 
-  private getHeaders(): HttpHeaders {
-    return new HttpHeaders({
-      'Authorization': `Bearer ${localStorage.getItem('token')}`
-    });
-  }
-
   cadastrarTecnico(dadosTecnico: any): Observable<any> {
-    const headers = this.getHeaders();
-    return this.http.post(`${this.apiUrl}/cadastrarTecnico`, dadosTecnico, { headers });
+    return this.http.post<any>(`${this.base}/cadastrarTecnico`, dadosTecnico);
   }
 
   listarTecnicos(page: number, size: number): Observable<any> {
-    const headers = this.getHeaders();
-    const params = { params: new HttpParams().set('page', String(page)).set('size', String(size)) };
-    return this.http.get<any>(`${this.apiUrl}/listarTecnicos`, { headers, ...params });
+    const params = new HttpParams()
+      .set('page', String(page))
+      .set('size', String(size));
+    return this.http.get<any>(`${this.base}/listarTecnicos`, { params });
   }
 
   listarTodosTecnicos(page: number, size: number): Observable<any> {
-    const headers = this.getHeaders();
-    const params = { params: new HttpParams().set('page', String(page)).set('size', String(size)) };
-    return this.http.get<any>(`${this.apiUrl}/listarTodosTecnicos`, { headers, ...params });
+    const params = new HttpParams()
+      .set('page', String(page))
+      .set('size', String(size));
+    return this.http.get<any>(`${this.base}/listarTodosTecnicos`, { params });
   }
 
   editarTecnico(dadosAtualizados: any): Observable<any> {
-    const headers = this.getHeaders();
-    return this.http.put<any>(`${this.apiUrl}/editarTecnico`, dadosAtualizados, { headers })
+    return this.http.put<any>(`${this.base}/editarTecnico`, dadosAtualizados);
   }
 
   demitirTecnico(idTecnico: number, dataDesligamento: string): Observable<any> {
-    const headers = this.getHeaders();
     const body = { idTecnico, dataDesligamento };
-
-    return this.http.put(`${this.apiUrl}/demitirTecnico`, body, { headers })
+    return this.http.put<any>(`${this.base}/demitirTecnico`, body);
   }
 
   readmitirTecnico(idTecnico: number): Observable<any> {
-    const headers = this.getHeaders();
-    return this.http.put(`${this.apiUrl}/readmitirTecnico/${idTecnico}`, {}, { headers });
+    return this.http.put<any>(`${this.base}/readmitirTecnico/${idTecnico}`, {});
   }
 
   buscarTecnicoPorId(idTecnico: number): Observable<any> {
-    const headers = this.getHeaders();
-    return this.http.get<any>(`${this.apiUrl}/detalharTecnico/${idTecnico}`, { headers })
-      .pipe(
-        tap(
-          data => console.log('Detalhes do serviço recebidos:', data),
-          error => console.error('Erro ao buscar detalhes do serviço:', error)
-        )
-      );
-    ;
+    return this.http.get<any>(`${this.base}/detalharTecnico/${idTecnico}`).pipe(
+      tap({
+        next: data => console.log('Detalhes do técnico:', data),
+        error: err => console.error('Erro ao buscar técnico:', err)
+      })
+    );
   }
 }
